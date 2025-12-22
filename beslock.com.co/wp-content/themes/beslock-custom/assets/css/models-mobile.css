@@ -1,0 +1,187 @@
+/* assets/css/models-mobile.css
+   Mobile-first styles for .models block (dynamic cards).
+   - Enforces perfect 16:9 container using aspect-ratio with a fallback for older browsers.
+   - Overlay: title (top-right), badge (bottom-left)
+   - Shade sits below overlay; badge has higher z-index and 65% white background.
+*/
+
+:root {
+  --beslock-bg-panel: #f1f3f4;
+  --beslock-bg-card: #ffffff;
+  --beslock-card-radius: 12px;
+  --beslock-card-padding: 18px;
+  --beslock-badge-bg-rgba: rgba(255,255,255,0.65);
+  --beslock-badge-border: rgba(0,0,0,0.06);
+  --beslock-text-on-image: #ffffff;
+  --beslock-text: #111111;
+  /* Restored shade opacity to 10% for best contrast as requested */
+  --beslock-shade: rgba(3,69,38,0.1);
+}
+
+/* Panel container */
+.mobile-products-panel.models {
+  box-sizing: border-box;
+  padding: 16px;
+  min-height: 100vh;
+  display: block; /* overridden by attribute selector if used */
+  background: var(--beslock-bg-panel);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Attribute-based hide/show adjusted to allow CSS transitions
+   Use opacity/transform instead of display:none so the sliding
+   transition for the products panel can animate smoothly. */
+/* Support both aria-hidden and the boolean [hidden] attribute.
+   Force display:block so that transitions may run even if JS briefly toggles
+   the `hidden` attribute. Visual state is controlled with opacity/transform. */
+#productsPanel[aria-hidden="true"],
+#productsPanel[hidden] {
+  display: block !important;
+  /* keep visibility so the element remains in the render tree while we
+     animate opacity/transform — removing `visibility: hidden` prevents a
+     white flash where the element becomes non-visible before the transition */
+  visibility: visible !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  transform: translate3d(100%, 0, 0) !important;
+  pointer-events: none !important;
+}
+
+#productsPanel[aria-hidden="false"],
+#productsPanel:not([aria-hidden])[hidden="false"] {
+  display: block !important;
+  visibility: visible !important;
+  height: 100vh !important;
+  overflow: auto !important;
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+  pointer-events: auto !important;
+}
+
+/* Compatibility classes kept for JS but avoid changing display property */
+.models--hidden { opacity: 0; transform: translate3d(100%, 0, 0); pointer-events: none; }
+.models--visible { opacity: 1; transform: translate3d(0, 0, 0); pointer-events: auto; }
+
+/* Card list wrapper */
+.models__list {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-bottom: 28px;
+}
+
+/* Card wrapper */
+.models__item {
+  background: transparent;
+  margin-bottom: 18px;
+  box-sizing: border-box;
+}
+
+/* Visual media box:
+   - aspect-ratio en navegadores modernos
+   - fallback para navegadores sin soporte (padding-top hack dentro de @supports)
+*/
+.models__item-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* preferred modern solution */
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--beslock-bg-card);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+  display: block;
+}
+
+/* Fallback for browsers that don't support aspect-ratio */
+@supports not (aspect-ratio: 1 / 1) {
+  .models__item-media {
+    height: 0;
+  }
+  .models__item-media::before {
+    content: "";
+    display: block;
+    padding-top: 56.25%; /* 9/16 = 56.25% */
+  }
+  .models__item-media > picture,
+  .models__item-media > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Image fill and focal control */
+.models__item-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover; /* fill the 16:9 box */
+  object-position: center center; /* default */
+  position: relative;
+  z-index: 0;
+}
+
+/* Shade layer sits above the image but below overlay content */
+.models__item-media__shade {
+  position: absolute;
+  inset: 0;
+  background: var(--beslock-shade);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Overlay for texts sits above the shade */
+.models__item-media__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3; /* ensure overlay above shade */
+  pointer-events: none;
+  display: block;
+}
+
+/* Title top-right */
+.models__item-title {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  margin: 0;
+  color: var(--beslock-text-on-image);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.05;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+  pointer-events: none;
+}
+
+/* Badges bottom-left: ensure highest z-index so they are never covered */
+.models__item-badges {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 4; /* above overlay content and shade */
+  pointer-events: auto; /* allow interaction if desired */
+}
+
+.models__item-badge {
+  display: inline-block;
+  background: var(--beslock-badge-bg-rgba);
+  border: 1px solid var(--beslock-badge-border);
+  color: var(--beslock-text);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+}
+
+/* Small screens adjustments */
+@media (max-width: 420px) {
+  .models__list { padding-left: 6px; padding-right: 6px; }
+  .models__item-media { border-radius: 10px; }
+  .models__item-title { font-size: 18px; top: 10px; right: 10px; }
+  .models__item-badge { font-size: 12px; padding: 6px 8px; left: 10px; bottom: 10px; }
+}

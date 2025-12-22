@@ -1,0 +1,244 @@
+/* Minimal resets for WooCommerce pages to prevent child theme from globally overriding parent/WC styles.
+   Loaded only on WooCommerce-related pages.
+   Intentionally conservative: only targets broad, commonly conflicting selectors used by the child theme.
+*/
+
+/* Reset base visual tokens so parent/woocommerce styles can apply cleanly */
+body.woocommerce, body.woocommerce-page {
+  background: unset !important;
+  color: unset !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif !important;
+  line-height: unset !important;
+}
+
+/* Neutralize child button utilities so WooCommerce buttons keep their own styles */
+body.woocommerce .btn,
+body.woocommerce .beslock-btn,
+body.woocommerce .discover__btn,
+body.woocommerce .hero__cta,
+body.woocommerce-page .btn,
+body.woocommerce-page .beslock-btn,
+body.woocommerce-page .discover__btn,
+body.woocommerce-page .hero__cta {
+  all: unset !important;
+  display: revert !important;
+}
+
+/* Make sure links within WC pages get their inherited/parent styles */
+body.woocommerce a,
+body.woocommerce-page a {
+  color: unset !important;
+  text-decoration: unset !important;
+}
+
+/* Inputs/forms: avoid child overrides that alter sizing/appearance */
+body.woocommerce input,
+body.woocommerce select,
+body.woocommerce textarea,
+body.woocommerce-page input,
+body.woocommerce-page select,
+body.woocommerce-page textarea {
+  all: revert !important;
+}
+
+/* Ensure WooCommerce notices, drawer and mobile menu text use the site font stack */
+body.woocommerce .woocommerce-message,
+body.woocommerce .cart-empty,
+body.woocommerce .widget,
+body.woocommerce .site-header,
+body.woocommerce .mobile-menu,
+body.woocommerce .mobile-menu__item,
+body.woocommerce .mobile-menu__badge,
+body.woocommerce .header__cart,
+body.woocommerce .site-footer,
+body.woocommerce .woocommerce a,
+body.woocommerce .u-container,
+body.woocommerce .entry-title,
+body.woocommerce .page-title {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif !important;
+}
+
+/* Container spacing: let parent control page/container sizing on WC pages */
+body.woocommerce .u-container,
+body.woocommerce-page .u-container {
+  max-width: revert !important;
+  padding: revert !important;
+  margin: revert !important;
+}
+
+/* If specific child components remain invasive, they can be selectively neutralized here. */
+
+/* Additional header/logo and mobile menu fixes for product archives */
+body.post-type-archive-product .site-header,
+body.tax-product_cat .site-header,
+body.tax-product_tag .site-header {
+  align-items: center !important;
+}
+
+body.post-type-archive-product .site-logo img,
+body.tax-product_cat .site-logo img,
+body.tax-product_tag .site-logo img {
+  max-height: 60px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+@media (min-width: 600px) {
+  body.post-type-archive-product .site-header .site-logo,
+  body.tax-product_cat .site-header .site-logo,
+  body.tax-product_tag .site-header .site-logo {
+    max-width: 220px !important;
+  }
+}
+
+body.post-type-archive-product .site-header .site-branding,
+body.tax-product_cat .site-header .site-branding,
+body.tax-product_tag .site-header .site-branding {
+  flex: 0 0 auto !important;
+}
+
+/* Normalize header layout on WooCommerce pages: keep left/right controls flush and logo centered */
+body.woocommerce .header__bar,
+body.woocommerce-cart .header__bar,
+body.post-type-archive-product .header__bar,
+body.tax-product_cat .header__bar,
+body.tax-product_tag .header__bar {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+/* Center logo visually without pushing left/right controls */
+body.woocommerce .header__logo {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Keep controls above the centered logo and clickable */
+body.woocommerce .header__menu-toggle,
+body.woocommerce .header__cart,
+body.woocommerce .mobile-header .menu-toggle,
+body.woocommerce .mobile-header .mobile-back {
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+@media (max-width: 599px) {
+  body.post-type-archive-product .mobile-header .mobile-back,
+  body.tax-product_cat .mobile-header .mobile-back,
+  body.tax-product_tag .mobile-header .mobile-back,
+  body.post-type-archive-product .mobile-header .menu-toggle,
+  body.tax-product_cat .mobile-header .menu-toggle,
+  body.tax-product_tag .mobile-header .menu-toggle {
+    display: inline-block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+/* Badge for mobile drawer 'Tienda de productos' */
+.mobile-menu__badge {
+  display: inline-block;
+  background: #e63946;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 999px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.header__cart-count {
+  display: inline-block;
+  background: #e63946;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* Force header logo size parity on WooCommerce pages (shop, cart, product archives) */
+body.woocommerce .header__logo img,
+body.woocommerce-cart .header__logo img,
+body.post-type-archive-product .header__logo img,
+body.tax-product_cat .header__logo img,
+body.tax-product_tag .header__logo img {
+  --site-logo-height: 32px !important;
+  height: var(--site-logo-height) !important;
+  max-height: 60px !important;
+  width: auto !important;
+}
+
+@media (min-width: 600px) {
+  body.woocommerce .header__logo img,
+  body.woocommerce-cart .header__logo img,
+  body.post-type-archive-product .header__logo img,
+  body.tax-product_cat .header__logo img,
+  body.tax-product_tag .header__logo img {
+    --site-logo-height: 38px !important;
+    height: var(--site-logo-height) !important;
+  }
+}
+
+/* Make WooCommerce page titles match the frontpage hero styles */
+body.woocommerce .product-archive-title h1,
+body.woocommerce .page-title,
+body.woocommerce .entry-title,
+body.woocommerce h1,
+body.woocommerce-page .page-title {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: var(--beslock-green) !important;
+  line-height: 1.03 !important;
+  margin-bottom: 0.7rem !important;
+}
+
+@media (min-width: 600px) {
+  body.woocommerce .product-archive-title h1,
+  body.woocommerce .page-title,
+  body.woocommerce .entry-title,
+  body.woocommerce h1,
+  body.woocommerce-page .page-title {
+    font-size: 4rem !important;
+  }
+}
+
+/* Desktop (>=600px): ensure header uses the global layout (absolute centered logo + space-between) */
+@media (min-width: 600px) {
+  body.woocommerce .header__bar,
+  body.woocommerce-cart .header__bar,
+  body.post-type-archive-product .header__bar,
+  body.tax-product_cat .header__bar,
+  body.tax-product_tag .header__bar {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.5rem !important;
+  }
+
+  /* Align logo to the absolute-centered pattern defined in main.css */
+  body.woocommerce .header__logo {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    pointer-events: none;
+    z-index: 5 !important;
+  }
+
+  /* Ensure logo sizing follows the site variable */
+  body.woocommerce .header__logo img {
+    height: var(--site-logo-height, 38px) !important;
+    width: auto !important;
+  }
+}

@@ -1,0 +1,1001 @@
+:root {
+  --beslock-black:      #070505;
+  --beslock-white:      #FFFFFF;
+  --beslock-text-main:  #070505;
+  --beslock-text-sec:   #444444;
+  --beslock-bg-1:       #F2F2F2;
+  --beslock-bg-2:       #C9CACA;
+  --beslock-green:      #034526;
+  --beslock-green-lite: #046739;
+
+  /* Nota: No definimos aquí --site-logo-height porque lo atamos al header (ver más abajo).
+     Si prefieres, puedes establecer un valor global aquí, por ejemplo:
+     --site-logo-height: 38px;
+  */
+}
+
+/* ========== RESET Y BASE ========== */
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: var(--beslock-bg-1);
+  color: var(--beslock-text-main);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* ========== CONTENEDOR UNIVERSAL ========== */
+.u-container {
+  width: 100%;
+  max-width: 540px;
+  padding: 0 1.25rem;
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .u-container {
+    max-width: 860px;
+    padding: 0 2rem;
+  }
+}
+@media (min-width: 1200px) {
+  .u-container {
+    max-width: 1180px;
+    padding: 0 2.5rem;
+  }
+}
+
+/* ========== SECCIÓN BASE ========== */
+.section {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+.section--lined {
+  position: relative;
+}
+.section--lined::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2rem;
+  bottom: 2rem;
+  width: 3px;
+  background: var(--beslock-bg-2);
+  border-radius: 3px;
+  z-index: 1;
+  display: none;
+}
+@media (min-width: 600px) {
+  .section--lined::before {
+    display: block;
+    padding-left: 2rem;
+  }
+}
+
+/* ========== HEADER & FOOTER ========== */
+
+/* For viewports >= 600px: make the overlay span the full hero width (0% -> 100%)
+   but ensure its visual content is anchored to the right so the overlay's
+   rightmost pixels coincide with the video's right edge. The image keeps its
+   aspect ratio via object-fit:contain and scales to the available height. */
+@media (min-width: 600px) {
+  .slide-overlay {
+    left: 0 !important;   /* left edge at 0% of viewport */
+    right: 0 !important;  /* right edge aligned to hero/video right (100%) */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    /* occupy full horizontal span; image content will be positioned to the right */
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: right center !important; /* anchor image content to the right */
+    max-width: none !important;
+    max-height: 100% !important;
+    transition: opacity 260ms ease, transform 260ms cubic-bezier(.22,.9,.41,1);
+    pointer-events: none;
+  }
+  .slide-overlay.overlay--visible { opacity: 0.8; }
+}
+/* Nota: tu regla original aplicaba position: sticky tanto a header como a .footer.
+   Dejamos esa regla, pero creamos una clase .site-footer que *anula* lo sticky
+   y aplica el diseño concreto del footer que ahora queremos usar. */
+.header,
+.footer {
+  background: var(--beslock-bg-2);
+  color: var(--beslock-black);
+  transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  opacity: 1;
+}
+.header.header--scrolled {
+  opacity: 0.25; /* preserve existing opacity animation */
+}
+.header *,
+.header.header--scrolled * {
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.logo, .header__logo {
+  color: var(--beslock-green);
+  font-size: 1.9rem;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  margin: 0;
+  padding: 1.4rem 0 1.1rem 0;
+  text-align: left;
+}
+.header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 0.4rem 0;
+  gap: 0.5rem;
+}
+
+/* Scale header content proportionally on scroll without deforming elements.
+   We scale the inner bar so the header background remains full-width while the
+   visible content reduces to 75% (25% smaller). Transform origin at top keeps
+   the shrink visually anchored. */
+.header__bar {
+  transition: padding 0.35s cubic-bezier(0.4,0,0.2,1), gap 0.35s cubic-bezier(0.4,0,0.2,1);
+  will-change: padding, gap;
+}
+
+/* When header is scrolled reduce vertical space and element sizes by 25%.
+   We reduce padding, logo height and icon sizes rather than using transform
+   to avoid horizontal movement; elements will re-flow vertically into the
+   reduced header space while preserving proportions. */
+.header.header--scrolled .header__bar {
+  padding: calc(0.4rem * 0.75) 0 !important; /* mobile */
+  gap: calc(0.5rem * 0.75) !important;
+}
+
+/* Mobile: scale down logo and icons proportionally */
+.header.header--scrolled .header__logo img {
+  height: calc(var(--site-logo-height, 32px) * 0.75) !important;
+}
+.header.header--scrolled .header__icon {
+  font-size: calc(2rem * 0.75) !important;
+  min-width: calc(40px * 0.75) !important;
+  min-height: calc(40px * 0.75) !important;
+}
+
+/* Desktop breakpoint adjustments */
+@media (min-width: 600px) {
+  .header.header--scrolled .header__bar {
+    padding: calc(0.7rem * 0.75) 0 !important; /* desktop */
+  }
+  .header.header--scrolled .header__logo img {
+    height: calc(var(--site-logo-height, 38px) * 0.75) !important;
+  }
+  .header.header--scrolled .header__icon {
+    font-size: calc(2.25rem * 0.75) !important;
+    min-width: calc(44px * 0.75) !important;
+    min-height: calc(44px * 0.75) !important;
+  }
+}
+.header__icon {
+  background: none;
+  border: none;
+  color: var(--beslock-green);
+  font-size: 2rem;
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.18s;
+}
+.header__icon--menu {}
+.header__icon--cart {}
+
+.header__logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+/* ---------- Aquí enlazamos la variable --site-logo-height al header ---------- */
+/* Definimos la variable en el elemento que controla el tamaño del logo del header.
+   Si el header cambia, actualiza estos valores (32px / 38px). */
+.header__logo img {
+  height: 32px;
+  display: block;
+  /* variable usada por el footer (fallback: 32px) */
+  --site-logo-height: 32px;
+  height: var(--site-logo-height);
+}
+.header__logo img.invert {
+  filter: invert(1) brightness(2);
+}
+@media (min-width: 600px) {
+  .header__bar {
+    padding: 0.7rem 0;
+  }
+  /* en pantallas >=600px actualizamos la variable al nuevo tamaño */
+  .header__logo img {
+    --site-logo-height: 38px;
+    height: var(--site-logo-height);
+  }
+}
+
+/* ========== BOTONES PRINCIPALES ========== */
+.btn, .beslock-btn, .discover__btn {
+  display: inline-block;
+  background: var(--beslock-bg-2);
+  color: var(--beslock-green);
+  border-radius: 24px;
+  border: 2px solid var(--beslock-bg-2);
+  padding: 0.92em 2em;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  font-size: 1.09rem;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  cursor: pointer;
+  outline: none;
+}
+.btn:hover,
+.beslock-btn:hover,
+.discover__btn:hover,
+.btn:active,
+.beslock-btn:active,
+.discover__btn:active,
+.btn:focus,
+.beslock-btn:focus,
+.discover__btn:focus {
+  background: var(--beslock-bg-2);
+  color: var(--beslock-green-lite);
+  border: 2px solid var(--beslock-green-lite);
+}
+
+/* ========== HERO: BOTÓN CONTRASTE INVERTIDO ========== */
+.hero__cta {
+  display: inline-block;
+  background: var(--beslock-white);
+  color: var(--beslock-green);
+  border: 2px solid var(--beslock-green);
+  border-radius: 24px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  font-size: 1.09rem;
+  padding: 0.92em 2em;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  box-shadow: 0 4px 16px rgba(7,5,5,0.08);
+  cursor: pointer;
+  outline: none;
+}
+.hero__cta:hover,
+.hero__cta:active,
+.hero__cta:focus {
+  background: var(--beslock-bg-2);
+  color: var(--beslock-green-lite);
+  border: 2px solid var(--beslock-green-lite);
+}
+
+/* ========== HERO ========== */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 74vh;
+  background: var(--beslock-bg-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  color: var(--beslock-black);
+  overflow: hidden;
+}
+.hero__video {
+  position: absolute;
+  z-index: 0;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.77;
+  pointer-events: none;
+}
+.hero__overlay {
+  position: absolute;
+  z-index: 1;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+.hero__overlay::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 40%;
+  background: linear-gradient(
+    to top,
+    rgba(201,202,202,0.94) 0%,
+    rgba(201,202,202,0.55) 40%,
+    rgba(201,202,202,0.0) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+.hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 3rem auto;
+  padding: 0 1rem;
+}
+.hero__title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--beslock-green);
+  margin-bottom: 0.7rem;
+}
+.hero__subtitle {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--beslock-black);
+  margin-bottom: 1.8rem;
+  text-align: center;
+}
+
+/* ===== Ajustes para resoluciones mayores a 600px: centrar el bloque de texto
+   de la hero en el 30% del viewport y aumentar fuente al 200% ===== */
+@media (min-width: 600px) {
+  .hero__content {
+    position: absolute;
+    left: 40vw; /* el punto central del bloque quedará en 40% del viewport */
+    transform: translateX(-50%); /* centra el bloque respecto al punto 40vw */
+    bottom: 3rem; /* conservar separación inferior similar al diseño móvil */
+    max-width: 680px; /* permitir mayor anchura en desktop */
+    width: auto;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  /* Duplicar el tamaño actual (200%) según valores definidos arriba */
+  .hero__title {
+    font-size: 4rem; /* 2rem * 2 */
+    line-height: 1.03;
+  }
+  .hero__subtitle {
+    font-size: 2.1rem; /* 1.05rem * 2 */
+  }
+}
+
+/* ========== DISCOVER ========== */
+.discover {
+  background: var(--beslock-white);
+  color: var(--beslock-text-main);
+}
+.discover__block {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: stretch;
+}
+.discover__text {
+  text-align: left;
+}
+.discover__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--beslock-text-main);
+  margin-bottom: 1rem;
+}
+.discover__title span {
+  color: var(--beslock-green);
+}
+.discover__desc {
+  color: var(--beslock-text-sec);
+  margin-bottom: 1.35rem;
+  font-size: 1rem;
+  text-align: justify;
+}
+.discover__image {
+  text-align: center;
+  width: 100%;
+}
+.discover__image img {
+  width: 100%;
+  max-width: 370px;
+  border-radius: 16px;
+  box-shadow: 0 6px 26px rgba(0,0,0,0.10);
+}
+@media (min-width: 768px) {
+  .discover__block {
+    flex-direction: row;
+    gap: 3.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .discover__text {
+    flex: 1 1 330px;
+  }
+  .discover__image {
+    flex: 1 1 330px;
+  }
+}
+
+/* ========== PRODUCT PORTFOLIO CARDS ========== */
+.products-portfolio__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+@media (min-width: 600px) {
+  .products-portfolio__grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .product-card {
+    flex: 1 1 270px;
+    max-width: 300px;
+  }
+}
+.product-card {
+  background: var(--beslock-white);
+  border-radius: 20px;
+  box-shadow: 0 2px 18px rgba(7,5,5,0.09);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow .20s;
+}
+.product-card:hover {
+  box-shadow: 0 8px 30px rgba(7,5,5,0.12);
+}
+.product-card__image {
+  padding-top: 34px;    /* 85% del padding vertical (antes solo abajo) */
+  padding-bottom: 6px;  /* 15% del padding vertical (antes solo abajo) */
+  /* Ajusta estos valores si el padding total debe ser mayor o menor */
+}
+.product-card__image img {
+  width: 100%;
+  max-width: 220px;
+  border-radius: 16px 16px 0 0;
+  display: block;
+}
+.product-card__content {
+  padding: 1rem 1.2rem 1.5rem;
+  text-align: center;
+}
+.product-card__title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+  color: var(--beslock-green);
+}
+.product-card__desc {
+  color: var(--beslock-text-sec);
+  font-size: 0.96rem;
+  min-height: 50px;
+  margin-bottom: 1rem;
+}
+.product-card__btn {
+  margin-top: 1rem;
+}
+
+/* ========== DETALLE VISUAL SUAVE EN SECCIONES GRANDES ========== */
+@media (min-width: 510px) {
+  .hero__content,
+  .discover__text,
+  .product-card__content {
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(0.5px);
+  }
+}
+
+/* ========== ANIMACIÓN REVEAL ========== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+/* ========== FOOTER ESPECÍFICO (site-footer) ========== */
+/* .footer (global) se mantiene por compatibilidad, pero .site-footer
+   anula lo que haga falta para el footer real que usamos en footer.php */
+.site-footer {
+  background: transparent; /* deja el fondo del tema */
+  color: var(--beslock-text-main);
+  padding: 2rem 0;
+  text-align: center;
+  position: static; /* importante: anulamos sticky si heredó */
+  top: auto;
+  z-index: auto;
+}
+
+/* Footer logo: tamaño = 40% del logo del header (usamos --site-logo-height) */
+/* Aquí usamos la variable definida en .header__logo img (fallback 32px) */
+.footer-logo {
+  display: inline-block;
+  height: calc(var(--site-logo-height, 32px) * 0.85);
+  width: auto;
+  max-width: 40vw; /* protección en pantallas muy pequeñas */
+  vertical-align: middle;
+  -webkit-user-drag: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+/* Si necesitas una variante que use width (en lugar de height), descomenta y ajusta:
+.footer-logo { width: calc(var(--site-logo-width, 128px) * 0.4); height: auto; }
+*/
+
+/* Ajustes adicionales visuales */
+.site-footer .u-container {
+  padding: 2rem 0;
+}
+
+/* ==========================
+   HERO BESLOCK STYLES (appended)
+   ========================== */
+.beslock-hero { position: relative; width:100%; height:85vh; max-height:100vh; overflow:hidden; background:#000; color:#fff; isolation:isolate; }
+.beslock-loader { position: fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.6rem; background:#ffffff; z-index:9999; transition:opacity 1.2s ease, visibility 1.2s linear; }
+.beslock-loader[aria-hidden="true"]{ opacity:0; visibility:hidden; pointer-events:none; }
+.beslock-loader__wrap{ --loader-logo-size: clamp(140px, 30vw, 416px); display:inline-block; /* responsive size via variable */ width: var(--loader-logo-size); height: var(--loader-logo-size); position:relative; }
+.beslock-loader__img{ width:100%; height:100%; display:block; object-fit:contain; /* no decorative background; show logo natural */
+  opacity: 0; transform: scale(.92); animation: loader-reveal 1.2s cubic-bezier(.22,.9,.41,1) forwards; }
+/* remove decorative pseudo-element and pulse: keep only the logo image */
+.beslock-loader__wrap::before{ display:none; }
+.beslock-loader__pulse{ display:none; }
+  /* Loader caption placed under logo: 25% of logo size */
+  .beslock-loader .beslock-loader__text{
+  margin-top: 0.6rem;
+  color: var(--beslock-green) !important;
+  font-weight: 400;
+  line-height: 1;
+  font-family: inherit;
+  font-size: 4rem !important;
+  text-align: center;
+  display: block;
+  letter-spacing: 0.02em;
+  transform: translateY(-20vh) !important;
+}
+
+/* Mobile override: ensure text sits below the logo, smaller and positioned 25% below center */
+@media (max-width: 599px) {
+  .beslock-loader { align-items: center; justify-content: center; }
+  .beslock-loader .beslock-loader__text{
+    transform: none !important; /* reset desktop vertical shift */
+    margin-top: 4px !important; /* 4px below the logo on mobile */
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important; /* remove any padding on mobile */
+    font-size: 1.35rem !important; /* mobile requested size */
+    position: relative !important;
+    top: auto !important;
+  }
+}
+
+/* Desktop override: match slide secondary text size on larger viewports
+   (use same clamp as .slide-subtitle at >=768px) */
+@media (min-width: 768px) {
+  .beslock-loader .beslock-loader__text {
+    font-size: 2.5rem !important;
+  }
+}
+@keyframes loader-pulse{0%{transform:scale(.95);opacity:.9}50%{transform:scale(1.08);opacity:1}100%{transform:scale(.95);opacity:.9}}
+
+@keyframes loader-reveal {
+  0% { transform: scale(.92); opacity: 0; }
+  60% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes loader-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.hero-viewport{ position:relative; width:100%; height:100%; opacity:0; transition:opacity 420ms ease; }
+.beslock-hero.ready .hero-viewport{ opacity:1; }
+.hero-slides{ position:absolute; inset:0; width:100%; height:100%; overflow:hidden; }
+.hero-slide{ position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 1000ms cubic-bezier(.22,.9,.41,1); pointer-events:none; will-change:opacity; display:flex; align-items:center; justify-content:center; }
+.hero-slide.is-active{ opacity:1; pointer-events:auto; z-index:2; }
+.slide-inner{ position:relative; width:100%; height:100%; touch-action:pan-y; overflow:hidden; display:flex; align-items:stretch; justify-content:center; }
+.slide-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; background:#000; display:block; z-index:0 }
+.slide-overlay{
+  position:absolute;
+  right:0;
+  left:auto;
+  top:50%;
+  /* Align overlay to the right edge of the hero clip and preserve aspect ratio */
+  height:100%;
+  width:auto;
+  max-width:60%;
+  max-height:100%;
+  object-fit:contain;
+  object-position:right center;
+  transform:translateY(-50%) scale(1);
+  opacity:0;
+  z-index:2; /* overlay images should sit above the dim layer */
+  pointer-events:none;
+  transition:opacity 700ms cubic-bezier(.22,.9,.41,1), transform 900ms ease-out;
+}
+.slide-overlay.overlay--visible{
+  opacity:0.8;
+  transform:translateY(-50%) scale(1.02);
+}
+
+/* Dim layer placed over the video but beneath overlay images and content
+   Improves contrast for white text without altering overlay artwork. */
+.slide-dim {
+  position: absolute;
+  inset: 0; /* cover the video area */
+  background: rgba(0,0,0,0.28); /* increased opacity to improve white text contrast */
+  z-index: 1; /* sit above video (z=0) and below .slide-overlay (z=2) */
+  pointer-events: none;
+  transition: background 260ms ease, opacity 260ms ease;
+}
+/* --------------------------------------------------------------------------
+   OVERLAY-ONLY RULES (IMPORTANT)
+   - REGLA: Los vídeos (`.slide-video`) están perfectamente posicionados y
+     escalados en todas las resoluciones. NO MODIFICAR NINGUNA REGLA DE VIDEO.
+   - ESTE BLOQUE solo afecta a las overlays (.slide-overlay) y sus breakpoints.
+   - Ajusta `max-width` y `opacity` aquí si necesitas cambios visuales.
+   -------------------------------------------------------------------------- */
+
+/* Mobile-first: base (no media query). Keep overlays visible but constrained */
+.slide-overlay {
+  /* don't touch video sizing: operate only on overlay container */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 260ms ease, transform 260ms cubic-bezier(.22,.9,.41,1);
+  will-change: opacity, transform;
+  max-width: 80%;
+}
+.slide-overlay.overlay--visible {
+  opacity: 0.8;
+}
+
+/* Small phones / landscape: slightly narrower overlays */
+@media (min-width: 480px) {
+  .slide-overlay { max-width: 68%; }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  .slide-overlay { max-width: 52%; }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .slide-overlay { max-width: 44%; }
+}
+
+/* Wide desktop: keep overlays from growing excessively */
+@media (min-width: 1440px) {
+  .slide-overlay { max-width: 36%; }
+}
+
+/* Utility: immediate hide (no transition) — useful if JS needs to swap instantly) */
+.slide-overlay.overlay--hidden-instant { transition: none !important; opacity: 0 !important; transform: translateY(-50%) scale(1) !important; }
+.slide-content{ position:absolute; left:calc(3rem + 100px); transform:none; bottom:12vh; text-align:left; z-index:3; padding:0 1.25rem; width:min(92%,900px); pointer-events:none; }
+@media (max-width:600px){ .slide-content{ left:1rem; right:1rem; width:auto; } }
+.slide-title{ margin:0; color:#fff; font-weight:700; line-height:1.02; font-size:clamp(1.6rem,6.4vw,3.15rem); text-shadow:0 6px 22px rgba(0,0,0,0.65); will-change:transform,opacity; }
+.slide-subtitle{ margin:.5rem 0 0; color:rgba(255,255,255,0.92); font-weight:400; font-size:clamp(1.26rem,5.04vw,1.54rem); text-shadow:0 4px 16px rgba(0,0,0,0.55); will-change:opacity,transform; }
+.hero-dots{ position:absolute; left:50%; transform:translateX(-50%); bottom:6vh; display:flex; gap:12px; z-index:5; align-items:center; justify-content:center }
+.hero-dot{ appearance:none; width:8px; height:8px; border-radius:999px; background:rgba(255,255,255,0.18); border:none; transition:transform 260ms cubic-bezier(.22,.9,.41,1), background 260ms, box-shadow 260ms, opacity 260ms; opacity:.8; cursor:pointer }
+.hero-dot:hover,.hero-dot:active{ transform:scale(1.4); }
+.hero-dot.is-active{ transform:scale(1.5); background:rgba(255,255,255,1); box-shadow:0 0 14px rgba(255,255,255,0.18); opacity:1 }
+.hero-dot:focus-visible{ outline:2px solid rgba(255,255,255,0.9); outline-offset:4px }
+@media(min-width:768px){ .slide-title{ font-size:clamp(2.1rem,4.5vw,4.2rem); } .slide-subtitle{ font-size:clamp(1.4rem,2.94vw,1.82rem); } }
+
+/* Elegant entrance animations for slide title/subtitle when slide becomes active */
+.hero-slide .slide-title, .hero-slide .slide-subtitle{ opacity:0; transform:translateY(12px) scale(.98); }
+.hero-slide.is-active .slide-title{ animation: slide-title-in 820ms cubic-bezier(.22,.9,.41,1) forwards; }
+.hero-slide.is-active .slide-subtitle{ animation: slide-subtitle-in 920ms cubic-bezier(.22,.9,.41,1) 120ms forwards; }
+
+@keyframes slide-title-in{
+  0%{ opacity:0; transform:translateY(14px) scale(.98); filter: blur(2px); }
+  60%{ opacity:1; transform:translateY(-4px) scale(1.02); filter: blur(0); }
+  100%{ opacity:1; transform:translateY(0) scale(1); filter: none; }
+}
+@keyframes slide-subtitle-in{
+  0%{ opacity:0; transform:translateY(10px); }
+  100%{ opacity:1; transform:translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE-FIRST: Center H1 up to 900px
+   - REGLA: Para resoluciones hasta 900px, el H1 (slide-title) debe estar
+     totalmente centrado. No tocar reglas de vídeo (.slide-video).
+   - Este bloque asegura centrado del título y la caja de contenido hasta 900px.
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .slide-content {
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+    padding: 0 1rem !important;
+    text-align: center !important;
+    bottom: 12vh !important;
+  }
+  .slide-title, .slide-subtitle {
+    text-align: center !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* end hero styles */
+/* ===== Ajuste específico: para resoluciones >600px posicionar el H1/slide-title
+   con su centro en 40vw y aumentar el tamaño al 200% (aplica al título sobre
+   cada clip) ===== */
+@media (min-width: 600px) {
+  .slide-content {
+    position: absolute !important;
+    left: 40vw !important; /* punto central del bloque en 40% del viewport */
+    transform: translateX(-50%) !important; /* centra el bloque en 40vw */
+    bottom: 12vh !important; /* mantener separación vertical similar */
+    width: min(76%, 760px) !important;
+    padding: 0 1rem !important;
+    text-align: center !important;
+  }
+
+  /* Duplica visualmente los tamaños del título y subtítulo sobre cada clip */
+  .slide-title {
+    font-size: clamp(3.2rem, 12.8vw, 6.3rem) !important; /* 2x de clamp original */
+    line-height: 1.02 !important;
+  }
+  .slide-subtitle {
+    font-size: clamp(2.52rem, 10.08vw, 3.08rem) !important; /* 2x de clamp original */
+  }
+}
+
+/* Aumentar especificidad para el H1 que se genera sobre cada clip (slide-title) */
+@media (min-width: 600px) {
+  .hero-slide .slide-content { left: 40vw !important; transform: translateX(-50%) !important; }
+  .hero-slide .slide-title {
+    font-size: clamp(3.2rem, 12.8vw, 6.3rem) !important;
+    line-height: 1.02 !important;
+    text-align: center !important;
+  }
+  .hero-slide .slide-subtitle {
+    font-size: clamp(2.52rem, 10.08vw, 3.08rem) !important;
+    text-align: center !important;
+  }
+}
+
+.site-footer .footer-copy {
+  margin-top: 0.6rem;
+  color: var(--beslock-text-sec);
+  font-size: 0.95rem;
+}
+
+/* Slide crossfade base rules: ensure slides overlap and crossfade smoothly
+   without using display:none so there is never a black frame between slides. */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  will-change: opacity;
+  z-index: 0;
+}
+.hero-slide {
+  /* Force GPU compositing to avoid painting flashes on some browsers/devices */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.hero-slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+.hero-slide.is-exiting {
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ===================== Features module styles ===================== */
+.features-wrapper { position: relative; margin-top: 0.8rem; }
+.features-list { display: flex; gap: 1rem; align-items: flex-start; justify-content: flex-start; flex-wrap: nowrap; }
+.features-list .feature { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; max-width: 120px; }
+.features-list .feature img { width: 48px; height: 48px; object-fit: contain; opacity: 0.92; transform: translateY(0); }
+/* Icon wrapper to support bolt badge and color-tinting */
+.feature__icon { display:inline-block; width:48px; height:48px; position:relative; flex:0 0 auto; }
+.feature__icon img { width:100%; height:100%; object-fit:contain; display:block; /* force white via filter (works for monochrome PNGs) */ filter: brightness(0) invert(1); }
+.feature__text { font-size: 0.95rem; color: rgba(7,5,5,0.9); text-align: center; line-height: 1.15; margin: 0; }
+
+/* Hidden by default (visibility controlled by JS via .feature--visible) */
+.feature { opacity: 0; transform: translateY(8px); transition: opacity 400ms cubic-bezier(.22,.9,.41,1), transform 400ms cubic-bezier(.22,.9,.41,1); }
+.feature--visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+/* Fade-out state for all features (no vertical movement on exit) */
+.features--fading .feature { transition: opacity 700ms ease; opacity: 0 !important; transform: translateY(0) !important; }
+
+/* Responsive: MOBILE behaviour (<=600px)
+   - H1/H2 should be at top (we position .slide-content accordingly)
+   - features aligned left, below H2; all 5 visible stacking horizontally if space allows
+   - ensure no internal scroll and items remain visible
+*/
+@media (max-width: 600px) {
+  /* Mobile: place titles at top of hero, centered, and features vertically left-aligned
+     Use higher-specificity selectors to override desktop/legacy rules. */
+  .hero-slide .slide-content {
+    position: absolute !important;
+    top: 1.2rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: calc(100% - 2rem) !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 0 1rem !important;
+  }
+
+  /* Features block sits 10px below the subtitle (H2) */
+  .hero-slide .features-wrapper {
+    position: relative !important;
+    margin-top: 10px !important;
+    width: 100% !important;
+  }
+
+  .hero-slide .features-wrapper .features-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    overflow: visible !important;
+    width: 100% !important;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    max-width: 100% !important;
+    gap: 6px !important;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature img {
+    width: 36px !important;
+    height: 36px !important;
+    margin-bottom: 3px !important;
+    opacity: 0.98 !important;
+    transform: translateY(-3px) !important; /* subir el icono 3px */
+  }
+  .hero-slide .features-wrapper .feature__icon { width:36px !important; height:36px !important; }
+  .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1) !important; }
+
+  .hero-slide .features-wrapper .feature__text {
+    font-size: 0.96rem !important;
+    color: #ffffff !important; /* match H1/H2 white */
+    line-height: 1.18 !important;
+    margin: 0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap:2px !important;
+    align-items: flex-start !important; /* asegurar alineación a la izquierda */
+    text-align: left !important;
+  }
+
+  .hero-slide .features-wrapper .feature__title { font-weight: 800 !important; color: #ffffff !important; display:block !important; }
+  .hero-slide .features-wrapper .feature__subtitle { color: rgba(255,255,255,0.92) !important; font-weight:500 !important; display:block !important; }
+  .hero-slide .features-wrapper .feature__text { opacity: 0.92; }
+}
+
+/* Desktop: make feature texts white and match drawer sizes */
+@media (min-width: 600px) {
+  .hero-slide .features-wrapper .feature__text {
+    color: #ffffff !important;
+    font-size: 1.2rem !important; /* same as drawer links */
+    line-height: 1.18 !important;
+    text-align: left !important;
+  }
+
+  .hero-slide .features-wrapper .feature__title {
+    color: #ffffff !important;
+    font-size: 1.2rem !important; /* title matches drawer size */
+    font-weight: 700 !important;
+    display: block !important;
+    text-align: left !important;
+  }
+
+  .hero-slide .features-wrapper .feature__subtitle {
+    color: rgba(255,255,255,0.92) !important;
+    font-size: 0.96rem !important; /* subtitle size matches drawer secondary */
+    font-weight: 500 !important;
+    display: block !important;
+    text-align: left !important;
+  }
+
+  /* keep icons white and sized correctly on desktop */
+  .hero-slide .features-wrapper .feature__icon { width: 48px !important; height: 48px !important; }
+  .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1) !important; }
+}
+
+/* Desktop: center texts under the icon (vertical stack), keep mobile untouched */
+@media (min-width: 600px) {
+  .hero-slide .features-wrapper .features-list .feature {
+    align-items: center !important; /* center icon + text horizontally */
+    text-align: center !important;
+  }
+
+  .hero-slide .features-wrapper .feature__text,
+  .hero-slide .features-wrapper .feature__title,
+  .hero-slide .features-wrapper .feature__subtitle {
+    text-align: center !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* Ensure ALL desktop (>=600px) devices use the desktop feature rules - stronger override
+   This covers cases where other breakpoints may override visual behaviour. */
+@media (min-width: 600px) {
+  .hero-slide .features-wrapper,
+  .hero-slide .features-wrapper .features-list,
+  .hero-slide .features-wrapper .features-list .feature,
+  .hero-slide .features-wrapper .feature__icon,
+  .hero-slide .features-wrapper .feature__icon img,
+  .hero-slide .features-wrapper .feature__text,
+  .hero-slide .features-wrapper .feature__title,
+  .hero-slide .features-wrapper .feature__subtitle {
+    color: #ffffff !important;
+  }
+
+  .hero-slide .features-wrapper .features-list {
+    flex-direction: row !important;
+    gap: 4.335rem !important; /* 2.55rem * 1.7 => 4.335rem */
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature {
+    max-width: 140px !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .hero-slide .features-wrapper .feature__icon { width: 48px !important; height: 48px !important; }
+  .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1) !important; }
+
+  .hero-slide .features-wrapper .feature__text { font-size: 1.2rem !important; line-height: 1.18 !important; }
+  .hero-slide .features-wrapper .feature__title { font-size: 1.2rem !important; font-weight:700 !important; }
+  .hero-slide .features-wrapper .feature__subtitle { font-size: 0.96rem !important; font-weight:500 !important; }
+}
+
+/* Desktop behaviour: position features absolute and center using the same horizontal
+   reference as H1 (left:40vw; translateX(-50%)) and display horizontally */
+@media (min-width: 600px) {
+  /* Position the features block at the top of each slide (centered)
+     so it visually sits inside the hero's top area. */
+    /* Center features horizontally relative to the H1 anchor (40vw) on desktop.
+      Increase vertical offset and block internal spacing by 1.5x so the block
+      appears lower and slightly taller (desktop only). */
+    .hero-slide .features-wrapper { position: absolute; top: calc(20px * 1.5); left: 40vw; transform: translateX(-50%); width: auto; z-index:4; padding-top: calc(0.8rem * 1.5); }
+  .hero-slide .features-list { justify-content: center; gap: 3rem !important; }
+  .hero-slide .features-list .feature { max-width: 160px; }
+  .hero-slide .features-list .feature__text { color: var(--beslock-black); text-align: center; }
+  .hero-slide .features-list .feature__title { color: var(--beslock-black); font-weight:700; display:block !important; width:100% !important; }
+  .hero-slide .features-list .feature__subtitle { color: rgba(7,5,5,0.78); font-weight:400; display:block !important; width:100% !important; }
+}
+
+/* Responsive: si quieres cambiar el ratio en pantallas grandes */
+@media (min-width: 900px) {
+  .footer-logo {
+    /* ejemplo: en desktop el footer usa 40% pero del header mayor */
+    height: calc(var(--site-logo-height, 32px) * 0.4);
+  }
+}

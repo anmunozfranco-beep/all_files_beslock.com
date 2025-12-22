@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.5
+    container_name: beslock_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - beslock
+
+  wordpress:
+    image: wordpress:6.4-php8.1-apache
+    container_name: beslock_wp
+    depends_on:
+      - db
+    restart: unless-stopped
+    ports:
+      - "${WORDPRESS_PORT}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+    volumes:
+      # Mount only wp-content so WordPress core (in the image) is not overridden
+      # by the repo's core files or production `wp-config.php`.
+      - ./beslock.com.co/wp-content:/var/www/html/wp-content:delegated
+      # Persist uploads separately (host-dir) so media survives rebuilds
+      - ./beslock.com.co/wp-content/uploads:/var/www/html/wp-content/uploads
+    networks:
+      - beslock
+
+volumes:
+  db_data:
+  wp_uploads:
+
+networks:
+  beslock:
+    driver: bridge

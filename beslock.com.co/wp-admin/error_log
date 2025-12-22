@@ -1,0 +1,10 @@
+[17-Nov-2025 15:35:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function softaculous_pro_ajax_output() in /home3/andres38/beslock.com.co/wp-content/plugins/softaculous-pro/main/ajax.php:894
+Stack trace:
+#0 /home3/andres38/beslock.com.co/wp-includes/class-wp-hook.php(324): softaculous_pro_onboarding_dismiss('')
+#1 /home3/andres38/beslock.com.co/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#2 /home3/andres38/beslock.com.co/wp-includes/plugin.php(517): WP_Hook->do_action(Array)
+#3 /home3/andres38/beslock.com.co/wp-admin/admin-ajax.php(192): do_action('wp_ajax_softacu...')
+#4 {main}
+  thrown in /home3/andres38/beslock.com.co/wp-content/plugins/softaculous-pro/main/ajax.php on line 894
+[17-Nov-2025 16:16:43 UTC] PHP Warning:  Attempt to read property "title" on null in /home3/andres38/beslock.com.co/wp-includes/class-wp-customize-widgets.php on line 926
+[17-Nov-2025 16:21:36 UTC] PHP Warning:  Attempt to read property "title" on null in /home3/andres38/beslock.com.co/wp-includes/class-wp-customize-widgets.php on line 926
