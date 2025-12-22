@@ -574,7 +574,28 @@
       function activateOverlay(targetOverlay) {
         try {
           var siblings = Array.prototype.slice.call(sl.querySelectorAll('.slide-overlay'));
-          siblings.forEach(function(s){ if (s !== targetOverlay) s.classList.remove('overlay--visible'); });
+          siblings.forEach(function(s){
+            if (s !== targetOverlay) {
+              s.classList.remove('overlay--visible');
+              try { s.style.removeProperty('transform'); s.style.removeProperty('--overlay-offset'); } catch(e){}
+            }
+          });
+          // If overlay provides a data-offset attribute (numeric, px optional),
+          // set a CSS variable instead of writing inline `transform`. Stylesheets
+          // will use `--overlay-offset` to position the overlay.
+          var dataOff = targetOverlay.getAttribute('data-offset');
+          if (dataOff !== null && dataOff !== undefined && dataOff !== '') {
+            try {
+              if (String(dataOff).indexOf('px') === -1) dataOff = dataOff + 'px';
+              targetOverlay.style.setProperty('--overlay-offset', dataOff);
+              // Set an inline transform using the numeric offset and mark it important
+              // so it wins over author stylesheet `!important` rules (main.css).
+              var inlineTransform = 'translateY(calc(-50% + ' + dataOff + ')) scale(1)';
+              try { targetOverlay.style.setProperty('transform', inlineTransform, 'important'); } catch(e) {}
+            } catch(e) { try{ targetOverlay.style.removeProperty('--overlay-offset'); targetOverlay.style.removeProperty('transform'); }catch(e){} }
+          } else {
+            try{ targetOverlay.style.removeProperty('--overlay-offset'); targetOverlay.style.removeProperty('transform'); }catch(e){}
+          }
           targetOverlay.classList.add('overlay--visible');
         } catch (e) {}
       }
@@ -582,7 +603,11 @@
         var vid = sl.querySelector('.slide-video');
         var ovs = Array.prototype.slice.call(sl.querySelectorAll('.slide-overlay'));
         // Ensure overlays start hidden when (re)showing the slide so transitions run on each loop
-        ovs.forEach(function(o){ o.classList.remove('overlay--visible'); });
+        // Also clear any inline transforms and per-overlay CSS variables set previously.
+        ovs.forEach(function(o){
+          o.classList.remove('overlay--visible');
+          try { o.style.removeProperty('transform'); o.style.removeProperty('--overlay-offset'); } catch(e){}
+        });
         if (vid && ovs.length){
           // attach a loop watcher to reset overlays when the video loops internally (preserve previous logic)
           if (!vid._loopWatcher) {
@@ -597,13 +622,13 @@
                     if (isNaN(startAtLoop)) startAtLoop = H.overlayStartAt;
                     if (vid.currentTime >= startAtLoop) { activateOverlay(o); }
                     else {
-                      o._ontime = function(){ if (vid.currentTime >= startAtLoop){ o.classList.add('overlay--visible'); try{ vid.removeEventListener('timeupdate', o._ontime); delete o._ontime; }catch(e){} } };
+                      o._ontime = function(){ if (vid.currentTime >= startAtLoop){ activateOverlay(o); try{ vid.removeEventListener('timeupdate', o._ontime); delete o._ontime; }catch(e){} } };
                       vid.addEventListener('timeupdate', o._ontime, { passive:true });
                       var fallbackDelay = Math.max(200, H.slideDuration-1200);
                       var target = (slideStartTs || Date.now()) + fallbackDelay;
                       var delay = Math.max(0, target - Date.now());
-                      var t2 = setTimeout(function(){ if (!o.classList.contains('overlay--visible')) o.classList.add('overlay--visible'); try{ if (o._ontime) { vid.removeEventListener('timeupdate', o._ontime); delete o._ontime; } }catch(e){} }, delay);
-                      overlaySchedule.push({ id: t2, target: target, fn: function(){ if (!o.classList.contains('overlay--visible')) o.classList.add('overlay--visible'); try{ if (o._ontime) { vid.removeEventListener('timeupdate', o._ontime); delete o._ontime; } }catch(e){} } });
+                      var t2 = setTimeout(function(){ if (!o.classList.contains('overlay--visible')) activateOverlay(o); try{ if (o._ontime) { vid.removeEventListener('timeupdate', o._ontime); delete o._ontime; } }catch(e){} }, delay);
+                      overlaySchedule.push({ id: t2, target: target, fn: function(){ if (!o.classList.contains('overlay--visible')) activateOverlay(o); try{ if (o._ontime) { vid.removeEventListener('timeupdate', o._ontime); delete o._ontime; } }catch(e){} } });
                     }
                   });
                 }

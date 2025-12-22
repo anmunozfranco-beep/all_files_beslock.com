@@ -1,13 +1,12 @@
 === QUEUE ===
 wp-img-auto-sizes-contain => inline/unknown
-admin-bar => /wp-includes/css/admin-bar.min.css
 wp-emoji-styles => inline/unknown
 woocommerce-inline => inline/unknown
-woocommerce-coming-soon => http://localhost:8000/wp-content/plugins/woocommerce/assets/css/coming-soon.css
 beslock-main-style => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/main.css
 beslock-bootstrap-icons => https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
 beslock-menu-products-mobile => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/menu-products-mobile.css
 beslock-models-mobile => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/models-mobile.css
+beslock-header-state-css => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/header-state.css
 
 === REGISTERED (selected) ===
 colors => 1
@@ -488,9 +487,9 @@ photoswipe-default-skin => http://localhost:8000/wp-content/plugins/woocommerce/
 select2 => http://localhost:8000/wp-content/plugins/woocommerce/assets/css/select2.css
 woocommerce_prettyPhoto_css => http://localhost:8000/wp-content/plugins/woocommerce/assets/css/prettyPhoto.css
 woocommerce-inline => inline/unknown
-woocommerce-coming-soon => http://localhost:8000/wp-content/plugins/woocommerce/assets/css/coming-soon.css
 beslock-main-style => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/main.css
 beslock-bootstrap-icons => https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
 beslock-menu-products-mobile => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/menu-products-mobile.css
 beslock-models-mobile => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/models-mobile.css
+beslock-header-state-css => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/header-state.css
 kad-splide => http://localhost:8000/wp-content/themes/kadence/assets/css/kadence-splide.min.css

@@ -1,0 +1,105 @@
+.header {
+  /* keep layout stable: do not animate height or margins */
+  transition: background-color 240ms ease, transform 220ms ease, opacity 220ms ease;
+  will-change: transform, opacity, background-color;
+    /* Make header an independent layer (fixed). Set z-index BELOW the drawer
+      so the hamburger drawer always appears above the header on all viewports. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-header);
+}
+
+.header--scrolled {
+  /* Visual compacting without changing layout height: use transform on children via the header wrapper */
+  background-color: rgba(255,255,255,0.98); /* subtle background change */
+  /* small visual lift to imply compactness (no layout shift) */
+  transform: translateZ(0);
+}
+
+/* Example tweaks for common header elements — safe transforms only */
+.header .header__logo {
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+.header--scrolled .header__logo {
+  /* Center the logo visually when header is in compact (scrolled) state.
+     We position it absolutely relative to the header bar so it remains
+     centered across all viewport widths while other header controls stay
+     in their normal flow. Combine translate and scale in one transform. */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0.95;
+  z-index: var(--z-logo);
+}
+
+/* Ensure header bar is the positioning context for the logo */
+.header .header__bar { position: relative; }
+
+.header .header__nav {
+  transition: transform 240ms ease, opacity 220ms ease;
+}
+.header--scrolled .header__nav {
+  transform: translateY(-2px);
+  opacity: 0.98;
+}
+
+/* Safety: preserve document flow — do not change height, padding, margin in scrolled state */
+.header, .header * {
+  box-sizing: border-box;
+}
+
+/* Spacer that preserves the document flow when header is fixed. */
+/* spacer removed: header overlays hero and must not reserve space */
+
+ /* Move the e-Prime overlay 27px down on desktop viewports >= 600px.
+   Targets the third slide (data-index="2") which contains the e-prime clip.
+   Uses transform override to avoid layout changes and stays within allowed
+   transition properties (transform, opacity). */
+@media (min-width: 600px) {
+  /* Overlay offset is now controlled via CSS custom property `--overlay-offset`.
+     This allows JS to set numeric offsets per-overlay (data-offset="20")
+     without relying on inline `transform` styles that win over stylesheet rules.
+     The variable defaults to 0 and can be overridden per-overlay. */
+  .beslock-hero .hero-viewport .hero-slides .hero-slide .slide-overlay {
+    transform: translateY(calc(-50% + var(--overlay-offset, 0px))) scale(1);
+  }
+  .beslock-hero .hero-viewport .hero-slides .hero-slide .slide-overlay.overlay--visible {
+    transform: translateY(calc(-50% + var(--overlay-offset, 0px))) scale(1.02);
+  }
+
+  /* Keep a fallback selector for the third slide (e-prime) in case markup
+     doesn't include `data-offset`. Not `!important` — JS will set the
+     preferred `--overlay-offset` when present. */
+  .beslock-hero .hero-viewport .hero-slides > .hero-slide:nth-child(3) .slide-overlay {
+    transform: translateY(calc(-50% + 27px)) scale(1);
+  }
+  .beslock-hero .hero-viewport .hero-slides > .hero-slide:nth-child(3) .slide-overlay.overlay--visible {
+    transform: translateY(calc(-50% + 27px)) scale(1.02);
+  }
+  /* Also provide a fallback for the first slide (e-Flex) when data-offset is
+     not present. This mirrors the e-prime fallback and keeps visual parity. */
+  .beslock-hero .hero-viewport .hero-slides > .hero-slide:nth-child(1) .slide-overlay {
+    transform: translateY(calc(-50% + 27px)) scale(1);
+  }
+  .beslock-hero .hero-viewport .hero-slides > .hero-slide:nth-child(1) .slide-overlay.overlay--visible {
+    transform: translateY(calc(-50% + 27px)) scale(1.02);
+  }
+  /* Fallback for the fifth slide (e-touch) to apply 30px offset when no data-offset is present */
+  .beslock-hero .hero-viewport .hero-slides > .hero-slide:nth-child(5) .slide-overlay {
+    transform: translateY(calc(-50% + 30px)) scale(1);
+  }
+  .beslock-hero .hero-viewport .hero-slides > .hero-slide:nth-child(5) .slide-overlay.overlay--visible {
+    transform: translateY(calc(-50% + 30px)) scale(1.02);
+  }
+  /* Fallback for the sixth slide (e-orbit) to apply 27px offset when no data-offset is present */
+  .beslock-hero .hero-viewport .hero-slides > .hero-slide:nth-child(6) .slide-overlay {
+    transform: translateY(calc(-50% + 27px)) scale(1);
+  }
+  .beslock-hero .hero-viewport .hero-slides > .hero-slide:nth-child(6) .slide-overlay.overlay--visible {
+    transform: translateY(calc(-50% + 27px)) scale(1.02);
+  }
+}
+/* End of overlay offset rules */

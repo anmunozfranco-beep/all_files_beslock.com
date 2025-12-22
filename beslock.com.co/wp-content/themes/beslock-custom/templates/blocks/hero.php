@@ -57,7 +57,16 @@
             <?php if ($ov_d_url): ?>
               <source media="(min-width:600px)" srcset="<?php echo esc_url( $ov_d_url ); ?>">
             <?php endif; ?>
-            <img class="slide-overlay" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/Hero_develp/images_hero/' . $ov ); ?>" alt="" aria-hidden="true" />
+            <?php
+              if ($i === 2 || $i === 0 || $i === 5) {
+                $data_offset_attr = ' data-offset="27"';
+              } elseif ($i === 4) {
+                $data_offset_attr = ' data-offset="30"';
+              } else {
+                $data_offset_attr = '';
+              }
+            ?>
+            <img class="slide-overlay" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/Hero_develp/images_hero/' . $ov ); ?>"<?php echo $data_offset_attr; ?> alt="" aria-hidden="true" />
           </picture>
           <?php if ($i === 5): // Add second orbit overlay image that enters at 3.55s ?>
             <?php
@@ -71,11 +80,11 @@
               $ov2_d_fs = get_stylesheet_directory() . '/assets/images/Hero_develp/images_hero/images_hero_d/' . $ov2_d_file;
               $ov2_d_url = file_exists($ov2_d_fs) ? (get_stylesheet_directory_uri() . '/assets/images/Hero_develp/images_hero/images_hero_d/' . $ov2_d_file) : '';
             ?>
-            <picture aria-hidden="true">
+              <picture aria-hidden="true">
               <?php if ($ov2_d_url): ?>
                 <source media="(min-width:600px)" srcset="<?php echo esc_url( $ov2_d_url ); ?>">
               <?php endif; ?>
-              <img class="slide-overlay" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/Hero_develp/images_hero/e-orbit_2_hero.png' ); ?>" data-start="3.55" alt="" aria-hidden="true" />
+              <img class="slide-overlay" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/Hero_develp/images_hero/e-orbit_2_hero.png' ); ?>" data-start="3.55" data-offset="27" alt="" aria-hidden="true" />
             </picture>
           <?php endif; ?>
           <div class="slide-content">

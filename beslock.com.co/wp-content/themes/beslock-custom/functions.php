@@ -129,6 +129,25 @@ add_action( 'wp_enqueue_scripts', function() {
     true
   );
 
+  /* -------------------------------
+   * Header state script + CSS (BBC-like behavior)
+   * Adds a minimal, reversible scroll-state controller for the header.
+   * ------------------------------- */
+  $header_state_js = $theme_dir_path . '/assets/js/header-state.js';
+  $ver_header_state_js = file_exists( $header_state_js ) ? filemtime( $header_state_js ) : null;
+  wp_enqueue_script(
+    'beslock-header-state',
+    $theme_dir_uri . '/assets/js/header-state.js',
+    [],
+    $ver_header_state_js,
+    true
+  );
+
+  $header_state_css = $theme_dir_path . '/assets/css/header-state.css';
+  if ( file_exists( $header_state_css ) ) {
+    wp_enqueue_style( 'beslock-header-state-css', $theme_dir_uri . '/assets/css/header-state.css', [ 'beslock-main-style' ], filemtime( $header_state_css ) );
+  }
+
 });
 
 /**

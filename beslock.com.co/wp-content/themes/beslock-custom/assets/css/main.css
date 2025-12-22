@@ -12,6 +12,16 @@
      Si prefieres, puedes establecer un valor global aquí, por ejemplo:
      --site-logo-height: 38px;
   */
+  /* Desktop offset for hero features block. Adjust this to move the features vertically on desktop. */
+  --hero-features-offset: 105px; /* default: calc(20px * 1.5 + 75px) => 105px */
+  /* Z-index layering variables */
+  --z-drawer-container: 1200;
+  --z-drawer-backdrop: 1220;
+  --z-drawer-panel: 1301;
+  --z-drawer-products-panel: 1310;
+  --z-drawer-header: 1320;
+  --z-header: 1100;
+  --z-logo: 1102;
 }
 
 /* ========== RESET Y BASE ========== */
@@ -984,7 +994,8 @@ body {
     /* Center features horizontally relative to the H1 anchor (40vw) on desktop.
       Increase vertical offset and block internal spacing by 1.5x so the block
       appears lower and slightly taller (desktop only). */
-    .hero-slide .features-wrapper { position: absolute; top: calc(20px * 1.5); left: 40vw; transform: translateX(-50%); width: auto; z-index:4; padding-top: calc(0.8rem * 1.5); }
+    .hero-slide .features-wrapper { position: absolute; top: var(--hero-features-offset); left: 40vw; transform: translateX(-50%); width: auto; z-index:4; padding-top: calc(0.8rem * 1.5); }
+    /* Desktop features vertical offset controlled by `--hero-features-offset` (default 105px) */
   .hero-slide .features-list { justify-content: center; gap: 3rem !important; }
   .hero-slide .features-list .feature { max-width: 160px; }
   .hero-slide .features-list .feature__text { color: var(--beslock-black); text-align: center; }
