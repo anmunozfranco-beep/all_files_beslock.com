@@ -161,14 +161,13 @@ add_action( 'after_setup_theme', function() {
   }
 }, 11 );
 
-// Enqueue a minimal CSS reset on WooCommerce pages so the child theme
-// does not globally override Kadence/WooCommerce styles.
+// Enqueue a minimal CSS reset for WooCommerce pages. The stylesheet is scoped
+// to `body.woocommerce` selectors so it's safe to include globally — this
+// ensures the shop/cart/checkout pages receive the intended header fixes.
 add_action( 'wp_enqueue_scripts', function() {
-  if ( function_exists( 'is_woocommerce' ) && ( is_woocommerce() || is_cart() || is_checkout() || is_account_page() ) ) {
-    $css_file = get_stylesheet_directory() . '/assets/css/wc-scope-fix.css';
-    if ( file_exists( $css_file ) ) {
-      wp_enqueue_style( 'beslock-wc-scope-fix', get_stylesheet_directory_uri() . '/assets/css/wc-scope-fix.css', [ 'beslock-main-style' ], filemtime( $css_file ) );
-    }
+  $css_file = get_stylesheet_directory() . '/assets/css/wc-scope-fix.css';
+  if ( file_exists( $css_file ) ) {
+    wp_enqueue_style( 'beslock-wc-scope-fix', get_stylesheet_directory_uri() . '/assets/css/wc-scope-fix.css', [ 'beslock-main-style' ], filemtime( $css_file ) );
   }
 }, 20 );
 
