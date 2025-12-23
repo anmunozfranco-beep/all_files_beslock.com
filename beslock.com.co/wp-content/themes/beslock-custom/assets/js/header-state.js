@@ -23,6 +23,14 @@
   var ENTER_COMPACT = 120; // px scrolled down to enter COMPACT
   var EXIT_COMPACT = 40;   // px scrolled up to return to FULL
 
+  // HERO gate: don't run FSM transitions until the user scrolls past this
+  // value (12% of the viewport). Recomputed on init and on resize only.
+  var HERO_GATE = window.innerHeight * 0.12;
+
+  function updateHeroGate() {
+    try { HERO_GATE = window.innerHeight * 0.12; } catch (e) { /* ignore */ }
+  }
+
   // Current state (initialized on boot)
   var currentState = STATE_FULL;
 
@@ -51,6 +59,14 @@
     scheduled = false;
     var y = window.scrollY || window.pageYOffset || 0;
 
+    // Gate: while inside the hero (less than HERO_GATE), force FULL and
+    // do not evaluate FSM transitions. Once the user scrolls past HERO_GATE
+    // the regular FSM logic runs unchanged.
+    if (y < HERO_GATE) {
+      applyState(STATE_FULL);
+      return;
+    }
+
     if (currentState === STATE_FULL) {
       if (y > ENTER_COMPACT) {
         applyState(STATE_COMPACT);
@@ -73,9 +89,15 @@
 
   // Initialize FSM once (determines initial state, attaches listeners)
   function init() {
+    // compute HERO gate on init
+    updateHeroGate();
+
     var y = window.scrollY || window.pageYOffset || 0;
-    // Determine initial state without toggling unnecessarily
-    if (y > ENTER_COMPACT) {
+    // Determine initial state but honor HERO_GATE: while inside hero keep FULL
+    if (y < HERO_GATE) {
+      currentState = STATE_FULL;
+      headerEl.classList.remove(TOGGLE_CLASS);
+    } else if (y > ENTER_COMPACT) {
       currentState = STATE_COMPACT;
       headerEl.classList.add(TOGGLE_CLASS);
     } else {
@@ -86,8 +108,9 @@
     // Attach single passive scroll listener
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // On resize we schedule a re-evaluation once (no layout measuring here)
+    // On resize recompute HERO_GATE and schedule a re-evaluation once
     window.addEventListener('resize', function () {
+      updateHeroGate();
       if (!scheduled) {
         scheduled = true;
         window.requestAnimationFrame(evaluate);
@@ -130,6 +153,8 @@
         scheduledMeasure = true;
         window.requestAnimationFrame(function () {
           setHeaderHeightVariable();
+          // keep HERO_GATE in sync on resize/measurement
+          try { updateHeroGate(); } catch (e) {}
           scheduledMeasure = false;
         });
       }
@@ -137,8 +162,9 @@
     // measure on init
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
       setHeaderHeightVariable();
+      updateHeroGate();
     } else {
-      document.addEventListener('DOMContentLoaded', setHeaderHeightVariable);
+      document.addEventListener('DOMContentLoaded', function () { setHeaderHeightVariable(); updateHeroGate(); });
     }
     // measure on resize (throttled)
     window.addEventListener('resize', scheduleMeasure, { passive: true });

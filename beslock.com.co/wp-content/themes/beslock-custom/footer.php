@@ -22,19 +22,33 @@
   // Throttled scroll handler to toggle .header--scrolled
   var last = 0;
   var throttleMS = 90;
+  // HERO gate (12vh) — recomputed on init and resize only
+  var HERO_GATE = (window && window.innerHeight) ? window.innerHeight * 0.12 : 0;
+  function updateHeroGate() { try { HERO_GATE = window.innerHeight * 0.12; } catch (e) {} }
+
   function onScroll() {
     var now = Date.now();
     if (now - last < throttleMS) return;
     last = now;
     var header = document.querySelector('.header');
     if (!header) return;
-    if (window.scrollY > 10) {
+    var y = window.scrollY || 0;
+    // While inside the hero keep header fully in its initial state
+    if (y < HERO_GATE) {
+      header.classList.remove('header--scrolled');
+      return;
+    }
+    if (y > 10) {
       header.classList.add('header--scrolled');
     } else {
       header.classList.remove('header--scrolled');
     }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+  // Keep HERO_GATE correct on resize
+  window.addEventListener('resize', function(){
+    updateHeroGate();
+  }, { passive: true });
 
   // Sincroniza el tama���o del logo del header con la variable CSS --site-logo-height
   // para que el footer pueda usar calc(var(--site-logo-height) * 0.4)

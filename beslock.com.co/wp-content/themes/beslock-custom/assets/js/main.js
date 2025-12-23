@@ -29,11 +29,24 @@
     var ENTER_THRESHOLD = 28; // px scrolled before applying shrink state
     var EXIT_THRESHOLD = 12;  // px scrolled below this removes the shrink state
     var isScrolled = header && header.classList.contains('header--scrolled');
+    // HERO gate: don't run header toggles until user scrolls past 12vh
+    var HERO_GATE = window.innerHeight * 0.12;
+    function updateHeroGate() { try { HERO_GATE = window.innerHeight * 0.12; } catch (e) {} }
     var logoAnchor = document.querySelector('.header__logo a') || document.querySelector('.header__logo');
 
     function updateHeader() {
       if (!header) return;
       var y = window.scrollY || window.pageYOffset || 0;
+      // While within the hero (top of page), keep header fully in its initial state
+      // and do not evaluate threshold transitions. Once y >= HERO_GATE allow
+      // the existing threshold-based logic to run unchanged.
+      if (y < HERO_GATE) {
+        if (isScrolled) {
+          header.classList.remove('header--scrolled');
+          isScrolled = false;
+        }
+        return;
+      }
       // Only toggle when crossing thresholds to avoid rapid on/off when user
       // is hovering near the trigger point.
       if (!isScrolled && y > ENTER_THRESHOLD) {
@@ -106,7 +119,14 @@
 
     setScrollRestorationManualIfReload();
     updateHeader();
+    // ensure HERO_GATE is correct on init
+    updateHeroGate();
     on(window, 'scroll', function () { window.requestAnimationFrame(updateHeader); }, { passive: true });
+    // Recompute HERO_GATE on resize and schedule a single rAF'ed update
+    window.addEventListener('resize', function () {
+      updateHeroGate();
+      window.requestAnimationFrame(updateHeader);
+    }, { passive: true });
     on(window, 'pageshow', onPageShow);
     hookLogo();
     on(window, 'beforeunload', function () {
