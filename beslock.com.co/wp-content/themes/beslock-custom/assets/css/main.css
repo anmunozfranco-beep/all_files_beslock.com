@@ -1122,8 +1122,8 @@ hero__title {
 
   .hero-slide .features-wrapper .feature__icon,
   .hero-slide .features-wrapper .features-list .feature img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
   }
 
   .hero-slide .features-wrapper .feature__text,
@@ -1131,5 +1131,12 @@ hero__title {
   .hero-slide .features-wrapper .feature__subtitle {
     text-align: center;
     color: #ffffff;
+  }
+
+  /* Increase feature text (title/main) size to 60px on desktop */
+  .hero-slide .features-wrapper .feature__text,
+  .hero-slide .features-wrapper .feature__title {
+    font-size: 60px;
+    line-height: 1.05;
   }
 }
