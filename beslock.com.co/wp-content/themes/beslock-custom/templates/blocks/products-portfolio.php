@@ -9,37 +9,37 @@
 $products = [
   [
     'name'  => 'e-Nova',
-    'desc'  => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Seguridad y diseño premium.',
+    'desc'  => "Acceso inteligente sin llaves para tu día a día.\nHuella y control simple para moverte con libertad y tranquilidad.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-nova_.webp',
     'link'  => '#'
   ],
   [
     'name'  => 'e-Orbit',
-    'desc'  => 'Soluciones avanzadas para acceder a tu espacio con tecnología y estilo. Lorem ipsum.',
+    'desc'  => "Mira y controla quién llega a tu puerta, estés donde estés.\nSeguridad avanzada con video y acceso inteligente desde tu celular.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-orbit_.webp',
     'link'  => '#'
   ],
   [
     'name'  => 'e-Touch',
-    'desc'  => 'Sistema inteligente para puertas modernas. Facilidad, protección y control total.',
+    'desc'  => "Acceso fácil para espacios compartidos.\nClave y huella para que todos puedan entrar, sin complicaciones.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-touch_.webp',
     'link'  => '#'
   ],
   [
     'name'  => 'e-Flex',
-    'desc'  => 'Flexibilidad y seguridad en una cerradura inteligente adaptable a cualquier hogar. Lorem ipsum.',
+    'desc'  => "Ideal para recibir y dar acceso sin estar presente.\nCódigos temporales, huella y control remoto para estancias cortas.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-flex_.webp',
     'link'  => '#'
   ],
   [
     'name'  => 'e-Shield',
-    'desc'  => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Seguridad y diseño premium.',
+    'desc'  => "Protección inteligente para tu hogar.\nSeguridad robusta con acceso electrónico y respaldo mecánico.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-shield_.webp',
     'link'  => '#'
   ],
   [
     'name'  => 'e-Prime',
-    'desc'  => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Seguridad y diseño premium.',
+    'desc'  => "Control total para accesos exigentes.\nGestión avanzada de usuarios para espacios de alto flujo.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-prime_.webp',
     'link'  => '#'
   ],
