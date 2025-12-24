@@ -100,33 +100,63 @@
               if ($pos !== false && isset($title_raw[$pos + 1])) {
                 $title_raw = substr_replace($title_raw, strtoupper($title_raw[$pos + 1]), $pos + 1, 1);
               }
-              $subtitle = ucwords($title_raw);
+
+              // Identify product key (use the first token, e.g. 'e-flex' => 'e-flex')
+              $product_key = strtolower(preg_replace('/\s+/', '', str_replace(' ', '-', $title_raw)));
+
+              // Hero subtitle overrides (exact strings requested)
+              $hero_subtitles = array(
+                'e-nova'  => 'Comodidad, seguridad y tranquilidad',
+                'e-flex'  => 'Llegar sin complicaciones',
+                'e-prime' => 'Para todos los espacios',
+                'e-touch' => 'Acceso para todos',
+                'e-shield' => 'Protege lo más valioso',
+                'e-orbit' => 'En cualquier lugar',
+              );
+
+              $subtitle = isset($hero_subtitles[$product_key]) ? $hero_subtitles[$product_key] : ucwords($title_raw);
             ?>
-            <h1 class="slide-title"><?php echo esc_html($title_raw); ?></h1>
-            <p class="slide-subtitle"><?php echo esc_html($subtitle); ?></p>
+            <h1 class="hero__title"><?php echo esc_html($title_raw); ?></h1>
+            <p class="hero__subtitle"><?php echo esc_html($subtitle); ?></p>
+
+            <?php
+              // Feature pool (use the same HTML structure and exact texts already present)
+              $feature_pool = array(
+                'visitas_temporales' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=26111&format=png&color=000000" alt="icon-1" /></span><div class="feature__text"><span class="feature__title">Ideal para</span><span class="feature__subtitle">visitas temporales</span></div></div>',
+                'multiples_usuarios' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=3734&format=png&color=000000" alt="icon-2" /></span><div class="feature__text"><span class="feature__title">Múltiples</span><span class="feature__subtitle">usuarios</span></div></div>',
+                'liberarte_llaves' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=QSpdbW6kJ2lS&format=png&color=000000" alt="icon-3" /></span><div class="feature__text"><span class="feature__title">Libérate</span><span class="feature__subtitle">de cargar llaves</span></div></div>',
+                'varias_aperturas' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=48917&format=png&color=000000" alt="icon-4" /></span><div class="feature__text"><span class="feature__title">Varias formas</span><span class="feature__subtitle">de apertura</span></div></div>',
+                'total_control' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/ios/100/000000/phonelink-lock.png" alt="icon-5" /></span><div class="feature__text"><span class="feature__title">Total control</span><span class="feature__subtitle">en el celular</span></div></div>',
+              );
+
+              // Selection per product (exact required selections, order preserved)
+              $features_by_product = array(
+                'e-nova' => array('liberarte_llaves', 'varias_aperturas', 'multiples_usuarios'),
+                'e-flex' => array('visitas_temporales', 'total_control', 'varias_aperturas'),
+                'e-prime' => array('multiples_usuarios', 'total_control', 'varias_aperturas'),
+                'e-touch' => array('multiples_usuarios', 'varias_aperturas', 'liberarte_llaves'),
+                'e-shield' => array('liberarte_llaves', 'varias_aperturas', 'total_control'),
+                'e-orbit' => array('total_control', 'varias_aperturas', 'visitas_temporales'),
+              );
+
+              // Determine which features to render for this slide
+              $selected_keys = isset($features_by_product[$product_key]) ? $features_by_product[$product_key] : array_keys($feature_pool);
+            ?>
+
             <!-- Features module (maqueta) - one per slide; layout controlled by CSS/JS -->
             <div class="features-wrapper" aria-hidden="true">
               <div class="features-list">
-                <div class="feature">
-                  <span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=26111&format=png&color=000000" alt="icon-1" /></span>
-                  <div class="feature__text"><span class="feature__title">Ideal para</span><span class="feature__subtitle">visitas temporales</span></div>
-                </div>
-                <div class="feature">
-                  <span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=3734&format=png&color=000000" alt="icon-2" /></span>
-                  <div class="feature__text"><span class="feature__title">Múltiples</span><span class="feature__subtitle">usuarios</span></div>
-                </div>
-                <div class="feature">
-                  <span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=QSpdbW6kJ2lS&format=png&color=000000" alt="icon-3" /></span>
-                  <div class="feature__text"><span class="feature__title">Libérate</span><span class="feature__subtitle">de cargar llaves</span></div>
-                </div>
-                <div class="feature">
-                  <span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=48917&format=png&color=000000" alt="icon-4" /></span>
-                  <div class="feature__text"><span class="feature__title">Varias formas</span><span class="feature__subtitle">de apertura</span></div>
-                </div>
-                <div class="feature">
-                  <span class="feature__icon"><img src="https://img.icons8.com/ios/100/000000/phonelink-lock.png" alt="icon-5" /></span>
-                  <div class="feature__text"><span class="feature__title">Total control</span><span class="feature__subtitle">en el celular</span></div>
-                </div>
+                <?php
+                  // Render exactly the 3 features for this product, preserving existing markup
+                  $rendered = 0;
+                  foreach ($selected_keys as $fk) {
+                    if ($rendered >= 3) break;
+                    if (isset($feature_pool[$fk])) {
+                      echo $feature_pool[$fk];
+                      $rendered++;
+                    }
+                  }
+                ?>
               </div>
             </div>
           </div>
