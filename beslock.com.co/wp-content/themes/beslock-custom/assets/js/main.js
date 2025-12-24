@@ -465,6 +465,20 @@
     var slides = $qa('.hero-slide', root);
     var dots = $qa('.hero-dot', root);
     var loader = $q('.beslock-loader', root);
+    // Loader caption position is controlled via CSS variable `--beslock-loader-offset`.
+    // Expose a small API to adjust the vertical offset programmatically.
+    try {
+      window.beslock = window.beslock || {};
+      window.beslock.setLoaderOffset = function(offset){
+        try{
+          var rootEl = loader || document.querySelector('.beslock-loader');
+          if (!rootEl) return;
+          // accept numbers (px) or strings like '20px' or '2rem'
+          var val = (typeof offset === 'number') ? offset + 'px' : (String(offset) || '0px');
+          rootEl.style.setProperty('--beslock-loader-offset', val);
+        }catch(e){}
+      };
+    } catch(e) {}
     var current = 0, timer = null, isPlaying = false;
     var overlaySchedule = []; // { id, target, fn }
     var featureSchedule = []; // { id, target, fn }
@@ -472,6 +486,63 @@
     var isTouchPaused = false, touchPauseAt = 0, autoplayRemaining = null, autoplayDeadline = null;
 
     // Loader image is handled by template (favicon); no inline SVG injection needed.
+    // Loader mode handling (auto/compact/normal)
+    (function(){
+      try{
+        var loaderEl = loader || document.querySelector('.beslock-loader');
+        if (!loaderEl) return;
+        var mode = loaderEl.getAttribute('data-loader-mode') || 'auto';
+
+        function applyMode(m){
+          loaderEl.classList.remove('beslock-loader--compact');
+          loaderEl.classList.remove('beslock-loader--normal');
+          if (m === 'compact') loaderEl.classList.add('beslock-loader--compact');
+          if (m === 'normal') loaderEl.classList.add('beslock-loader--normal');
+        }
+
+        function decideAuto(){
+          // auto: compact when viewport height is small relative to logo size
+          try{
+            var vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            // compute desired logo size from CSS variable if present
+            var wrap = loaderEl.querySelector('.beslock-loader__wrap');
+            var loaderSize = 0;
+            if (wrap) {
+              try{ loaderSize = parseFloat(getComputedStyle(wrap).getPropertyValue('--loader-logo-size')) || 0; }catch(e){}
+            }
+            // if no explicit loader size, fallback to 140 (min clamp) heuristic
+            if (!loaderSize || loaderSize <= 10) loaderSize = Math.min(140, Math.round(vh * 0.18));
+            // If loader would occupy more than 20% of viewport height, compact it
+            if (loaderSize > vh * 0.18 || vh < 520) return 'compact';
+            return 'normal';
+          }catch(e){ return 'normal'; }
+        }
+
+        // initial application
+        if (mode === 'auto') applyMode(decideAuto()); else applyMode(mode);
+
+        // expose API for mode control
+        window.beslock = window.beslock || {};
+        window.beslock.setLoaderMode = function(m){ try{ loaderEl.setAttribute('data-loader-mode', String(m)); applyMode(m); }catch(e){} };
+
+        // re-evaluate on resize/orientationchange
+        var resizeHandler = function(){ try{ var cm = loaderEl.getAttribute('data-loader-mode') || 'auto'; if (cm === 'auto') applyMode(decideAuto()); }catch(e){} };
+        window.addEventListener('resize', resizeHandler, { passive:true });
+        window.addEventListener('orientationchange', resizeHandler, { passive:true });
+      }catch(e){}
+    })();
+    // expose JS API to update loader text top (desktop) at runtime
+    try{
+      window.beslock = window.beslock || {};
+      window.beslock.setLoaderTextTop = function(v){
+        try{
+          var rootEl = loader || document.querySelector('.beslock-loader');
+          if (!rootEl) return;
+          var val = (typeof v === 'number') ? v + 'px' : String(v);
+          rootEl.style.setProperty('--beslock-text-top', val);
+        }catch(e){}
+      };
+    }catch(e){}
 
     function waitFirst(){
       return new Promise(function(resolve){

@@ -89,6 +89,32 @@ body {
   }
 }
 
+/* When JS moves `.features-wrapper` out of `.slide-content` and makes it a
+   direct child of `.hero-slide` (desktop), position it relative to the slide
+   so it anchors under the slide title without depending on `.slide-content`. */
+@media (min-width: 600px) {
+  .hero-slide { position: relative; }
+
+  .hero-slide > .features-wrapper {
+    position: absolute;
+    top: var(--hero-features-offset, 105px);
+    left: 40vw;
+    transform: translateX(-50%);
+    width: auto;
+    z-index: 4;
+    padding-top: 0;
+    background: transparent;
+  }
+
+  .hero-slide > .features-wrapper .features-list {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    justify-content: center;
+    align-items: flex-start;
+  }
+}
+
 /* ========== HEADER & FOOTER ========== */
 
 /* For viewports >= 600px: make the overlay span the full hero width (0% -> 100%)
@@ -260,8 +286,6 @@ body {
 }
 .btn:hover,
 .beslock-btn:hover,
-    .hero-slide .features-wrapper .feature__icon { width: 50px; height: 50px; }
-    .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1); }
 .beslock-btn:active,
 .discover__btn:active,
 .btn:focus,
@@ -559,9 +583,22 @@ hero__title {
    HERO BESLOCK STYLES (appended)
    ========================== */
 .beslock-hero { position: relative; width:100%; height:85vh; max-height:100vh; overflow:hidden; background:#000; color:#fff; isolation:isolate; }
-.beslock-loader { position: fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.6rem; background:#ffffff; z-index:9999; transition:opacity 1.2s ease, visibility 1.2s linear; }
+.beslock-loader { --beslock-loader-offset: 0px; position: fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; background:#ffffff; z-index:9999; transition:opacity 1.2s ease, visibility 1.2s linear; }
 .beslock-loader[aria-hidden="true"]{ opacity:0; visibility:hidden; pointer-events:none; }
-.beslock-loader__wrap{ --loader-logo-size: clamp(140px, 30vw, 416px); display:inline-block; /* responsive size via variable */ width: var(--loader-logo-size); height: var(--loader-logo-size); position:relative; }
+.beslock-loader__wrap{ --loader-logo-size: clamp(140px, 30vw, 416px); display:flex; align-items:center; justify-content:center; /* responsive size via variable */ width: var(--loader-logo-size); height: var(--loader-logo-size); position:relative; margin-bottom:0.5rem; min-height:var(--loader-logo-size); }
+
+/* Compact logo container: apply 10px sizing/margins when compact modifier is set */
+/* Compact mode via BEM modifier class */
+.beslock-loader--compact .beslock-loader__wrap,
+.beslock-loader__wrap--compact,
+.beslock-loader.compact .beslock-loader__wrap {
+  --loader-logo-size: 10px !important;
+  width: 10px !important;
+  height: 10px !important;
+  min-height: 10px !important;
+  margin: 10px !important;
+  padding: 10px !important;
+}
 .beslock-loader__img{ width:100%; height:100%; display:block; object-fit:contain; /* no decorative background; show logo natural */
   opacity: 0; transform: scale(.92); animation: loader-reveal 1.2s cubic-bezier(.22,.9,.41,1) forwards; }
 /* remove decorative pseudo-element and pulse: keep only the logo image */
@@ -569,7 +606,7 @@ hero__title {
 .beslock-loader__pulse{ display:none; }
   /* Loader caption placed under logo: 25% of logo size */
   .beslock-loader .beslock-loader__text{
-  margin-top: 0.6rem;
+  margin-top: 0.4rem;
   color: var(--beslock-green) !important;
   font-weight: 400;
   line-height: 1;
@@ -578,15 +615,17 @@ hero__title {
   text-align: center;
   display: block;
   letter-spacing: 0.02em;
-  transform: translateY(-20vh) !important;
+  transform: translateY(var(--beslock-loader-offset, 0px)) !important;
 }
 
 /* Mobile override: ensure text sits below the logo, smaller and positioned 25% below center */
 @media (max-width: 599px) {
   .beslock-loader { align-items: center; justify-content: center; }
   .beslock-loader .beslock-loader__text{
-    transform: none !important; /* reset desktop vertical shift */
-    margin-top: 4px !important; /* 4px below the logo on mobile */
+    /* mobile: override offset to 0 so text sits under logo */
+    --beslock-loader-offset: 0px;
+    transform: translateY(var(--beslock-loader-offset)) !important;
+    margin-top: 6px !important; /* small gap below the logo on mobile */
     margin-right: 0 !important;
     margin-left: 0 !important;
     margin-bottom: 0 !important;
@@ -602,6 +641,24 @@ hero__title {
 @media (min-width: 768px) {
   .beslock-loader .beslock-loader__text {
     font-size: 2.5rem !important;
+  }
+}
+/* Desktop (>=600px): small vertical offset from centered baseline */
+@media (min-width: 600px) {
+  .beslock-loader { align-items: center; justify-content: center; }
+  /* Center loader caption vertically on desktop */
+  .beslock-loader { --beslock-loader-offset: 0px; --beslock-text-top: 60vh; }
+  /* Logo remains centered via flex; text positioned absolutely at 60vh */
+  .beslock-loader { position: fixed; }
+  .beslock-loader .beslock-loader__text {
+    position: absolute;
+    left: 50%;
+    top: var(--beslock-text-top, 60vh);
+    transform: translateX(-50%) translateY(var(--beslock-loader-offset)) !important;
+    margin-top: 0; /* reset flow margin */
+    padding-inline: 0.25rem; /* avoid text touching edges */
+    z-index: 10000;
+    pointer-events: none;
   }
 }
 @keyframes loader-pulse{0%{transform:scale(.95);opacity:.9}50%{transform:scale(1.08);opacity:1}100%{transform:scale(.95);opacity:.9}}
@@ -697,14 +754,14 @@ hero__title {
 /* Utility: immediate hide (no transition) — useful if JS needs to swap instantly) */
 .slide-overlay.overlay--hidden-instant { transition: none !important; opacity: 0 !important; transform: translateY(-50%) scale(1) !important; }
 .slide-content{ position:absolute; left:calc(3rem + 100px); transform:none; bottom:12vh; text-align:left; z-index:3; padding:0 1.25rem; width:min(92%,900px); pointer-events:none; }
-.hero__title{ margin:0; color:#fff; font-weight:700; line-height:1.02; font-size:clamp(1.6rem,6.4vw,3.15rem); text-shadow:0 6px 22px rgba(0,0,0,0.65); will-change:transform,opacity; }
+.hero__title{ margin:0; color:#fff; font-weight:700; line-height:1.02; font-size:clamp(3.5rem,8.2vw,5rem); text-shadow:0 6px 22px rgba(0,0,0,0.65); will-change:transform,opacity; }
 .hero__subtitle{ margin:.5rem 0 0; color:rgba(255,255,255,0.92); font-weight:400; font-size:clamp(1.26rem,5.04vw,1.54rem); text-shadow:0 4px 16px rgba(0,0,0,0.55); will-change:opacity,transform; }
 .hero-dots{ position:absolute; left:50%; transform:translateX(-50%); bottom:6vh; display:flex; gap:12px; z-index:5; align-items:center; justify-content:center }
 .hero-dot{ appearance:none; width:8px; height:8px; border-radius:999px; background:rgba(255,255,255,0.18); border:none; transition:transform 260ms cubic-bezier(.22,.9,.41,1), background 260ms, box-shadow 260ms, opacity 260ms; opacity:.8; cursor:pointer }
 .hero-dot:hover,.hero-dot:active{ transform:scale(1.4); }
 .hero-dot.is-active{ transform:scale(1.5); background:rgba(255,255,255,1); box-shadow:0 0 14px rgba(255,255,255,0.18); opacity:1 }
 .hero-dot:focus-visible{ outline:2px solid rgba(255,255,255,0.9); outline-offset:4px }
-@media(min-width:768px){ .hero__title{ font-size:clamp(2.1rem,4.5vw,4.2rem); } .hero__subtitle{ font-size:clamp(1.4rem,2.94vw,1.82rem); } }
+@media(min-width:768px){ .hero__title{ font-size:clamp(3.5rem,8.2vw,5rem); } .hero__subtitle{ font-size:clamp(1.4rem,2.94vw,1.82rem); } }
 
 /* Elegant entrance animations for slide title/subtitle when slide becomes active */
 .hero-slide .hero__title, .hero-slide .hero__subtitle{ opacity:0; transform:translateY(12px) scale(.98); }
@@ -760,7 +817,7 @@ hero__title {
 
   /* Duplica visualmente los tamaños del título y subtítulo sobre cada clip */
   .hero__title {
-    font-size: clamp(3.2rem, 12.8vw, 6.3rem) !important; /* 2x de clamp original */
+    font-size: clamp(3.5rem,8.2vw,5rem) !important;
     line-height: 1.02 !important;
   }
   .hero__subtitle {
@@ -772,7 +829,7 @@ hero__title {
 @media (min-width: 600px) {
   .hero-slide .slide-content { left: 40vw !important; transform: translateX(-50%) !important; }
   .hero-slide .hero__title {
-    font-size: clamp(3.2rem, 12.8vw, 6.3rem) !important;
+    font-size: clamp(3.5rem,8.2vw,5rem) !important;
     line-height: 1.02 !important;
     text-align: center !important;
   }
@@ -838,9 +895,9 @@ hero__title {
 .features-wrapper { position: relative; margin-top: 0.8rem; }
 .features-list { display: flex; gap: 1rem; align-items: flex-start; justify-content: flex-start; flex-wrap: nowrap; }
 .features-list .feature { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; max-width: 120px; }
-.features-list .feature img { width: 50px; height: 50px; object-fit: contain; opacity: 0.92; transform: translateY(0); }
+.features-list .feature img { width: 6rem; height: 6rem; object-fit: contain; opacity: 0.92; transform: translateY(0); }
 /* Icon wrapper to support bolt badge and color-tinting */
-.feature__icon { display:inline-block; width:50px; height:50px; position:relative; flex:0 0 auto; }
+.feature__icon { display:inline-block; width:6rem; height:6rem; position:relative; flex:0 0 auto; }
 .feature__icon img { width:100%; height:100%; object-fit:contain; display:block; /* force white via filter (works for monochrome PNGs) */ filter: brightness(0) invert(1); }
 .feature__text { font-size: 0.95rem; color: rgba(7,5,5,0.9); text-align: center; line-height: 1.15; margin: 0; }
 
@@ -871,17 +928,17 @@ hero__title {
     padding: 0 1rem !important;
   }
 
-  /* Features block sits 10px below the subtitle (H2) */
+  /* Features block sits 30px below the subtitle (H2) */
   .hero-slide .features-wrapper {
     position: relative;
-    margin-top: 10px;
+    margin-top: 30px; /* moved down 20px from previous 10px */
     width: 100%;
   }
 
   .hero-slide .features-wrapper .features-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 40px; /* increased 10px */
     align-items: flex-start;
     justify-content: flex-start;
     overflow: visible;
@@ -898,13 +955,13 @@ hero__title {
   }
 
   .hero-slide .features-wrapper .features-list .feature img {
-    width: 36px;
-    height: 36px;
+    width: 50px;
+    height: 50px;
     margin-bottom: 3px;
     opacity: 0.98;
     transform: translateY(-3px); /* subir el icono 3px */
   }
-  .hero-slide .features-wrapper .feature__icon { width:36px; height:36px; }
+  .hero-slide .features-wrapper .feature__icon { width:50px; height:50px; }
   .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1); }
 
   .hero-slide .features-wrapper .feature__text {
@@ -919,8 +976,18 @@ hero__title {
     text-align: left;
   }
 
-  .hero-slide .features-wrapper .feature__title { font-weight: 800; color: #ffffff; display:block; }
-  .hero-slide .features-wrapper .feature__subtitle { color: rgba(255,255,255,0.92); font-weight:500; display:block; }
+  .hero-slide .features-wrapper .feature__title {
+    font-weight: 800;
+    color: #ffffff;
+    display: block;
+    font-size: 1.35rem;
+  }
+  .hero-slide .features-wrapper .feature__subtitle {
+    color: rgba(255,255,255,0.92);
+    font-weight: 500;
+    display: block;
+    font-size: 1.2rem;
+  }
   .hero-slide .features-wrapper .feature__text { opacity: 0.92; }
 }
 
@@ -928,14 +995,14 @@ hero__title {
 @media (min-width: 600px) {
   .hero-slide .features-wrapper .feature__text {
     color: #ffffff;
-    font-size: calc(1.2rem + 2px); /* increased 2px on desktop */
+    font-size: 1.8rem;
     line-height: 1.18;
     text-align: left;
   }
 
   .hero-slide .features-wrapper .feature__title {
     color: #ffffff;
-    font-size: calc(1.2rem + 2px); /* title increased 2px */
+    font-size: 1.8rem;
     font-weight: 700;
     display: block;
     text-align: left;
@@ -943,14 +1010,14 @@ hero__title {
 
   .hero-slide .features-wrapper .feature__subtitle {
     color: rgba(255,255,255,0.92);
-    font-size: calc(0.96rem + 2px); /* subtitle increased 2px */
+    font-size: 1.45rem;
     font-weight: 500;
     display: block;
     text-align: left;
   }
 
   /* keep icons white and sized correctly on desktop */
-  .hero-slide .features-wrapper .feature__icon { width: 50px; height: 50px; }
+  .hero-slide .features-wrapper .feature__icon { width: 6rem; height: 6rem; }
   .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1); }
 }
 
@@ -961,11 +1028,10 @@ hero__title {
     text-align: center;
   }
 
-  .hero-slide .features-wrapper .feature__text,
-  .hero-slide .features-wrapper .feature__title,
-  .hero-slide .features-wrapper .feature__subtitle {
-    text-align: center;
-    margin: 0 auto;
+  .hero-slide .features-wrapper .feature__text {
+    color: #ffffff;
+    line-height: 1.18;
+    text-align: left;
   }
 }
 
@@ -978,30 +1044,28 @@ hero__title {
   .hero-slide .features-wrapper .feature__icon,
   .hero-slide .features-wrapper .feature__icon img,
   .hero-slide .features-wrapper .feature__text,
-  .hero-slide .features-wrapper .feature__title,
-  .hero-slide .features-wrapper .feature__subtitle {
+  .hero-slide .features-wrapper .feature__title {
     color: #ffffff;
+    /* keep default text sizing for features on desktop */
+    text-align: left;
   }
-
-  .hero-slide .features-wrapper .features-list {
-    flex-direction: row;
-    gap: 4.335rem; /* 2.55rem * 1.7 => 4.335rem */
+    gap: 7rem;
     align-items: flex-start;
     justify-content: flex-start;
   }
 
   .hero-slide .features-wrapper .features-list .feature {
-    max-width: 140px;
+    max-width: 220px; /* increased so title can stay on a single line on desktop */
     align-items: center;
     text-align: center;
   }
 
-  .hero-slide .features-wrapper .feature__icon { width: 50px; height: 50px; }
+  .hero-slide .features-wrapper .feature__icon { width: 6rem; height: 6rem; }
   .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1); }
 
-  .hero-slide .features-wrapper .feature__text { font-size: 1.2rem; line-height: 1.18; }
-  .hero-slide .features-wrapper .feature__title { font-size: 1.2rem; font-weight:700; }
-  .hero-slide .features-wrapper .feature__subtitle { font-size: 0.96rem; font-weight:500; }
+  .hero-slide .features-wrapper .feature__text { font-size: 1.8rem; line-height: 1.18; }
+  .hero-slide .features-wrapper .feature__title { font-size: 1.8rem; font-weight:700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hero-slide .features-wrapper .feature__subtitle { font-size: 1.45rem; font-weight:500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
 
 /* Desktop behaviour: position features absolute and center using the same horizontal
@@ -1012,13 +1076,15 @@ hero__title {
     /* Center features horizontally relative to the H1 anchor (40vw) on desktop.
       Increase vertical offset and block internal spacing by 1.5x so the block
       appears lower and slightly taller (desktop only). */
-    .hero-slide .features-wrapper { position: absolute; top: var(--hero-features-offset); left: 40vw; transform: translateX(-50%); width: auto; z-index:4; padding-top: calc(0.8rem * 1.5); }
+    /* Keep features in normal flow on desktop so they sit beneath slide text.
+       This avoids placing the block into the adjacent 'black box' area. */
+    .hero-slide .features-wrapper { position: relative; top: auto; left: auto; transform: translateY(60px); width: 100%; z-index:4; padding-top: calc(0.8rem * 1.0); }
     /* Desktop features vertical offset controlled by `--hero-features-offset` (default 105px) */
-  .hero-slide .features-list { justify-content: center; gap: 3rem !important; }
-  .hero-slide .features-list .feature { max-width: 160px; }
-  .hero-slide .features-list .feature__text { color: var(--beslock-black); text-align: center; }
-  .hero-slide .features-list .feature__title { color: var(--beslock-black); font-weight:700; display:block !important; width:100% !important; }
-  .hero-slide .features-list .feature__subtitle { color: rgba(7,5,5,0.78); font-weight:400; display:block !important; width:100% !important; }
+  .hero-slide .features-list { justify-content: center; gap: 7rem; }
+  .hero-slide .features-list .feature { max-width: 220px; }
+  .hero-slide .features-list .feature__text { color: #ffffff; text-align: center; }
+  .hero-slide .features-list .feature__title { color: #ffffff; font-weight:700; display:block; width:100%; }
+  .hero-slide .features-list .feature__subtitle { color: rgba(255,255,255,0.92); font-weight:500; display:block; width:100%; }
 }
 
 /* Responsive: si quieres cambiar el ratio en pantallas grandes */
@@ -1045,13 +1111,13 @@ hero__title {
   }
 
   .hero-slide.hero-slide .features-wrapper.features-wrapper .feature__icon.feature__icon {
-    width: 50px;
-    height: 50px;
+    width: 6rem;
+    height: 6rem;
   }
 
   .hero-slide.hero-slide .features-wrapper.features-wrapper .features-list.features-list .feature.feature img {
-    width: 50px;
-    height: 50px;
+    width: 6rem;
+    height: 6rem;
   }
 }
 
@@ -1067,7 +1133,7 @@ hero__title {
   .hero-slide .features-wrapper .features-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 40px; /* increased 10px */
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
@@ -1084,8 +1150,8 @@ hero__title {
 
   .hero-slide .features-wrapper .features-list .feature img,
   .hero-slide .features-wrapper .feature__icon {
-    width: 36px;
-    height: 36px;
+    width: 50px;
+    height: 50px;
   }
 
   .hero-slide .features-wrapper .feature__text {
@@ -1106,7 +1172,7 @@ hero__title {
   .hero-slide .features-wrapper .features-list {
     display: flex;
     flex-direction: row;
-    gap: 3rem;
+    gap: 7rem;
     align-items: flex-start;
     justify-content: center;
   }
@@ -1122,8 +1188,8 @@ hero__title {
 
   .hero-slide .features-wrapper .feature__icon,
   .hero-slide .features-wrapper .features-list .feature img {
-    width: 50px;
-    height: 50px;
+    width: 6rem;
+    height: 6rem;
   }
 
   .hero-slide .features-wrapper .feature__text,
@@ -1131,5 +1197,41 @@ hero__title {
   .hero-slide .features-wrapper .feature__subtitle {
     text-align: center;
     color: #ffffff;
+  }
+}
+
+/* Clean positioning for desktop features block
+   Placed at file end so it wins over earlier conflicting rules without
+   using `!important`. Ensures the JS relocation (`relocateFeaturesForBreakpoint`) 
+   can make the block a direct child of `.hero-slide` and this selector will apply.
+*/
+@media (min-width: 600px) {
+  .hero-slide > .features-wrapper {
+    position: absolute;
+    top: calc(var(--hero-features-offset, 105px) + 60px);
+    left: 40vw;
+    transform: translateX(-50%);
+    width: auto;
+    z-index: 4;
+    padding-top: 0;
+  }
+}
+
+/* Mobile overrides placed at EOF so they take precedence for <=600px
+   without using !important. Keeps mobile-only adjustments isolated. */
+@media (max-width: 600px) {
+  .hero-slide .features-wrapper .feature__title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  .hero-slide .features-wrapper .feature__subtitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
 }

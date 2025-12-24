@@ -4,7 +4,7 @@
   `images/hero_develp/clips_hero` and `images/hero_develp/images_hero`.
 */ ?>
 <section class="beslock-hero" id="beslockHero" aria-roledescription="carousel" aria-label="Hero carousel">
-  <div class="beslock-loader" id="beslockLoader" role="status" aria-live="polite" aria-hidden="false">
+  <div class="beslock-loader" id="beslockLoader" role="status" aria-live="polite" aria-hidden="false" data-loader-mode="auto">
     <div class="beslock-loader__bg" aria-hidden="true"></div>
     <!-- Use transparent logo (logo-white.png) and wrap to allow circular reveal + spinner -->
     <span class="beslock-loader__wrap" aria-hidden="true">
