@@ -11,7 +11,7 @@ $products = [
     'name'  => 'e-Nova',
     'desc'  => "Acceso inteligente sin llaves para tu día a día.\nHuella y control simple para moverte con libertad y tranquilidad.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-nova_.webp',
-    'images' => [ 'e-nova.webp', 'e-nova_s.webp' ],
+    'images' => [ 'e-nova_.webp', 'e-nova_s.webp' ],
     'link'  => '#'
   ],
   [
@@ -25,7 +25,7 @@ $products = [
     'name'  => 'e-Touch',
     'desc'  => "Acceso fácil para espacios compartidos.\nClave y huella para que todos puedan entrar, sin complicaciones.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-touch_.webp',
-    'images' => [ 'e-touch.webp', 'e-touch_c.webp' ],
+    'images' => [ 'e-touch_.webp', 'e-touch_c.webp' ],
     'link'  => '#'
   ],
   [
@@ -39,7 +39,7 @@ $products = [
     'name'  => 'e-Shield',
     'desc'  => "Protección inteligente para tu hogar.\nSeguridad robusta con acceso electrónico y respaldo mecánico.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-shield_.webp',
-    'images' => [ 'e-shield.webp', 'e-shield_e.webp' ],
+    'images' => [ 'e-shield_.webp', 'e-shield_e.webp' ],
     'link'  => '#'
   ],
   [
