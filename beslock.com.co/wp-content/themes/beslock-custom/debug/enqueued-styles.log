@@ -6,8 +6,8 @@ beslock-main-style => http://localhost:8000/wp-content/themes/beslock-custom/ass
 beslock-bootstrap-icons => https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
 beslock-menu-products-mobile => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/menu-products-mobile.css
 beslock-models-mobile => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/models-mobile.css
+beslock-product-card-fade => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/product-card-fade.css
 beslock-header-state-css => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/header-state.css
-beslock-product-card-slideshow => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/product-card-slideshow.css
 beslock-wc-scope-fix => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/wc-scope-fix.css
 
 === REGISTERED (selected) ===
@@ -493,7 +493,7 @@ beslock-main-style => http://localhost:8000/wp-content/themes/beslock-custom/ass
 beslock-bootstrap-icons => https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css
 beslock-menu-products-mobile => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/menu-products-mobile.css
 beslock-models-mobile => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/models-mobile.css
+beslock-product-card-fade => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/product-card-fade.css
 beslock-header-state-css => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/header-state.css
-beslock-product-card-slideshow => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/product-card-slideshow.css
 kad-splide => http://localhost:8000/wp-content/themes/kadence/assets/css/kadence-splide.min.css
 beslock-wc-scope-fix => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/wc-scope-fix.css

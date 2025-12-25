@@ -144,6 +144,17 @@ add_action( 'wp_enqueue_scripts', function() {
     wp_enqueue_script( 'beslock-product-card-fade-js', $theme_dir_uri . '/assets/js/product-card-fade.js', [ 'beslock-main-js' ], filemtime( $product_fade_js ), true );
   }
 
+  /* Product rotator (grid-based, opacity-only) */
+  $product_rotator_css = $theme_dir_path . '/assets/css/product-rotator.css';
+  if ( file_exists( $product_rotator_css ) ) {
+    wp_enqueue_style( 'beslock-product-rotator', $theme_dir_uri . '/assets/css/product-rotator.css', [ 'beslock-main-style' ], filemtime( $product_rotator_css ) );
+  }
+
+  $product_rotator_js = $theme_dir_path . '/assets/js/product-rotator.js';
+  if ( file_exists( $product_rotator_js ) ) {
+    wp_enqueue_script( 'beslock-product-rotator-js', $theme_dir_uri . '/assets/js/product-rotator.js', [ 'beslock-main-js' ], filemtime( $product_rotator_js ), true );
+  }
+
   /* -------------------------------
    * Header state script + CSS (BBC-like behavior)
    * Adds a minimal, reversible scroll-state controller for the header.

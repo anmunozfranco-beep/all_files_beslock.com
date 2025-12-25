@@ -1,0 +1,33 @@
+/* product-rotator.css
+   Lightweight cross-fade rotator for product cards.
+
+   Notes:
+   - Uses CSS Grid stacking so layout flow is preserved (no absolute positioning).
+   - Only animates opacity. Transition is 0.8s as requested.
+   - Images must have class `product-frame` and be wrapped by `.product-image-rotator`.
+*/
+
+.product-image-rotator {
+  display: grid; /* stack children without removing them from flow */
+  width: 100%;
+  align-items: center;
+  justify-items: center;
+}
+
+.product-image-rotator .product-frame {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: auto; /* preserve intrinsic aspect ratio */
+  display: block;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  will-change: opacity;
+}
+
+.product-image-rotator .product-frame.visible {
+  opacity: 1;
+}
+
+/* Defensive: if authors used different markup, keep layout stable */
+.product-image-rotator img { max-width: 100%; height: auto; }
