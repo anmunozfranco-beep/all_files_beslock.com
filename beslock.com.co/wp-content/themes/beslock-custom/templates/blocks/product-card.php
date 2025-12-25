@@ -41,11 +41,13 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
 
       if ( ! empty( $images ) ) :
     ?>
-        <div class="product-image-rotator">
+        <div class="product-card__image-rotator product-image-rotator">
           <?php foreach ( $images as $i => $img_name ) :
             $img_name = ltrim( $img_name, "/" );
             $src = get_stylesheet_directory_uri() . '/assets/images/' . $img_name;
-            $class = 'product-frame' . ( $i === 0 ? ' is-active' : '' );
+            $bem = 'product-card__frame' . ( $i === 0 ? ' product-card__frame--active' : '' );
+            $legacy = 'product-frame' . ( $i === 0 ? ' is-active' : '' );
+            $class = trim( $bem . ' ' . $legacy );
           ?>
             <img class="<?php echo esc_attr( $class ); ?>" src="<?php echo esc_url( $src ); ?>" alt="" />
           <?php endforeach; ?>

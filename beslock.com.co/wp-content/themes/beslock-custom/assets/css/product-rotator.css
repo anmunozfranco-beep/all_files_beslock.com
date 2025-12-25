@@ -7,15 +7,17 @@
    - Images use absolute stacking with object-fit: contain to preserve composition.
 */
 
-.product-image-rotator {
+.product-card__image-rotator,
+.product-image-rotator { /* keep legacy selector as fallback */
   display: block;
   width: 100%;
-  height: 240px; /* required fixed visual height per spec */
+  height: 240px;
   overflow: hidden;
   position: relative;
 }
 
-.product-image-rotator .product-frame {
+.product-card__frame,
+.product-frame { /* legacy fallback */
   position: absolute;
   top: 0;
   left: 0;
@@ -26,10 +28,12 @@
   transition: opacity .6s ease-in-out;
 }
 
+.product-card__frame--active,
 .product-image-rotator .product-frame.visible,
 .product-image-rotator .product-frame.is-active {
   opacity: 1;
 }
 
 /* Defensive: ensure images never exceed container width */
+.product-card__image-rotator img,
 .product-image-rotator img { max-width: 100%; height: 100%; display: block; }
