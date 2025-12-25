@@ -65,35 +65,21 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
         };
 
         if ( $use_rotator ) :
-          // Map contains relative paths; convert to full URIs and check file existence before rendering second image.
+          // Map contains relative paths; convert to full URIs. Render exactly two images
+          // inside the rotator container for the specified products (no file_exists checks).
           $pair = $rotator_map[ $product_name ];
           $img1_rel = $pair[0];
           $img2_rel = $pair[1];
-          $img1_abs = $theme_dir . $img1_rel;
-          $img2_abs = $theme_dir . $img2_rel;
           $img1_uri = esc_url( get_stylesheet_directory_uri() . $img1_rel );
           $img2_uri = esc_url( get_stylesheet_directory_uri() . $img2_rel );
-
-          // Only render rotator if both files exist; otherwise fallback to single image.
-          if ( file_exists( $img1_abs ) && file_exists( $img2_abs ) ) :
-            $srcset1 = $build_srcset_for( $img1_uri );
-            $srcset2 = $build_srcset_for( $img2_uri );
+          $srcset1 = $build_srcset_for( $img1_uri );
+          $srcset2 = $build_srcset_for( $img2_uri );
       ?>
-            <div class="product-image-rotator">
-              <img class="product-frame visible lazyload" data-src="<?php echo $img1_uri; ?>" <?php if ( $srcset1 ) : ?>data-srcset="<?php echo esc_attr( $srcset1 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?>" loading="lazy" decoding="async" />
-              <img class="product-frame lazyload" data-src="<?php echo $img2_uri; ?>" <?php if ( $srcset2 ) : ?>data-srcset="<?php echo esc_attr( $srcset2 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?> alternate" loading="lazy" decoding="async" />
-            </div>
+          <div class="product-image-rotator">
+            <img class="product-frame visible lazyload" data-src="<?php echo $img1_uri; ?>" <?php if ( $srcset1 ) : ?>data-srcset="<?php echo esc_attr( $srcset1 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?>" loading="lazy" decoding="async" />
+            <img class="product-frame lazyload" data-src="<?php echo $img2_uri; ?>" <?php if ( $srcset2 ) : ?>data-srcset="<?php echo esc_attr( $srcset2 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?> alternate" loading="lazy" decoding="async" />
+          </div>
       <?php
-            // end rotator render
-            else :
-              // fallback single image if files missing
-              $single_srcset = $srcset_attr;
-      ?>
-              <div class="product-image-rotator">
-                <img class="product-frame visible lazyload" data-src="<?php echo esc_url( $image_src ); ?>" <?php if ( $single_srcset ) : ?>data-srcset="<?php echo esc_attr( $single_srcset ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?>" loading="lazy" decoding="async" />
-              </div>
-      <?php
-            endif; // file_exists both
         else :
           // Default single-image flow for products not in the rotator map
       ?>
