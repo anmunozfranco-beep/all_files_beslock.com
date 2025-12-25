@@ -26,7 +26,8 @@
   transition: opacity .6s ease-in-out;
 }
 
-.product-image-rotator .product-frame.visible {
+.product-image-rotator .product-frame.visible,
+.product-image-rotator .product-frame.is-active {
   opacity: 1;
 }
 
