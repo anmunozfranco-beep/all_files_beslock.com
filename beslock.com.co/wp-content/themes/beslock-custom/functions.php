@@ -130,19 +130,9 @@ add_action( 'wp_enqueue_scripts', function() {
     true
   );
 
-  /* -------------------------------
-   * Product card cross-fade (CSS + JS)
-   * Only affects wrappers that contain exactly two `.product-img` elements.
-   * ------------------------------- */
-  $product_fade_css = $theme_dir_path . '/assets/css/product-card-fade.css';
-  if ( file_exists( $product_fade_css ) ) {
-    wp_enqueue_style( 'beslock-product-card-fade', $theme_dir_uri . '/assets/css/product-card-fade.css', [ 'beslock-main-style' ], filemtime( $product_fade_css ) );
-  }
-
-  $product_fade_js = $theme_dir_path . '/assets/js/product-card-fade.js';
-  if ( file_exists( $product_fade_js ) ) {
-    wp_enqueue_script( 'beslock-product-card-fade-js', $theme_dir_uri . '/assets/js/product-card-fade.js', [ 'beslock-main-js' ], filemtime( $product_fade_js ), true );
-  }
+  // NOTE: Cross-fade system disabled.
+  // We use the rotator implementation (product-rotator.css/js) with `.product-image-rotator` + `.product-frame`.
+  // The previous cross-fade assets were targeting different class names and were causing layout drift.
 
   /* Product rotator (grid-based, opacity-only) */
   $product_rotator_css = $theme_dir_path . '/assets/css/product-rotator.css';

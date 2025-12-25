@@ -33,10 +33,12 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
     <?php if ( $image_src ) : ?>
       <?php
         // For three specific products, render a rotator with two images.
+        // IMPORTANT: current filenames in /assets/images end with an underscore for the base image.
+        // Example: e-nova_.webp (base) + e-nova_s.webp (alt). Keep this map in sync with actual files.
         $rotator_map = [
-          'e-Nova'   => [ '/assets/images/e-nova.webp', '/assets/images/e-nova_s.webp' ],
-          'e-Touch'  => [ '/assets/images/e-touch.webp', '/assets/images/e-touch_c.webp' ],
-          'e-Shield' => [ '/assets/images/e-shield.webp', '/assets/images/e-shield_e.webp' ],
+          'e-Nova'   => [ '/assets/images/e-nova_.webp',   '/assets/images/e-nova_s.webp'   ],
+          'e-Touch'  => [ '/assets/images/e-touch_.webp',  '/assets/images/e-touch_c.webp'  ],
+          'e-Shield' => [ '/assets/images/e-shield_.webp', '/assets/images/e-shield_e.webp' ],
         ];
 
         $product_name = $product['name'] ?? '';
@@ -76,15 +78,15 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
           $srcset2 = $build_srcset_for( $img2_uri );
       ?>
           <div class="product-image-rotator">
-            <img class="product-frame visible lazyload" data-src="<?php echo $img1_uri; ?>" <?php if ( $srcset1 ) : ?>data-srcset="<?php echo esc_attr( $srcset1 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?>" loading="lazy" decoding="async" />
-            <img class="product-frame lazyload" data-src="<?php echo $img2_uri; ?>" <?php if ( $srcset2 ) : ?>data-srcset="<?php echo esc_attr( $srcset2 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?> alternate" loading="lazy" decoding="async" />
+            <img class="product-frame visible" src="<?php echo $img1_uri; ?>" <?php if ( $srcset1 ) : ?>srcset="<?php echo esc_attr( $srcset1 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?>" loading="lazy" decoding="async" />
+            <img class="product-frame" src="<?php echo $img2_uri; ?>" <?php if ( $srcset2 ) : ?>srcset="<?php echo esc_attr( $srcset2 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?> alternate" loading="lazy" decoding="async" />
           </div>
       <?php
         else :
           // Default single-image flow for products not in the rotator map
       ?>
           <div class="product-image-rotator">
-            <img class="product-frame visible lazyload" data-src="<?php echo esc_url( $image_src ); ?>" <?php if ( $srcset_attr ) : ?>data-srcset="<?php echo esc_attr( $srcset_attr ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product['name'] ?? '' ); ?>" loading="lazy" decoding="async" />
+            <img class="product-frame visible" src="<?php echo esc_url( $image_src ); ?>" <?php if ( $srcset_attr ) : ?>srcset="<?php echo esc_attr( $srcset_attr ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product['name'] ?? '' ); ?>" loading="lazy" decoding="async" />
           </div>
       <?php
         endif; // use_rotator
