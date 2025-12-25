@@ -53,9 +53,6 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
     <?php else : ?>
       <div style="width:100%;height:0;padding-bottom:100%;background:#f3f3f3;border-radius:12px;"></div>
     <?php endif; ?>
-    <?php else : ?>
-      <div style="width:100%;height:0;padding-bottom:100%;background:#f3f3f3;border-radius:12px;"></div>
-    <?php endif; ?>
   </div>
 
   <div class="product-card__content">
