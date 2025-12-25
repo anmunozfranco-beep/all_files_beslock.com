@@ -70,6 +70,7 @@ add_action( 'wp_enqueue_scripts', function() {
     $ver_models_css
   );
 
+
   /* -------------------------------
    * GSAP + ScrollTrigger desde CDN
    * ------------------------------- */
@@ -147,6 +148,25 @@ add_action( 'wp_enqueue_scripts', function() {
   if ( file_exists( $header_state_css ) ) {
     wp_enqueue_style( 'beslock-header-state-css', $theme_dir_uri . '/assets/css/header-state.css', [ 'beslock-main-style' ], filemtime( $header_state_css ) );
   }
+
+  /* -------------------------------
+   * Product card slideshow (CSS + JS)
+   * Minimal cross-fade for product cards with two images.
+   * ------------------------------- */
+  $prod_css_path = $theme_dir_path . '/assets/css/product-card-slideshow.css';
+  if ( file_exists( $prod_css_path ) ) {
+    wp_enqueue_style( 'beslock-product-card-slideshow', $theme_dir_uri . '/assets/css/product-card-slideshow.css', [ 'beslock-main-style' ], filemtime( $prod_css_path ) );
+  }
+
+  $prod_js_path = $theme_dir_path . '/assets/js/product-card-slideshow.js';
+  $ver_prod_js = file_exists( $prod_js_path ) ? filemtime( $prod_js_path ) : null;
+  wp_enqueue_script(
+    'beslock-product-card-slideshow',
+    $theme_dir_uri . '/assets/js/product-card-slideshow.js',
+    [ 'beslock-main-js' ],
+    $ver_prod_js,
+    true
+  );
 
 });
 

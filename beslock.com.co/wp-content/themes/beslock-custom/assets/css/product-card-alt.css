@@ -1,0 +1,57 @@
+.products-portfolio .product-card__image{position:relative;overflow:hidden}
+.products-portfolio .product-card__image img{display:block;border-radius:inherit}
+
+/* Strict, scoped overrides for cards that have an alternate image. */
+.products-portfolio .product-card__image.has-alt{
+	position:relative;
+	overflow:hidden;
+}
+
+/* Force both images to fully cover the locked container without any transforms */
+/* Main image stays in normal flow to preserve layout; alt overlays absolutely */
+.products-portfolio .product-card__image.has-alt .product-card__image--main {
+	position:relative !important;
+	z-index:1 !important;
+	display:block !important;
+	width:100% !important;
+	height:auto !important;
+	max-width:220px !important;
+	object-fit:cover !important;
+	object-position:center !important;
+	transform:none !important;
+	scale:1 !important;
+	transition:opacity 700ms ease-in-out !important;
+	transition-property: opacity !important;
+	will-change:opacity !important;
+}
+.products-portfolio .product-card__image.has-alt .product-card__image--alt {
+	position:absolute !important;
+	inset:0 !important;
+	top:0 !important;
+	left:0 !important;
+	width:100% !important;
+	height:100% !important;
+	display:block !important;
+	object-fit:cover !important;
+	object-position:center !important;
+	transform:none !important;
+	scale:1 !important;
+	z-index:2 !important;
+	opacity:0 !important;
+	pointer-events:none !important;
+	transition:opacity 700ms ease-in-out !important;
+	transition-property: opacity !important;
+	will-change:opacity !important;
+	border-radius:inherit !important;
+	-webkit-backface-visibility: hidden !important;
+}
+
+/* Cross-fade controlled by JS: toggle the class `alt-visible` on the container */
+.products-portfolio .product-card__image.has-alt.alt-visible .product-card__image--alt{opacity:1 !important}
+
+/* Safety: ensure no inherited transform/transition affects these images */
+.products-portfolio .product-card__image.has-alt,
+.products-portfolio .product-card__image.has-alt * {
+	transform: none !important;
+	transition-property: opacity !important;
+}
