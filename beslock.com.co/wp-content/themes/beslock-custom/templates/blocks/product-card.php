@@ -31,17 +31,78 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
 <div class="product-card reveal">
   <div class="product-card__image" aria-hidden="false">
     <?php if ( $image_src ) : ?>
-      <img
-        class="lazyload"
-        data-src="<?php echo esc_url( $image_src ); ?>"
-        <?php if ( $srcset_attr ) : ?>
-          data-srcset="<?php echo esc_attr( $srcset_attr ); ?>"
-        <?php endif; ?>
-        sizes="(max-width:600px) 90vw, 300px"
-        alt="<?php echo esc_attr( $product['name'] ?? '' ); ?>"
-        loading="lazy"
-        decoding="async"
-      />
+      <?php
+        // For three specific products, render a rotator with two images.
+        $rotator_map = [
+          'e-Nova'   => [ '/assets/images/e-nova.webp', '/assets/images/e-nova_s.webp' ],
+          'e-Touch'  => [ '/assets/images/e-touch.webp', '/assets/images/e-touch_c.webp' ],
+          'e-Shield' => [ '/assets/images/e-shield.webp', '/assets/images/e-shield_e.webp' ],
+        ];
+
+        $product_name = $product['name'] ?? '';
+        $use_rotator = array_key_exists( $product_name, $rotator_map );
+
+        // Helper: build srcset string for a given image path (URI form)
+        $build_srcset_for = function( $img_uri ) use ( $theme_dir ) {
+          $srcset_parts = array();
+          $image_path_rel = str_replace( get_stylesheet_directory_uri(), '', $img_uri );
+          $filename = basename( $img_uri );
+          $dirname  = dirname( $image_path_rel );
+          $possible_sizes = array(
+            '300' => $dirname . '/m/300x0/' . $filename,
+            '800' => $dirname . '/m/800x0/' . $filename,
+          );
+          foreach ( $possible_sizes as $w => $rel ) {
+            $abs = $theme_dir . $rel;
+            if ( file_exists( $abs ) ) {
+              $srcset_parts[] = esc_url( get_stylesheet_directory_uri() . $rel ) . ' ' . $w . 'w';
+            }
+          }
+          if ( empty( $srcset_parts ) && $img_uri ) {
+            $srcset_parts[] = esc_url( $img_uri ) . ' 800w';
+          }
+          return ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
+        };
+
+        if ( $use_rotator ) :
+          // Map contains relative paths; convert to full URIs and check file existence before rendering second image.
+          $pair = $rotator_map[ $product_name ];
+          $img1_rel = $pair[0];
+          $img2_rel = $pair[1];
+          $img1_abs = $theme_dir . $img1_rel;
+          $img2_abs = $theme_dir . $img2_rel;
+          $img1_uri = esc_url( get_stylesheet_directory_uri() . $img1_rel );
+          $img2_uri = esc_url( get_stylesheet_directory_uri() . $img2_rel );
+
+          // Only render rotator if both files exist; otherwise fallback to single image.
+          if ( file_exists( $img1_abs ) && file_exists( $img2_abs ) ) :
+            $srcset1 = $build_srcset_for( $img1_uri );
+            $srcset2 = $build_srcset_for( $img2_uri );
+      ?>
+            <div class="product-image-rotator">
+              <img class="product-frame visible lazyload" data-src="<?php echo $img1_uri; ?>" <?php if ( $srcset1 ) : ?>data-srcset="<?php echo esc_attr( $srcset1 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?>" loading="lazy" decoding="async" />
+              <img class="product-frame lazyload" data-src="<?php echo $img2_uri; ?>" <?php if ( $srcset2 ) : ?>data-srcset="<?php echo esc_attr( $srcset2 ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?> alternate" loading="lazy" decoding="async" />
+            </div>
+      <?php
+            // end rotator render
+            else :
+              // fallback single image if files missing
+              $single_srcset = $srcset_attr;
+      ?>
+              <div class="product-image-rotator">
+                <img class="product-frame visible lazyload" data-src="<?php echo esc_url( $image_src ); ?>" <?php if ( $single_srcset ) : ?>data-srcset="<?php echo esc_attr( $single_srcset ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product_name ); ?>" loading="lazy" decoding="async" />
+              </div>
+      <?php
+            endif; // file_exists both
+        else :
+          // Default single-image flow for products not in the rotator map
+      ?>
+          <div class="product-image-rotator">
+            <img class="product-frame visible lazyload" data-src="<?php echo esc_url( $image_src ); ?>" <?php if ( $srcset_attr ) : ?>data-srcset="<?php echo esc_attr( $srcset_attr ); ?>"<?php endif; ?> sizes="(max-width:600px) 90vw, 300px" alt="<?php echo esc_attr( $product['name'] ?? '' ); ?>" loading="lazy" decoding="async" />
+          </div>
+      <?php
+        endif; // use_rotator
+      ?>
     <?php else : ?>
       <div style="width:100%;height:0;padding-bottom:100%;background:#f3f3f3;border-radius:12px;"></div>
     <?php endif; ?>
