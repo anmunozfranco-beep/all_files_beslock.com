@@ -171,13 +171,30 @@
   function initGsapReveals() {
     if (window.gsap && window.ScrollTrigger) {
       try {
-        gsap.registerPlugin(ScrollTrigger);
-        gsap.utils.toArray('.reveal').forEach(function (el) {
-          gsap.fromTo(el, { opacity: 0, y: 50 }, {
-            opacity: 1, y: 0, duration: 1, ease: "power3.out",
-            scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }
-          });
-        });
+            gsap.registerPlugin(ScrollTrigger);
+            // Batch product-card reveals so whole rows appear together instead of
+            // individual cards triggering at slightly different offsets.
+            var productCards = gsap.utils.toArray('.products-portfolio__grid .product-card.reveal');
+            if (productCards.length) {
+              ScrollTrigger.batch(productCards, {
+                interval: 0.12,      // time window to batch callbacks (s)
+                batchMax: 20,        // maximum items per batch
+                start: 'top 85%',
+                onEnter: function(batch) {
+                  gsap.fromTo(batch, { opacity: 0, y: 50 }, {
+                    opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+                    stagger: { each: 0.06, from: 'center' }
+                  });
+                }
+              });
+            }
+            // Initialize reveals for other isolated .reveal elements
+            gsap.utils.toArray('.reveal:not(.products-portfolio__grid .product-card)').forEach(function (el) {
+              gsap.fromTo(el, { opacity: 0, y: 50 }, {
+                opacity: 1, y: 0, duration: 1, ease: "power3.out",
+                scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }
+              });
+            });
         console.log('main.js: GSAP reveals initialized');
         return;
       } catch (e) {
