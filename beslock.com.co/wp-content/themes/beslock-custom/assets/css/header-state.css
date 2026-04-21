@@ -102,4 +102,26 @@
     transform: translateY(calc(-50% + 27px)) scale(1.02);
   }
 }
+/* Desktop safety shim: cover tiny subpixel/gap artifacts that can appear
+   between a fixed header and the hero during fast scroll-up. This is a
+   conservative visual fix only — it doesn't change layout or reserve space.
+   If the root cause is found later (hero transforms or header sizing),
+   this block can be removed. */
+@media (min-width: 1024px) {
+  .header {
+    /* ensure header creates a positioned context for the pseudo element */
+    position: fixed;
+  }
+  .header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px; /* extend a few pixels below header to hide the gap */
+    height: 6px;
+    background: rgba(255,255,255,0.98); /* match header background */
+    pointer-events: none;
+    display: block;
+  }
+}
 /* End of overlay offset rules */

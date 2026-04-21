@@ -37,8 +37,8 @@
   // rAF guard
   var scheduled = false;
 
-  // BEM class to toggle. Per instructions, only one class is toggled.
-  var TOGGLE_CLASS = 'header--compact';
+  // BEM class to toggle. Use the same class other header scripts and CSS expect.
+  var TOGGLE_CLASS = 'header--scrolled';
 
   // Find header element; fallback to <header> or document.body to avoid errors.
   var headerEl = document.querySelector('.header') || document.querySelector('header') || document.body;
