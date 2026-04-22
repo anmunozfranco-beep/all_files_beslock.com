@@ -1,3 +1,9 @@
 # Ignore documentation and log files
 docs/
 *.log
+
+# macOS Finder
+.DS_Store
+
+# Ignore Visual Studio Code workspace/state
+.vscode/
