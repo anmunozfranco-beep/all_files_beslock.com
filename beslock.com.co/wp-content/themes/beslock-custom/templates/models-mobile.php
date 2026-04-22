@@ -26,7 +26,12 @@ $images_dir_uri  = get_stylesheet_directory_uri() . '/assets/images/products/';
 // User-configurable overrides:
 // badge text per base (optional)
 $badge_overrides = array(
-  // 'e-nova' => 'Cerradura Electronica',
+  'e-flex'  => 'Ideal en estancias cortas.',
+  'e-nova'  => 'Privacidad sin compicaciones.',
+  'e-orbit' => '3D Reconicimiento facial.',
+  'e-prime' => 'Uso profesional en oficinas.',
+  'e-shield'=> 'Protección inteligente del hogar.',
+  'e-touch' => 'Versátil en espacios compartidos.',
 );
 
 // focal point overrides per base (object-position values, e.g. "50% 30%")
