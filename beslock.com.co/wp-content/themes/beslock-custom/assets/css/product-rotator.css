@@ -34,12 +34,12 @@
   opacity: 1;
 }
 
-/* Defensive: ensure images never exceed container width */
 .product-card__image-rotator img,
 .product-image-rotator img { max-width: 100%; height: 100%; display: block; }
 
-/* Layout fix: prevent ancestor flex-centering from collapsing rotator width
-   Scoped to the products portfolio so global card layout remains unchanged. */
+/* Corrección de diseño: evitar que el centrado por flex de un ancestro
+  colapse el ancho del rotador. Aplicado solo dentro de `.products-portfolio`
+  para no afectar el diseño global. */
 .products-portfolio__grid .product-card {
   align-items: stretch;
 }
@@ -48,12 +48,13 @@
 }
 .products-portfolio .product-card__image-rotator {
   width: 100%;
-  min-width: 220px; /* conservative fallback to ensure visible frames */
+  min-width: 220px; /* fallback conservador para garantizar que los marcos sean visibles */
 }
 
-/* Ensure card content uses full width and buttons align to same baseline */
+/* Asegurar que el contenido de la tarjeta ocupe todo el ancho y que los
+   botones queden alineados en la misma línea de base. */
 .products-portfolio__grid .product-card {
-  align-items: stretch; /* override centered alignment so content can fill width */
+  align-items: stretch; /* sobreescribe la alineación centrada para que el contenido ocupe el ancho */
 }
 .products-portfolio .product-card__content {
   display: flex;
@@ -61,7 +62,7 @@
   flex: 1 1 auto;
 }
 .products-portfolio .product-card__btn {
-  margin-top: auto; /* push button to bottom of the content block */
-  align-self: center; /* keep button centered horizontally */
+  margin-top: auto; /* empuja el botón al pie del bloque de contenido */
+  align-self: center; /* mantiene el botón centrado horizontalmente */
 }
 

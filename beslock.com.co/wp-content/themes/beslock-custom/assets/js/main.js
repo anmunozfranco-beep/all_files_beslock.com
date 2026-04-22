@@ -172,13 +172,14 @@
     if (window.gsap && window.ScrollTrigger) {
       try {
             gsap.registerPlugin(ScrollTrigger);
-            // Batch product-card reveals so whole rows appear together instead of
-            // individual cards triggering at slightly different offsets.
+            // Agrupar las animaciones de entrada de las tarjetas de producto
+            // para que las filas completas aparezcan juntas en lugar de que
+            // cada tarjeta se active con ligeros desfases.
             var productCards = gsap.utils.toArray('.products-portfolio__grid .product-card.reveal');
             if (productCards.length) {
               ScrollTrigger.batch(productCards, {
-                interval: 0.12,      // time window to batch callbacks (s)
-                batchMax: 20,        // maximum items per batch
+                interval: 0.12,      // ventana temporal para agrupar callbacks (s)
+                batchMax: 20,        // máximo de elementos por lote
                 start: 'top 85%',
                 onEnter: function(batch) {
                   gsap.fromTo(batch, { opacity: 0, y: 50 }, {
