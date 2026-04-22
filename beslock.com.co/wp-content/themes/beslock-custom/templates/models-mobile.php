@@ -27,8 +27,8 @@ $images_dir_uri  = get_stylesheet_directory_uri() . '/assets/images/products/';
 // badge text per base (optional)
 $badge_overrides = array(
   'e-flex'  => 'Ideal en estancias cortas.',
-  'e-nova'  => 'Privacidad sin compicaciones.',
-  'e-orbit' => '3D Reconicimiento facial.',
+  'e-nova'  => 'Privacidad sin complicaciones.',
+  'e-orbit' => 'Reconocimiento facial 3D.',
   'e-prime' => 'Uso profesional en oficinas.',
   'e-shield'=> 'Protección inteligente del hogar.',
   'e-touch' => 'Versátil en espacios compartidos.',
