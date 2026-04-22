@@ -63,23 +63,7 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
 
   <div class="product-card__content">
     <h3 class="product-card__title"><?php echo esc_html( $product['name'] ?? '' ); ?></h3>
-    <?php
-      $desc = isset( $product['desc'] ) ? $product['desc'] : '';
-      $name_raw = isset( $product['name'] ) ? $product['name'] : '';
-      $key = strtolower( str_replace( array( ' ', '_' ), '-', $name_raw ) );
-      $descriptions = array(
-        'e-flex'  => 'Ideal en estancias cortas.',
-        'e-nova'  => 'Privacidad sin compicaciones.',
-        'e-orbit' => '3D Reconicimiento facial.',
-        'e-prime' => 'Uso profesional en oficinas.',
-        'e-shield' => 'Protección inteligente del hogar.',
-        'e-touch' => 'Versátil en espacios compartidos.',
-      );
-      if ( isset( $descriptions[ $key ] ) ) {
-        $desc = $descriptions[ $key ];
-      }
-    ?>
-    <p class="product-card__desc"><?php echo esc_html( $desc ); ?></p>
+    <p class="product-card__desc"><?php echo esc_html( $product['desc'] ?? '' ); ?></p>
     <a href="<?php echo esc_url( $product['link'] ?? '#' ); ?>" class="btn product-card__btn" tabindex="0">Ver producto</a>
   </div>
 </div>
