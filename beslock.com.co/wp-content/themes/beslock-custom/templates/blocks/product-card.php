@@ -44,7 +44,11 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
         <div class="product-card__image-rotator product-image-rotator">
           <?php foreach ( $images as $i => $img_name ) :
             $img_name = ltrim( $img_name, "/" );
+            $abs_img = $theme_dir . '/assets/images/' . $img_name;
             $src = get_stylesheet_directory_uri() . '/assets/images/' . $img_name;
+            if ( file_exists( $abs_img ) ) {
+              $src .= '?v=' . filemtime( $abs_img );
+            }
             $bem = 'product-card__frame' . ( $i === 0 ? ' product-card__frame--active' : '' );
             $legacy = 'product-frame' . ( $i === 0 ? ' is-active' : '' );
             $class = trim( $bem . ' ' . $legacy );

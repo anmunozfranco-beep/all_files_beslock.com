@@ -66,7 +66,15 @@
                 $data_offset_attr = '';
               }
             ?>
-            <img class="slide-overlay" src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/Hero_develp/images_hero/' . $ov ); ?>"<?php echo $data_offset_attr; ?> alt="" aria-hidden="true" />
+            <?php
+              // Resolve filesystem path for the overlay and append filemtime as cache-buster
+              $ov_fs = get_stylesheet_directory() . '/assets/images/Hero_develp/images_hero/' . $ov;
+              $ov_url = get_stylesheet_directory_uri() . '/assets/images/Hero_develp/images_hero/' . $ov;
+              if ( file_exists( $ov_fs ) ) {
+                $ov_url .= '?v=' . filemtime( $ov_fs );
+              }
+            ?>
+            <img class="slide-overlay" src="<?php echo esc_url( $ov_url ); ?>"<?php echo $data_offset_attr; ?> alt="" aria-hidden="true" />
           </picture>
           <?php if ($i === 5): // Add second orbit overlay image that enters at 3.55s ?>
             <?php
