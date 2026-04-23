@@ -25,7 +25,7 @@ if ( ! class_exists( 'WooCommerce' ) ) {
   exit;
 }
 
-$DO_IMPORT = false; // set to true to perform creation
+$DO_IMPORT = true; // enabled: perform creation (user requested real run)
 
 // Static source copied from templates/blocks/products-portfolio.php
 $static_products = [
