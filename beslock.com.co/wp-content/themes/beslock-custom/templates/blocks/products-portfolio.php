@@ -6,13 +6,11 @@
  * (these are the larger/front-page images reserved for the portfolio).
  */
 
-// Fallback static product data (kept for environments without WooCommerce).
-$static_products = [
+$products = [
   [
     'name'  => 'e-Nova',
     'desc'  => "Acceso inteligente sin llaves para tu día a día.\nHuella y control simple para moverte con libertad y tranquilidad.",
     'image' => get_stylesheet_directory_uri() . '/assets/images/e-nova_.webp',
-    // image filenames relative to theme assets (used by the importer)
     'images' => [ 'e-nova_.webp', 'e-nova_s.webp' ],
     'link'  => '#'
   ],
@@ -52,45 +50,6 @@ $static_products = [
     'link'  => '#'
   ],
 ];
-
-// If WooCommerce is active, read from WC products. Otherwise fall back to the static array.
-$products = [];
-if ( class_exists('WooCommerce') ) {
-  $wc_args = [ 'limit' => 6, 'status' => 'publish' ];
-  $wc_products = wc_get_products( $wc_args );
-  if ( ! empty( $wc_products ) ) {
-    foreach ( $wc_products as $wp ) {
-      $id = is_object( $wp ) && method_exists( $wp, 'get_id' ) ? $wp->get_id() : intval( $wp );
-      $name = is_object( $wp ) && method_exists( $wp, 'get_name' ) ? $wp->get_name() : get_the_title( $id );
-      $desc = is_object( $wp ) && method_exists( $wp, 'get_short_description' ) ? $wp->get_short_description() : '';
-      if ( empty( $desc ) && is_object( $wp ) && method_exists( $wp, 'get_description' ) ) $desc = $wp->get_description();
-      $image_url = get_the_post_thumbnail_url( $id, 'full' );
-      $gallery_ids = get_post_meta( $id, '_product_image_gallery', true );
-      $images = [];
-      if ( $gallery_ids ) {
-        foreach ( explode( ',', $gallery_ids ) as $aid ) {
-          $src = wp_get_attachment_url( intval( $aid ) );
-          if ( $src ) $images[] = $src;
-        }
-      }
-      // Ensure the featured image is the first image from server output
-      if ( $image_url ) array_unshift( $images, $image_url );
-
-      $products[] = [
-        'name'   => $name,
-        'desc'   => $desc,
-        'image'  => $image_url ?: $static_products[0]['image'],
-        'images' => $images ?: $static_products[0]['images'],
-        'link'   => get_permalink( $id ),
-      ];
-    }
-  }
-}
-
-// final fallback to static if products is still empty
-if ( empty( $products ) ) {
-  $products = $static_products;
-}
 
 echo '<section class="products-portfolio section reveal"><div class="u-container products-portfolio__grid">';
 foreach ($products as $product) {
