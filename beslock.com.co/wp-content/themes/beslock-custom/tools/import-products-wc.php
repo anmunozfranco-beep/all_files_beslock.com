@@ -31,7 +31,7 @@ if ( ! class_exists( 'WooCommerce' ) ) {
   exit;
 }
 
-$DO_IMPORT = false; // dry-run by default (safer)
+$DO_IMPORT = true; // enabled by user confirmation — will perform creation
 
 $theme_images_dir = get_stylesheet_directory() . '/assets/images/';
 
