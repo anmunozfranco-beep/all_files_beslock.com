@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:6.4.1-php8.1-apache
+    depends_on:
+      - db
+    ports:
+      - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ./beslock.com.co:/var/www/html:delegated
+
+  wpcli:
+    image: docker.io/wp-cli/wp-cli:2.7.1
+    depends_on:
+      - wordpress
+    volumes:
+      - ./beslock.com.co:/var/www/html:delegated
+    working_dir: /var/www/html
+    entrypoint: ["bash", "-lc"]
+    tty: true
+
+volumes:
+  db_data:
