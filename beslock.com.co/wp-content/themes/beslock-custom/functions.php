@@ -192,48 +192,54 @@ add_action( 'wp_enqueue_scripts', function() {
  * This removes styles whose handle begins with "kadence-" but leaves all scripts
  * and template functionality intact. Run late (priority 100) so it can catch
  * styles enqueued by the parent and other components.
+ *
+ * NOTE: Disabled temporarily because aggressive dequeueing can remove
+ * essential parent styles and break layout. Re-enable only after careful QA.
  */
-add_action( 'wp_enqueue_scripts', function() {
-  // Only run on the front-end.
-  if ( is_admin() ) {
-    return;
-  }
-
-  // Deregister any style handles that start with 'kadence-'.
-  global $wp_styles;
-  if ( empty( $wp_styles ) || empty( $wp_styles->registered ) ) {
-    return;
-  }
-
-  foreach ( $wp_styles->registered as $handle => $data ) {
-    if ( strpos( $handle, 'kadence' ) === 0 ) {
-      wp_dequeue_style( $handle );
-      wp_deregister_style( $handle );
+if ( false ) {
+  add_action( 'wp_enqueue_scripts', function() {
+    // Only run on the front-end.
+    if ( is_admin() ) {
+      return;
     }
-  }
 
-  // Also ensure any parent style explicitly enqueued under 'kadence-parent-style' is removed.
-  if ( wp_style_is( 'kadence-parent-style', 'enqueued' ) || wp_style_is( 'kadence-parent-style', 'registered' ) ) {
-    wp_dequeue_style( 'kadence-parent-style' );
-    wp_deregister_style( 'kadence-parent-style' );
-  }
-
-  // Additional aggressive removals: WordPress global/block styles and classic theme styles
-  $extra_handles = [ 'global-styles', 'classic-theme-styles', 'wp-block-library-theme', 'wp-block-library' ];
-  foreach ( $extra_handles as $h ) {
-    if ( wp_style_is( $h, 'enqueued' ) || wp_style_is( $h, 'registered' ) ) {
-      wp_dequeue_style( $h );
-      wp_deregister_style( $h );
+    // Deregister any style handles that start with 'kadence-'.
+    global $wp_styles;
+    if ( empty( $wp_styles ) || empty( $wp_styles->registered ) ) {
+      return;
     }
-  }
 
-}, 100 );
+    foreach ( $wp_styles->registered as $handle => $data ) {
+      if ( strpos( $handle, 'kadence' ) === 0 ) {
+        wp_dequeue_style( $handle );
+        wp_deregister_style( $handle );
+      }
+    }
+
+    // Also ensure any parent style explicitly enqueued under 'kadence-parent-style' is removed.
+    if ( wp_style_is( 'kadence-parent-style', 'enqueued' ) || wp_style_is( 'kadence-parent-style', 'registered' ) ) {
+      wp_dequeue_style( 'kadence-parent-style' );
+      wp_deregister_style( 'kadence-parent-style' );
+    }
+
+    // Additional aggressive removals: WordPress global/block styles and classic theme styles
+    $extra_handles = [ 'global-styles', 'classic-theme-styles', 'wp-block-library-theme', 'wp-block-library' ];
+    foreach ( $extra_handles as $h ) {
+      if ( wp_style_is( $h, 'enqueued' ) || wp_style_is( $h, 'registered' ) ) {
+        wp_dequeue_style( $h );
+        wp_deregister_style( $h );
+      }
+    }
+
+  }, 100 );
+}
 
 /**
  * Remove Kadence header rendering hooks so the child theme header is the only one used.
  * Runs on after_setup_theme with slightly higher priority so parent registrations exist.
  */
-add_action( 'after_setup_theme', function() {
+if ( false ) {
+  add_action( 'after_setup_theme', function() {
   // List of Kadence hooks and callbacks to remove. This is aggressive by design.
   $removals = [
     'kadence_header' => [ 'Kadence\\header_markup' ],
@@ -273,7 +279,8 @@ add_action( 'after_setup_theme', function() {
     remove_all_actions( $hook );
   }
 
-}, 30 );
+  }, 30 );
+}
 
 /**
  * DEBUG: Volcar estilos encolados a un archivo para diagnóstico local.
@@ -317,22 +324,26 @@ add_action( 'wp_print_styles', function() {
  * This is aggressive: it removes any <link> or <style> node that references
  * "kadence" so the child theme CSS is the visual source of truth.
  */
-add_action( 'wp_head', function() {
-  if ( is_admin() ) {
-    return;
-  }
-  ob_start( 'beslock_strip_kadence_css' );
-}, 1 );
+// Temporarily disable aggressive head-buffering that strips Kadence CSS/link blocks.
+// This buffering was causing unintended removal of needed head output in some environments.
+if ( false ) {
+  add_action( 'wp_head', function() {
+    if ( is_admin() ) {
+      return;
+    }
+    ob_start( 'beslock_strip_kadence_css' );
+  }, 1 );
 
-add_action( 'wp_head', function() {
-  if ( is_admin() ) {
-    return;
-  }
-  // Flush buffer late so all wp_head output is captured.
-  if ( ob_get_level() ) {
-    ob_end_flush();
-  }
-}, 9999 );
+  add_action( 'wp_head', function() {
+    if ( is_admin() ) {
+      return;
+    }
+    // Flush buffer late so all wp_head output is captured.
+    if ( ob_get_level() ) {
+      ob_end_flush();
+    }
+  }, 9999 );
+}
 
 function beslock_strip_kadence_css( $buffer ) {
   // Remove <link ... href="...kadence...css" ...> or links to the Kadence theme folder
