@@ -96,7 +96,11 @@ $table_prefix = 'wptq_';
  *
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
-define( 'WP_DEBUG', false );
+// Enable debugging to log to `wp-content/debug.log` but do not display errors
+// to visitors. This is temporary for diagnosing the recent import-related issue.
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', false );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
