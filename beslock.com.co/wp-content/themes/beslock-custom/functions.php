@@ -6,56 +6,6 @@
  * Actualizado: encolado seguro de assets del menú móvil (CSS + JS)
  */
 
-// Re-add admin Tools page to run the portfolio importer on demand.
-add_action( 'admin_menu', function() {
-  add_management_page(
-    'Beslock Importer',
-    'Beslock Importer',
-    'manage_options',
-    'beslock-importer',
-    function() {
-      echo '<div class="wrap">';
-      echo '<h1>Beslock Importer</h1>';
-      $run_url = wp_nonce_url( admin_url( '?beslock_portfolio_import=1' ), 'beslock_portfolio_import' );
-      echo '<p><a class="button button-primary" href="' . esc_url( $run_url ) . '">Run import now</a></p>';
-      $out = get_transient( 'beslock_portfolio_import_output' );
-      if ( $out ) {
-        echo '<h2>Last run output</h2>';
-        echo '<pre style="white-space:pre-wrap;background:#fff;border:1px solid #ddd;padding:1em;">' . esc_html( $out ) . '</pre>';
-        delete_transient( 'beslock_portfolio_import_output' );
-      }
-      echo '<p><strong>Warning:</strong> this will create WooCommerce products and upload images. Backup DB before running.</p>';
-      echo '</div>';
-    }
-  );
-} );
-
-add_action( 'admin_init', function() {
-  if ( empty( $_GET['beslock_portfolio_import'] ) ) {
-    return;
-  }
-  if ( ! current_user_can( 'manage_options' ) ) {
-    return;
-  }
-  if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'beslock_portfolio_import' ) ) {
-    wp_die( 'Invalid nonce or unauthorized.' );
-  }
-
-  $importer = WP_CONTENT_DIR . '/tools/import-products-from-portfolio.php';
-  if ( ! file_exists( $importer ) ) {
-    set_transient( 'beslock_portfolio_import_output', "Importer file not found: {$importer}", 60 );
-    wp_safe_redirect( admin_url( 'tools.php?page=beslock-importer' ) );
-    exit;
-  }
-
-  ob_start();
-  include $importer;
-  $out = ob_get_clean();
-  set_transient( 'beslock_portfolio_import_output', $out, 60 );
-  wp_safe_redirect( admin_url( 'tools.php?page=beslock-importer' ) );
-  exit;
-} );
-
 add_action( 'wp_enqueue_scripts', function() {
 
   // If this theme is used as a child theme, ensure the Kadence parent stylesheet
