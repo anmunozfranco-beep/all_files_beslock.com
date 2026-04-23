@@ -25,7 +25,7 @@ if ( ! class_exists( 'WooCommerce' ) ) {
   exit;
 }
 
-$DO_REMOVE = false; // set to true to perform deletions
+$DO_REMOVE = true; // USER CONFIRMED: perform deletions
 
 $args = [
   'status' => 'any',
