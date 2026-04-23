@@ -411,51 +411,7 @@ function beslock_kadence_archive_hero_buffer_end() {
  * Adds a Tools -> Beslock Importer page that lets an admin run the
  * `tools/import-products-wc.php` script from the dashboard (nonce protected).
  */
-add_action( 'admin_menu', function() {
-  add_management_page(
-    'Beslock Importer',
-    'Beslock Importer',
-    'manage_options',
-    'beslock-importer',
-    function() {
-      echo '<div class="wrap">';
-      echo '<h1>Beslock Importer</h1>';
-      $run_url = wp_nonce_url( admin_url( '?beslock_import=1' ), 'beslock_import' );
-      echo '<p><a class="button button-primary" href="' . esc_url( $run_url ) . '">Run import now</a></p>';
-      $out = get_transient( 'beslock_import_output' );
-      if ( $out ) {
-        echo '<h2>Last run output</h2>';
-        echo '<pre style="white-space:pre-wrap;background:#fff;border:1px solid #ddd;padding:1em;">' . esc_html( $out ) . '</pre>';
-        delete_transient( 'beslock_import_output' );
-      }
-      echo '</div>';
-    }
-  );
-} );
-
-add_action( 'admin_init', function() {
-  if ( empty( $_GET['beslock_import'] ) ) {
-    return;
-  }
-  if ( ! current_user_can( 'manage_options' ) ) {
-    return;
-  }
-  if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'beslock_import' ) ) {
-    wp_die( 'Invalid nonce or unauthorized.' );
-  }
-
-  // Run the importer and capture output.
-  $importer = get_stylesheet_directory() . '/tools/import-products-wc.php';
-  if ( ! file_exists( $importer ) ) {
-    set_transient( 'beslock_import_output', "Importer file not found: {$importer}", 60 );
-    wp_safe_redirect( admin_url( 'tools.php?page=beslock-importer' ) );
-    exit;
-  }
-
-  ob_start();
-  include $importer;
-  $out = ob_get_clean();
-  set_transient( 'beslock_import_output', $out, 60 );
-  wp_safe_redirect( admin_url( 'tools.php?page=beslock-importer' ) );
-  exit;
-} );
+// NOTE: Admin importer UI and auto-run handler were removed temporarily to
+// prevent further import executions while diagnosing site issues. If you want
+// to re-enable the admin runner later, restore the previous admin_menu and
+// admin_init blocks added earlier.

@@ -31,7 +31,7 @@ if ( ! class_exists( 'WooCommerce' ) ) {
   exit;
 }
 
-$DO_IMPORT = true; // enabled by user confirmation — will perform creation
+$DO_IMPORT = false; // reverted to dry-run to avoid further changes while diagnosing site issues
 
 $theme_images_dir = get_stylesheet_directory() . '/assets/images/';
 
