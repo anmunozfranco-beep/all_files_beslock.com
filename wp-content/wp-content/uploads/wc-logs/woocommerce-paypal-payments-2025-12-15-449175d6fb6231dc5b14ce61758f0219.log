@@ -1,0 +1,92 @@
+2025-12-15T17:40:39+00:00 DEBUG #1898 - [New Request] GET /wp-admin/admin.php
+2025-12-15T17:40:39+00:00 DEBUG #1898 - GET https://api.woocommerce.com/integrations/ppc/v1/customer/partners/K8SKZ36LQBWXJ/merchant-integrations/
+Response: Array
+(
+    [code] => 404
+    [message] => Not Found
+)
+
+Response Body: {"statusCode":404,"error":"Not Found","message":"Not Found"}
+2025-12-15T17:40:39+00:00 WARNING #1898 - [Error] Not Found CONTEXT: {"args":{"method":"GET","headers":{"Authorization":"Bearer token","Content-Type":"application/json"}},"response":{"headers":{},"body":"{"statusCode":404,"error":"Not Found","message":"Not Found"}","response":{"code":404,"message":"Not Found"},"cookies":[],"filename":null,"http_response":{"data":null,"headers":null,"status":null}}}
+2025-12-15T17:40:42+00:00 DEBUG #9243 - [New Request] GET /wp-json/wc/v3/wc_paypal/webhooks
+2025-12-15T17:40:42+00:00 DEBUG #9243 - GET https://api.woocommerce.com/integrations/ppc/v1/notifications/webhooks
+Response: Array
+(
+    [code] => 404
+    [message] => Not Found
+)
+
+Response Body: {"statusCode":404,"error":"Not Found","message":"Not Found"}
+2025-12-15T17:41:46+00:00 DEBUG #6477 - [New Request] POST /wp-json/wc/v3/wc_paypal/login_link
+2025-12-15T17:41:46+00:00 INFO #6477 - Generating onboarding URL for: production-express_checkout-
+2025-12-15T17:41:46+00:00 DEBUG #6477 - POST https://api.woocommerce.com/integrations/ppc/v2/customer/partner-referrals
+Request Body: {"partner_config_override":{"return_url":"https:\/\/beslock.com.co\/wp-admin\/admin.php?page=wc-settings&tab=checkout&section=ppcp-gateway&ppcpToken=eyJrIjoicHJvZHVjdGlvbi1leHByZXNzX2NoZWNrb3V0LSIsInUiOjEsImgiOiI2YzM5MGUwOGZlYjc3YzgxMTNlNzQzM2IwYzk3N2E4NCJ9","return_url_description":"Volver a tu tienda.","show_add_credit_card":false},"products":["EXPRESS_CHECKOUT"],"legal_consents":[{"type":"SHARE_DATA_CONSENT","granted":true}],"operations":[{"operation":"API_INTEGRATION","api_integration_preference":{"rest_api_integration":{"integration_method":"PAYPAL","integration_type":"FIRST_PARTY","first_party_details":{"features":["PAYMENT","REFUND","ADVANCED_TRANSACTIONS_SEARCH","TRACKING_SHIPMENT_READWRITE","BILLING_AGREEMENT"],"seller_nonce":"a1233wtergfsdt4365tzrshgfbaewa36AGa1233wtergfsdt4365tzrshgfbaewa36AG"}}}}]}
+Response Debug ID: d1c71dc4a59f1
+Response: Array
+(
+    [code] => 201
+    [message] => Created
+)
+
+2025-12-15T17:41:48+00:00 DEBUG #2070 - [New Request] POST /wp-json/wc/v3/wc_paypal/login_link
+2025-12-15T17:41:48+00:00 DEBUG #2070 - Loaded onboarding URL from cache: production-express_checkout-
+2025-12-15T17:41:48+00:00 INFO #2070 - Using cached onboarding URL for: production-express_checkout-
+2025-12-15T17:41:48+00:00 DEBUG #6537 - [New Request] POST /wp-json/wc/v3/wc_paypal/login_link
+2025-12-15T17:41:48+00:00 DEBUG #6537 - Loaded onboarding URL from cache: production-express_checkout-
+2025-12-15T17:41:48+00:00 INFO #6537 - Using cached onboarding URL for: production-express_checkout-
+2025-12-15T17:44:34+00:00 DEBUG #1280 - [New Request] POST /wp-json/wc/v3/wc_paypal/authenticate/oauth
+2025-12-15T17:44:34+00:00 INFO #1280 - Storing one-time OAuth credentials... CONTEXT: {"shared_id":"BAAq2-5N6_GBnWNSOINE168mZ-pMMT3lItRs_s33Gut3Hf6RR0JvYONWBE9cpn3yf3RiC2OFuj-vr6xop4","auth_code":"C21AAP1bNT3nR_s1Ks4zAdNklp7kJlzh2R_8nWTyXkuqUgbxF3maDrv3Y8Ogrc-KKyUuNVMKIGQoHi54nBiGFldX7M_5gnbJg","use_sandbox":false}
+2025-12-15T17:44:38+00:00 DEBUG #3154 - [New Request] GET /wp-admin/admin.php
+2025-12-15T17:44:38+00:00 DEBUG #3154 - Validating onboarding ppcpToken: ey...E4NCJ9
+2025-12-15T17:44:38+00:00 INFO #3154 - Validated onboarding ppcpToken: ey...E4NCJ9
+2025-12-15T17:44:38+00:00 INFO #3154 - Extracting connection data from request...
+2025-12-15T17:44:38+00:00 INFO #3154 - Found OAuth merchant data in request CONTEXT: {"merchant_id":"LSR823DW3N8JA","merchant_email":"anmunozfranco@gmail.com","seller_type":"personal"}
+2025-12-15T17:44:38+00:00 INFO #3154 - Attempting OAuth login to PayPal... CONTEXT: {"sandbox":false,"shared_id":"BAAq2-5N6_GBnWNSOINE168mZ-pMMT3lItRs_s33Gut3Hf6RR0JvYONWBE9cpn3yf3RiC2OFuj-vr6xop4"}
+2025-12-15T17:44:39+00:00 DEBUG #3154 - POST https://api-m.paypal.com/v1/oauth2/token/
+Response Debug ID: f572ec0601ef3
+Response: Array
+(
+    [code] => 200
+    [message] => OK
+)
+
+2025-12-15T17:44:39+00:00 DEBUG #3154 - GET https://api-m.paypal.com/v1/customer/partners/K8SKZ36LQBWXJ/merchant-integrations/credentials/
+Response Debug ID: 21aa73bcd7427
+Response: Array
+(
+    [code] => 200
+    [message] => OK
+)
+
+2025-12-15T17:44:39+00:00 INFO #3154 - Updating connection details CONTEXT: {"is_sandbox":false,"client_id":"BAAq2-5N6_GBnWNSOINE168mZ-pMMT3lItRs_s33Gut3Hf6RR0JvYONWBE9cpn3yf3RiC2OFuj-vr6xop4","client_secret":"EMP-8X4CN920hEb6X4duzpYrs_dPOkWqDf-xiTOmgci1AZYBFRq2RdrgvSpCXghHk9Q6WR8hRXeebsae","merchant_id":"LSR823DW3N8JA","merchant_email":"anmunozfranco@gmail.com","merchant_country":"","seller_type":"personal"}
+2025-12-15T17:44:39+00:00 INFO #3154 - Merchant successfully connected to PayPal
+2025-12-15T17:44:39+00:00 INFO #3154 - Calling internal REST endpoint [https://beslock.com.co/wp-json/wc/v3/wc_paypal/common/seller-account]
+2025-12-15T17:44:40+00:00 DEBUG #3154 - Finished internal REST call [https://beslock.com.co/wp-json/wc/v3/wc_paypal/common/seller-account]
+2025-12-15T17:44:40+00:00 INFO #3154 - Internal REST success! CONTEXT: {"json":{"success":true,"data":{"country":"MT"}}}
+2025-12-15T17:44:40+00:00 INFO #3154 - Flushing API caches...
+2025-12-15T17:44:40+00:00 INFO #3154 - Merchant connected, complete onboarding and set defaults.
+2025-12-15T17:44:40+00:00 DEBUG #3154 - Webhook lock acquired for 'register'.
+2025-12-15T17:44:40+00:00 DEBUG #3154 - Webhook operation 'register' started.
+2025-12-15T17:44:40+00:00 DEBUG #3154 - GET https://api.woocommerce.com/integrations/ppc/v1/notifications/webhooks
+Response: Array
+(
+    [code] => 404
+    [message] => Not Found
+)
+
+Response Body: {"statusCode":404,"error":"Not Found","message":"Not Found"}
+2025-12-15T17:44:40+00:00 ERROR #3154 - Failed to delete webhooks: [Error] Not Found
+2025-12-15T17:44:40+00:00 INFO #3154 - Webhooks deleted.
+2025-12-15T17:44:40+00:00 DEBUG #3154 - POST https://api.woocommerce.com/integrations/ppc/v1/notifications/webhooks
+Request Body: {"url":"https:\/\/beslock.com.co\/wp-json\/paypal\/v1\/incoming","event_types":[{"name":"CHECKOUT.ORDER.APPROVED"},{"name":"CHECKOUT.ORDER.COMPLETED"},{"name":"CHECKOUT.PAYMENT-APPROVAL.REVERSED"},{"name":"PAYMENT.CAPTURE.REFUNDED"},{"name":"PAYMENT.AUTHORIZATION.VOIDED"},{"name":"PAYMENT.CAPTURE.REVERSED"},{"name":"PAYMENT.ORDER.CANCELLED"},{"name":"PAYMENT.CAPTURE.DENIED"},{"name":"PAYMENT.CAPTURE.COMPLETED"},{"name":"VAULT.PAYMENT-TOKEN.CREATED"},{"name":"VAULT.PAYMENT-TOKEN.DELETED"},{"name":"PAYMENT.CAPTURE.PENDING"},{"name":"PAYMENT.SALE.COMPLETED"},{"name":"PAYMENT.SALE.REFUNDED"},{"name":"BILLING.SUBSCRIPTION.CANCELLED"},{"name":"BILLING.PLAN.PRICING-CHANGE.ACTIVATED"},{"name":"CATALOG.PRODUCT.UPDATED"},{"name":"BILLING.PLAN.UPDATED"}]}
+Response: Array
+(
+    [code] => 404
+    [message] => Not Found
+)
+
+Response Body: {"statusCode":404,"error":"Not Found","message":"Not Found"}
+2025-12-15T17:44:40+00:00 ERROR #3154 - Failed to subscribe webhooks: [Error] Not Found
+2025-12-15T17:44:40+00:00 DEBUG #3154 - Webhook lock released for 'register'.
+2025-12-15T17:44:40+00:00 DEBUG #9673 - [New Request] GET /wp-admin/admin.php
+2025-12-15T17:44:40+00:00 INFO #9673 - Token already processed, continuing silently CONTEXT: {"token":"ey...E4NCJ9"}

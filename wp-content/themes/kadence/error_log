@@ -1,0 +1,5 @@
+[02-Apr-2026 14:53:32 America/Mexico_City] PHP Warning:  Undefined global variable $wp_version in /home1/andres38/beslock.com.co/wp-content/themes/kadence/functions.php on line 17
+[02-Apr-2026 14:53:32 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined function get_template_directory() in /home1/andres38/beslock.com.co/wp-content/themes/kadence/functions.php:18
+Stack trace:
+#0 {main}
+  thrown in /home1/andres38/beslock.com.co/wp-content/themes/kadence/functions.php on line 18

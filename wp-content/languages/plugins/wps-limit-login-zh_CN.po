@@ -1,0 +1,357 @@
+# Translation of Plugins - WPS Limit Login - Stable (latest release) in Chinese (China)
+# This file is distributed under the same license as the Plugins - WPS Limit Login - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2022-10-14 08:11:21+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: zh_CN\n"
+"Project-Id-Version: Plugins - WPS Limit Login - Stable (latest release)\n"
+
+#. Author of the plugin
+#: wps-limit-login.php
+msgid "WPServeur, NicolasKulka, wpformation"
+msgstr "WPServeur, NicolasKulka, wpformation"
+
+#: blocks/pub.php:45
+msgid "Enable"
+msgstr "启用"
+
+#: blocks/pub.php:33
+msgid "Install"
+msgstr "安装"
+
+#: classes/plugin.php:1472
+msgid "Thanks :)"
+msgstr "谢谢 :)"
+
+#: classes/plugin.php:1470
+msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
+msgstr "如果你喜欢 %1$s，请给我们打%2$s。非常感谢！"
+
+#: blocks/pub-wpserveur.php:71 blocks/pub.php:71
+msgid "More about %s"
+msgstr "更多关于 %s 的信息..."
+
+#: classes/plugin.php:1412
+msgid "List of the last 5 lockouts:"
+msgstr "最后5次被拦截的登录尝试"
+
+#: classes/plugin.php:1428
+msgid "See all lockouts"
+msgstr "查看所有被拦截的登录尝试"
+
+#: classes/plugin.php:1394 classes/plugin.php:1396
+msgid "Settings"
+msgstr "设置"
+
+#. Author URI of the plugin
+#: wps-limit-login.php
+msgid "https://wpserveur.net"
+msgstr "https://www.wpscale.cn"
+
+#. Description of the plugin
+#: wps-limit-login.php
+msgid "Limit connection attempts by IP address"
+msgstr "根据IP地址限制登录尝试"
+
+#. Plugin Name of the plugin
+#: wps-limit-login.php classes/plugin.php:1471
+msgid "WPS Limit Login"
+msgstr "WPS Limit Login"
+
+#: classes/plugin.php:1151 classes/plugin.php:1169 classes/plugin.php:1187
+msgid "Options saved."
+msgstr "设置已保存。"
+
+#: classes/plugin.php:1122
+msgid "Cleared current lockouts"
+msgstr "清除当前拦截"
+
+#: classes/plugin.php:1116
+msgid "Reset lockout count"
+msgstr "重置登录锁定计数"
+
+#: classes/plugin.php:1110
+msgid "Cleared IP log"
+msgstr "清除 IP 日志"
+
+#: classes/plugin.php:961
+msgid "WC Error"
+msgstr "WC 错误"
+
+#: classes/plugin.php:938
+msgid "<strong>ERROR</strong>: Incorrect username or password."
+msgstr "<strong>错误</strong>：错误的用户名或密码。"
+
+#: classes/plugin.php:870
+msgid "Please try again in %d minute."
+msgid_plural "Please try again in %d minutes."
+msgstr[0] "请在 %d 分钟后重试。"
+
+#: classes/plugin.php:868
+msgid "Please try again in %d hour."
+msgid_plural "Please try again in %d hours."
+msgstr[0] "请在 %d 小时后重试"
+
+#: classes/plugin.php:860
+msgid "Please try again later."
+msgstr "请稍后重试。"
+
+#: classes/plugin.php:670
+msgid "IP was blocked for %s"
+msgstr "该IP在 %s 被锁定"
+
+#: classes/plugin.php:668
+msgid "IP was NOT blocked because of external whitelist."
+msgstr "由于 IP 已列入外部白名单，故未被阻止。"
+
+#: classes/plugin.php:664
+msgid "Last user attempted: %s"
+msgstr "最后一次尝试登录的用户：%s"
+
+#: classes/plugin.php:660
+msgid "%d failed login attempts (%d lockout(s)) from IP: %s"
+msgstr "%d 次登录失败尝试（累计锁定 %d 次），来源 IP：%s"
+
+#: classes/plugin.php:655
+msgid "[%s - WPS Limit Login] Too many failed login attempts"
+msgstr "[%s - WPS Limit Login] 错误登录尝试过多"
+
+#: classes/plugin.php:651
+msgid "[%s - WPS Limit Login] Failed login attempts from whitelisted IP"
+msgstr "[%s - WPS Limit Login] 来自白名单IP的尝试登录错误"
+
+#: classes/plugin.php:644
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d 分钟"
+
+#: classes/plugin.php:638
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d 小时"
+
+#: classes/plugin.php:320 classes/plugin.php:795 classes/plugin.php:856
+msgid "<strong>ERROR</strong>: Too many failed login attempts."
+msgstr "<strong>错误</strong>：登录尝试失败的次数过多。"
+
+#: classes/plugin.php:267 classes/plugin.php:1010
+msgid "<strong>%d</strong> attempt remaining."
+msgid_plural "<strong>%d</strong> attempts remaining."
+msgstr[0] "剩余<strong>%d</strong> 次重试登录机会。"
+
+#: blocks/whitelist.php:19
+msgid "which will add all ip between 88.88.88.86 and 88.88.88.90 in the whitelist"
+msgstr "这将会添加所有从88.88.88.86 到 88.88.88.90的IP地址到白名单"
+
+#: blocks/whitelist.php:16
+msgid "Add your IP address (%s) to a whitelist."
+msgstr "添加您的IP 地址 (%s) 到白名单"
+
+#: blocks/whitelist.php:15
+msgid "Sets a list of IP addresses that will have no attempt limit and will never be blocked. Be careful, you must put trusted IP addresses (example: the IP address of your home), you must never put the IP address of a public network (Internet cafe or other)."
+msgstr "设置没有尝试限制且永远不会被阻止的 IP 地址列表。注意！一定要填可信的IP地址（例如：你家的IP地址），千万不要放公共网络（网吧或其他）的IP地址。"
+
+#: blocks/settings.php:87
+msgid "Reset the original settings"
+msgstr "重置为初始设置"
+
+#: blocks/settings.php:80
+msgid "Show credit link"
+msgstr "展示信任链接"
+
+#: blocks/settings.php:76
+msgid "This helps others know about the plugin so they can protect their blogs as well if they like. However, you can disable this message if you prefer."
+msgstr "这有助于其他人了解该插件，以便他们也可以根据需要保护自己的博客。但是如果您愿意，也可以关闭此链接的展示。"
+
+#: blocks/settings.php:73 classes/plugin.php:1282
+msgid "Login form protected by"
+msgstr "登陆表单保护程序为"
+
+#: blocks/settings.php:71
+msgid "By default, WPS Limit Login will display the following message on the login form:"
+msgstr "WPS Limit Login将在登陆表单默认显示下面的信息："
+
+#: blocks/settings.php:70
+msgid "Show Credit Link?"
+msgstr "是否显示信任链接？"
+
+#: blocks/settings.php:67
+msgid "lockouts"
+msgstr "拦截"
+
+#: blocks/settings.php:65
+msgid "Email to admin after"
+msgstr "电子邮件通知管理员，当发生"
+
+#: blocks/settings.php:60
+msgid "hours"
+msgstr "小时"
+
+#: blocks/settings.php:58
+msgid "lockouts increase lockout time to"
+msgstr "拦截后增加锁定时间至"
+
+#: blocks/settings.php:54
+msgid "hours until retries are reset"
+msgstr "个小时后重设登录尝试次数"
+
+#: blocks/settings.php:50
+msgid "minutes"
+msgstr "分钟"
+
+#: blocks/settings.php:48
+msgid "allowed retries"
+msgstr "次登录尝试后锁定"
+
+#: blocks/settings.php:48
+msgid "for a period of"
+msgstr "时间"
+
+#: blocks/settings.php:27
+msgid "Use global settings"
+msgstr "使用全局设置"
+
+#: blocks/settings.php:23
+msgid "If disabled, the global settings will be forcibly applied to the entire network."
+msgstr "如果禁用，全局设置将强制应用到整个网络。"
+
+#: blocks/settings.php:22
+msgid "Let network sites use their own settings"
+msgstr "让网站使用自己的设置"
+
+#: blocks/pub-wpserveur.php:67
+msgid "Subscribe to WPServeur"
+msgstr "购买WPScale套餐"
+
+#: blocks/pub-wpserveur.php:63
+msgid "(-10% discount on your subscription with the promo code <strong>WPSC&T</strong>)"
+msgstr "（使用优惠码 <strong>WPSC&T</strong> 获得9折优惠）"
+
+#: blocks/pub-wpserveur.php:62
+msgid "We only do WordPress but we do it well!"
+msgstr "我们只做WordPress 托管，但我们力求做到最好！"
+
+#: blocks/pub-wpserveur.php:61
+msgid "For fast, secure and efficient hosting."
+msgstr "为了更安全、快速和高效率的主机。"
+
+#: blocks/pub-wpserveur.php:60
+msgid "Discover the specialized WordPress hosting with WPServeur!"
+msgstr "进一步了解专业的WordPress主机商WPScale所提供的托管服务！"
+
+#: blocks/pub-wpserveur.php:35
+msgid "Enable Migrate Guru"
+msgstr "启用Migrate Guru"
+
+#: blocks/pub-wpserveur.php:23
+msgid "Install Migrate Guru"
+msgstr "安装Migrate Guru"
+
+#: blocks/menu.php:56
+msgid "Log"
+msgstr "日志"
+
+#: blocks/menu.php:30 blocks/whitelist.php:14
+msgid "Whitelist"
+msgstr "白名单"
+
+#: blocks/menu.php:17 blocks/settings.php:15
+msgid "Configuration"
+msgstr "配置"
+
+#: blocks/log.php:82 blocks/log.php:108
+msgid "Unlocked"
+msgstr "已解锁"
+
+#: blocks/log.php:80
+msgid "Unlock"
+msgstr "解锁"
+
+#: blocks/log.php:75 classes/plugin.php:1421
+msgid "lockout"
+msgid_plural "lockouts"
+msgstr[0] "拦截"
+
+#: blocks/log.php:67 blocks/log.php:76
+msgid "Gateway"
+msgstr "网关"
+
+#: blocks/log.php:66 blocks/log.php:75
+msgid "Users"
+msgstr "用户"
+
+#: blocks/log.php:65 blocks/log.php:74
+msgctxt "Internet address"
+msgid "IP"
+msgstr "IP"
+
+#: blocks/log.php:64 blocks/log.php:73
+msgid "Date"
+msgstr "日期"
+
+#: blocks/log.php:57
+msgid "Clear Log"
+msgstr "清除日志"
+
+#: blocks/log.php:46
+msgid "You can unlock an IP address individually (by clicking on \"Unlock\" red button)."
+msgstr "您可以单独解锁一个IP地址（点击红色“解锁“按钮）"
+
+#: blocks/log.php:44
+msgid "Lockout log"
+msgstr "拦截日志"
+
+#: blocks/log.php:34
+msgid "Restore Lockouts"
+msgstr "恢复锁定"
+
+#: blocks/log.php:30
+msgid "Reset Counter"
+msgstr "重置计数器"
+
+#: blocks/log.php:25
+msgid "%d IP is currently blocked from trying to log in"
+msgid_plural "%d IP are currently blocked from trying to log in"
+msgstr[0] "目前已阻止 %d 个尝试登录的IP"
+
+#: blocks/log.php:21 blocks/log.php:48 classes/plugin.php:1407
+msgid "No lockouts yet"
+msgstr "还没有拦截记录"
+
+#: blocks/log.php:17
+msgid "%d lockout since last reset"
+msgid_plural "%d lockouts since last reset"
+msgstr[0] "自上次重置锁定计数以来，共发生了 %d 次登录锁定"
+
+#: blocks/log.php:11
+msgid "Statistics"
+msgstr "统计"
+
+#: blocks/blacklist.php:19 blocks/settings.php:84 blocks/whitelist.php:22
+msgid "Save"
+msgstr "保存"
+
+#: blocks/blacklist.php:16
+msgid "which will block all ip between 88.88.88.86 and 88.88.88.90"
+msgstr "这会拦截从88.88.88.86 到 88.88.88.90的所有的IP地址"
+
+#: blocks/blacklist.php:14 blocks/whitelist.php:17
+msgid "One IP range (88.88.88.86/90) or IP(88.88.88.86) per line"
+msgstr "一行一个IP(例如：88.88.88.86) 或 一个IP范围(88.88.88.86/90)"
+
+#: blocks/blacklist.php:13
+msgid "Defines a list of IP addresses for which you want to completely block access to the login page."
+msgstr "定义一个您想完全拦截访问登录界面的IP地址列表"
+
+#: blocks/blacklist.php:12 blocks/menu.php:43
+msgid "Blacklist"
+msgstr "黑名单"
+
+#: admin_page/options.php:9
+msgid "WPS Limit Login limits attempts to connect to your WordPress administration."
+msgstr "WPS Limit Login 限制登录您WordPress管理后台的尝试次数。"

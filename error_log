@@ -1,0 +1,278 @@
+[19-Mar-2026 09:18:50 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_site_transient_wp_theme_files_patterns-c598fbbf54f36254bc62c26429516abc' made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, _register_theme_block_patterns, WP_Theme->get_block_patterns, WP_Theme->get_pattern_cache, get_site_transient, delete_site_option, delete_network_option, delete_option
+[19-Mar-2026 09:18:50 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_site_transient_wp_theme_files_patterns-c598fbbf54f36254bc62c26429516abc' made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, _register_theme_block_patterns, WP_Theme->get_block_patterns, WP_Theme->get_pattern_cache, get_site_transient, delete_site_option, delete_network_option, delete_option
+[19-Mar-2026 09:18:51 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[19-Mar-2026 09:18:51 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[19-Mar-2026 09:18:51 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[19-Mar-2026 09:18:51 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[19-Mar-2026 12:46:52 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[19-Mar-2026 22:12:43 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[20-Mar-2026 20:05:36 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt ASC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[20-Mar-2026 20:05:36 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt DESC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[22-Mar-2026 19:07:18 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query INSERT INTO `wptq_options` (`option_name`, `option_value`, `autoload`) VALUES ('_site_transient_timeout_wp_theme_files_patterns-c6be90e42b32e8cf589b37216ea0f4c8', '1774208238', 'off') ON DUPLICATE KEY UPDATE `option_name` = VALUES(`option_name`), `option_value` = VALUES(`option_value`), `autoload` = VALUES(`autoload`) made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, _register_theme_block_patterns, WP_Theme->get_block_patterns, WP_Theme->set_pattern_cache, set_site_transient, add_site_option, add_network_option, add_option
+[24-Mar-2026 14:46:58 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[24-Mar-2026 14:46:58 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[24-Mar-2026 14:46:58 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[24-Mar-2026 14:46:58 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[24-Mar-2026 14:46:58 UTC] Error de evento de anulación de programación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[24-Mar-2026 14:46:58 UTC] Error de evento de reprogramación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[26-Mar-2026 03:03:35 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_site_transient_wp_theme_files_patterns-c598fbbf54f36254bc62c26429516abc' made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, _register_theme_block_patterns, WP_Theme->get_block_patterns, WP_Theme->get_pattern_cache, get_site_transient, delete_site_option, delete_network_option, delete_option
+[26-Mar-2026 03:03:35 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_site_transient_wp_theme_files_patterns-c598fbbf54f36254bc62c26429516abc' made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, _register_theme_block_patterns, WP_Theme->get_block_patterns, WP_Theme->get_pattern_cache, get_site_transient, delete_site_option, delete_network_option, delete_option
+[26-Mar-2026 03:03:36 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_timeout_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[26-Mar-2026 03:03:36 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_timeout_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[28-Mar-2026 02:28:03 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt ASC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[28-Mar-2026 02:28:03 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt DESC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[29-Mar-2026 19:39:10 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[31-Mar-2026 06:32:35 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[31-Mar-2026 06:32:35 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[31-Mar-2026 06:32:35 UTC] Error de evento de reprogramación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[31-Mar-2026 06:32:35 UTC] Error de evento de anulación de programación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[31-Mar-2026 06:32:35 UTC] Error de evento de reprogramación de cron para el hook: jetpack_clean_nonces. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[31-Mar-2026 06:32:35 UTC] Error de evento de anulación de programación de cron para el hook: jetpack_clean_nonces. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[31-Mar-2026 06:32:35 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_process_orders_milestone. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[31-Mar-2026 06:32:35 UTC] Error de evento de anulación de programación de cron para el hook: wc_admin_process_orders_milestone. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[31-Mar-2026 06:32:35 UTC] Error de evento de reprogramación de cron para el hook: wp_privacy_delete_old_export_files. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[31-Mar-2026 06:32:35 UTC] Error de evento de anulación de programación de cron para el hook: wp_privacy_delete_old_export_files. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[31-Mar-2026 06:32:35 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_three_hours_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_every_three_hours","args":[],"interval":10800}
+[31-Mar-2026 06:32:35 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_three_hours_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_every_three_hours","args":[],"interval":10800}
+[31-Mar-2026 12:36:09 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
+[31-Mar-2026 13:28:15 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
+[31-Mar-2026 17:37:19 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[31-Mar-2026 18:19:25 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
+[31-Mar-2026 18:29:38 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[01-Apr-2026 15:58:28 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_site_transient_wp_theme_files_patterns-4900f40883e2a943cf33b7727d4f6139' made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, _register_theme_block_patterns, WP_Theme->get_block_patterns, WP_Theme->get_pattern_cache, get_site_transient, delete_site_option, delete_network_option, delete_option
+[01-Apr-2026 15:58:29 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_timeout_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[04-Apr-2026 00:50:32 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_site_transient_wp_theme_files_patterns-4900f40883e2a943cf33b7727d4f6139' made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, _register_theme_block_patterns, WP_Theme->get_block_patterns, WP_Theme->get_pattern_cache, get_site_transient, delete_site_option, delete_network_option, delete_option
+[04-Apr-2026 07:08:36 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt ASC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[04-Apr-2026 07:08:36 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt DESC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[04-Apr-2026 15:25:22 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[04-Apr-2026 15:25:22 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[04-Apr-2026 15:25:22 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[05-Apr-2026 17:09:26 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[05-Apr-2026 17:09:26 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[06-Apr-2026 15:01:06 UTC] Error de evento de reprogramación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[06-Apr-2026 15:56:29 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
+[06-Apr-2026 15:56:29 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
+[06-Apr-2026 21:16:11 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[06-Apr-2026 21:16:11 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[06-Apr-2026 21:16:11 UTC] Error de evento de reprogramación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[06-Apr-2026 21:16:11 UTC] Error de evento de anulación de programación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[06-Apr-2026 21:16:11 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[06-Apr-2026 21:16:11 UTC] Error de evento de anulación de programación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[06-Apr-2026 21:16:11 UTC] Error de evento de reprogramación de cron para el hook: jetpack_clean_nonces. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[06-Apr-2026 21:26:25 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_timeout_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[06-Apr-2026 21:31:28 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[07-Apr-2026 04:31:58 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_three_hours_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_every_three_hours","args":[],"interval":10800}
+[07-Apr-2026 04:31:58 UTC] Error de evento de reprogramación de cron para el hook: check_plugin_updates-fileorganizer-pro. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"twicedaily","args":[],"interval":43200}
+[07-Apr-2026 04:31:58 UTC] Error de evento de anulación de programación de cron para el hook: check_plugin_updates-fileorganizer-pro. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"twicedaily","args":[],"interval":43200}
+[07-Apr-2026 10:36:49 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[07-Apr-2026 10:36:49 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[07-Apr-2026 10:36:49 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[07-Apr-2026 10:36:49 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[07-Apr-2026 12:22:12 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[07-Apr-2026 12:22:13 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[07-Apr-2026 12:22:13 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[09-Apr-2026 01:29:46 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
+[09-Apr-2026 12:09:23 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[10-Apr-2026 03:47:24 UTC] Error de evento de reprogramación de cron para el hook: wp_version_check. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"twicedaily","args":[],"interval":43200}
+[11-Apr-2026 07:34:51 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[11-Apr-2026 07:34:51 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[11-Apr-2026 07:34:51 UTC] Error de evento de reprogramación de cron para el hook: wp_privacy_delete_old_export_files. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[11-Apr-2026 07:34:51 UTC] Error de evento de anulación de programación de cron para el hook: wp_privacy_delete_old_export_files. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[11-Apr-2026 07:34:51 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[11-Apr-2026 07:34:51 UTC] Error de evento de anulación de programación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[11-Apr-2026 07:34:51 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_process_orders_milestone. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[11-Apr-2026 07:34:51 UTC] Error de evento de anulación de programación de cron para el hook: wc_admin_process_orders_milestone. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[11-Apr-2026 10:47:46 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt ASC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[11-Apr-2026 10:47:46 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt DESC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[13-Apr-2026 13:03:16 UTC] Error de evento de reprogramación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[15-Apr-2026 04:26:03 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
+[16-Apr-2026 00:19:59 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_site_transient_wp_theme_files_patterns-4900f40883e2a943cf33b7727d4f6139' made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, _register_theme_block_patterns, WP_Theme->get_block_patterns, WP_Theme->get_pattern_cache, get_site_transient, delete_site_option, delete_network_option, delete_option
+[16-Apr-2026 00:19:59 UTC] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query DELETE FROM `wptq_options` WHERE `option_name` = '_transient_timeout_cmplz_cookies' made by require('wp-blog-header.php'), wp, WP->main, do_action_ref_array('wp'), WP_Hook->do_action, WP_Hook->apply_filters, cmplz_init_cookie_blocker, cmplz_can_run_cookie_blocker, cmplz_banner_loader->site_needs_cookie_warning, cmplz_banner_loader->site_shares_data, cmplz_banner_loader->get_cookies, get_transient, delete_option
+[16-Apr-2026 03:30:05 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[16-Apr-2026 03:30:05 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[16-Apr-2026 03:30:05 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[16-Apr-2026 03:30:05 UTC] Error de evento de reprogramación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[16-Apr-2026 14:47:41 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
+[17-Apr-2026 22:19:49 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_process_orders_milestone. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[17-Apr-2026 22:19:49 UTC] Error de evento de anulación de programación de cron para el hook: wc_admin_process_orders_milestone. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[17-Apr-2026 22:19:49 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[17-Apr-2026 22:19:49 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[17-Apr-2026 22:19:49 UTC] Error de evento de reprogramación de cron para el hook: jetpack_clean_nonces. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[17-Apr-2026 22:19:49 UTC] Error de evento de anulación de programación de cron para el hook: jetpack_clean_nonces. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[17-Apr-2026 22:19:49 UTC] Error de evento de reprogramación de cron para el hook: wp_privacy_delete_old_export_files. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[17-Apr-2026 22:19:49 UTC] Error de evento de anulación de programación de cron para el hook: wp_privacy_delete_old_export_files. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[17-Apr-2026 22:19:49 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[17-Apr-2026 22:19:49 UTC] Error de evento de anulación de programación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[17-Apr-2026 22:19:49 UTC] Error de evento de reprogramación de cron para el hook: woocommerce_marketplace_cron_fetch_promotions. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"twicedaily","args":[],"interval":43200}
+[17-Apr-2026 22:19:49 UTC] Error de evento de anulación de programación de cron para el hook: woocommerce_marketplace_cron_fetch_promotions. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"twicedaily","args":[],"interval":43200}
+[18-Apr-2026 13:14:52 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt ASC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[18-Apr-2026 13:14:52 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_create' at line 3 for query SELECT
+					id,
+					row_number() OVER (ORDER BY date_created_gmt) AS order_rank,
+					date_created_gmt AS order_created_at,
+					date_updated_gmt AS order_updated_at,
+					currency,
+					total_amount,
+					payment_method,
+					payment_method_title
+				FROM wptq_wc_orders
+				WHERE
+					type = 'shop_order'
+					AND status IN ('wc-completed', 'wc-refunded')
+				ORDER BY date_created_gmt DESC
+				LIMIT 20; made by do_action_ref_array('action_scheduler_run_queue'), WP_Hook->do_action, WP_Hook->apply_filters, ActionScheduler_QueueRunner->run, ActionScheduler_QueueRunner->do_batch, ActionScheduler_Abstract_QueueRunner->process_action, ActionScheduler_Action->execute, do_action_ref_array('woocommerce_tracker_send_event_wrapper'), WP_Hook->do_action, WP_Hook->apply_filters, WooCommerce->add_woocommerce_tracker_send_event_wrapper, do_action('woocommerce_tracker_send_event'), WP_Hook->do_action, WP_Hook->apply_filters, WC_Tracker::send_tracking_data, WC_Tracker::get_tracking_data, WC_Tracker::get_order_snapshot, WC_Tracker::get_order_data
+[19-Apr-2026 04:44:45 UTC] Error de evento de reprogramación de cron para el hook: action_scheduler_run_queue. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"every_minute","args":["WP Cron"],"interval":60}
+[19-Apr-2026 04:44:45 UTC] Error de evento de reprogramación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[19-Apr-2026 04:44:45 UTC] Error de evento de anulación de programación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[19-Apr-2026 04:44:45 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[19-Apr-2026 04:44:45 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[19-Apr-2026 04:44:45 UTC] Error de evento de reprogramación de cron para el hook: jetpack_clean_nonces. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[19-Apr-2026 04:44:45 UTC] Error de evento de anulación de programación de cron para el hook: jetpack_clean_nonces. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[19-Apr-2026 04:44:45 UTC] Error de evento de reprogramación de cron para el hook: wp_privacy_delete_old_export_files. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[19-Apr-2026 04:44:45 UTC] Error de evento de anulación de programación de cron para el hook: wp_privacy_delete_old_export_files. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[19-Apr-2026 04:44:45 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_three_hours_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_every_three_hours","args":[],"interval":10800}
+[19-Apr-2026 04:44:45 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_three_hours_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_every_three_hours","args":[],"interval":10800}
+[19-Apr-2026 04:44:45 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_unsnooze_admin_notes. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[20-Apr-2026 13:12:14 UTC] Error de evento de reprogramación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[20-Apr-2026 13:12:14 UTC] Error de evento de anulación de programación de cron para el hook: cmplz_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"cmplz_five_minutes","args":[],"interval":300}
+[20-Apr-2026 13:12:14 UTC] Error de evento de reprogramación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[20-Apr-2026 13:12:14 UTC] Error de evento de anulación de programación de cron para el hook: rsssl_every_five_minutes_hook. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"rsssl_five_minutes","args":[],"interval":300}
+[20-Apr-2026 13:12:14 UTC] Error de evento de reprogramación de cron para el hook: wc_admin_process_orders_milestone. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[20-Apr-2026 13:12:14 UTC] Error de evento de anulación de programación de cron para el hook: wc_admin_process_orders_milestone. Código de error: could_not_set. Mensaje de error: No se ha podido guardar la lista de eventos del cron.. Datos: {"schedule":"hourly","args":[],"interval":3600}
+[21-Apr-2026 07:08:59 UTC] PHP Warning:  Undefined array key "path" in /home1/andres38/beslock.com.co/wp-content/advanced-cache.php on line 52
