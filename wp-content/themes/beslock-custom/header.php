@@ -41,7 +41,6 @@
       <?php if ( $cart_count > 0 ) : ?>
         <span class="header__cart-count" aria-hidden="true"><?php echo esc_html( $cart_count ); ?></span>
       <?php endif; ?>
-      <span class="screen-reader-text"><?php esc_html_e('Go to cart', 'beslock'); ?></span>
     </a>
   </div>
 </header>

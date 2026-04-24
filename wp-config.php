@@ -31,16 +31,17 @@ define('WP_CACHE', true); // Added by SpeedyCache
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'andres38_wp718' );
+// Use Docker Compose database settings for local development
+define( 'DB_NAME', getenv('DB_NAME') ? getenv('DB_NAME') : 'wordpress' );
 
 /** Database username */
-define( 'DB_USER', 'andres38_wp718' );
+define( 'DB_USER', getenv('DB_USER') ? getenv('DB_USER') : 'wp' );
 
 /** Database password */
-define( 'DB_PASSWORD', '[B5V5c1(Sp' );
+define( 'DB_PASSWORD', getenv('DB_PASSWORD') ? getenv('DB_PASSWORD') : 'wp_pass' );
 
 /** Database hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', getenv('DB_HOST') ? getenv('DB_HOST') : 'db' );
 
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8mb4' );

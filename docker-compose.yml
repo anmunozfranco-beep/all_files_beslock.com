@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: beslock_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:6.2-php8.1-apache
+    container_name: beslock_wp
+    depends_on:
+      - db
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html:cached
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: beslock_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8080:80"
+
+volumes:
+  db_data:
