@@ -249,6 +249,7 @@ add_action( 'after_setup_theme', function() {
     echo '<p><button type="submit" name="beslock_import_images" class="button button-primary">' . esc_html__( 'Import images', 'beslock' ) . '</button></p>';
     echo '<p><button type="submit" name="beslock_assign_images" class="button">' . esc_html__( 'Assign images to products', 'beslock' ) . '</button></p>';
     echo '<p><button type="submit" name="beslock_import_and_assign" class="button button-primary">' . esc_html__( 'Import and assign images', 'beslock' ) . '</button></p>';
+    echo '<p><button type="submit" name="beslock_set_all_price" class="button button-secondary" onclick="return confirm(\'' . esc_js( __( 'Set price 500000 for ALL products? This cannot be undone easily.', 'beslock' ) ) . '\');">' . esc_html__( 'Set all products price (500000)', 'beslock' ) . '</button></p>';
     echo '</form></div>';
   }
 
@@ -270,6 +271,18 @@ add_action( 'after_setup_theme', function() {
         if ( ! empty( $result['skipped'] ) ) {
           echo '<p>' . esc_html__( 'Skipped products (no matching images):', 'beslock' ) . ' ' . esc_html( implode( ', ', $result['skipped'] ) ) . '</p>';
         }
+      }
+    }
+
+    // Handle setting price for all products to a fixed amount (500000)
+    if ( isset( $_POST['beslock_set_all_price'] ) ) {
+      check_admin_referer( 'beslock_import_images_nonce' );
+      $amount = '500000';
+      $res = beslock_set_all_products_price( $amount );
+      if ( is_wp_error( $res ) ) {
+        echo '<div class="notice notice-error"><p>' . esc_html( $res->get_error_message() ) . '</p></div>';
+      } else {
+        printf( '<div class="notice notice-success"><p>%s</p></div>', esc_html( sprintf( __( 'Updated price for %d products to %s', 'beslock' ), intval( $res['updated'] ), $amount ) ) );
       }
     }
 
@@ -361,6 +374,60 @@ add_action( 'after_setup_theme', function() {
       'assigned'     => isset( $assign['assigned'] ) ? $assign['assigned'] : 0,
       'skipped'      => isset( $assign['skipped'] ) ? $assign['skipped'] : array(),
     );
+  }
+
+  /**
+   * Set all products regular price to given amount (string/number).
+   * Returns array('updated' => N) or WP_Error.
+   */
+  function beslock_set_all_products_price( $amount ) {
+    if ( ! $amount || ! is_scalar( $amount ) ) {
+      return new WP_Error( 'invalid_amount', __( 'Invalid amount', 'beslock' ) );
+    }
+    $amount = (string) $amount;
+
+    $products = get_posts( array( 'post_type' => 'product', 'numberposts' => -1, 'post_status' => array( 'publish', 'private', 'draft' ) ) );
+    if ( empty( $products ) ) {
+      return new WP_Error( 'no_products', __( 'No products found', 'beslock' ) );
+    }
+
+    $updated = 0;
+    foreach ( $products as $p ) {
+      $pid = $p->ID;
+      if ( function_exists( 'wc_get_product' ) ) {
+        $wc = wc_get_product( $pid );
+        if ( ! $wc ) continue;
+        // Variable products: update variations
+        if ( $wc->is_type( 'variable' ) ) {
+          $child_ids = $wc->get_children();
+          foreach ( $child_ids as $cid ) {
+            $vc = wc_get_product( $cid );
+            if ( $vc ) {
+              $vc->set_regular_price( $amount );
+              $vc->set_sale_price( '' );
+              $vc->save();
+              update_post_meta( $cid, '_price', $amount );
+            }
+          }
+          // Also set parent min/max via WC internal methods by saving parent
+          $wc->save();
+        } else {
+          $wc->set_regular_price( $amount );
+          $wc->set_sale_price( '' );
+          $wc->save();
+          update_post_meta( $pid, '_price', $amount );
+        }
+        $updated++;
+      } else {
+        // Fallback: directly set post meta
+        update_post_meta( $pid, '_regular_price', $amount );
+        update_post_meta( $pid, '_price', $amount );
+        delete_post_meta( $pid, '_sale_price' );
+        $updated++;
+      }
+    }
+
+    return array( 'updated' => $updated );
   }
 
   /**
