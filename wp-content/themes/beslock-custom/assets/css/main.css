@@ -59,6 +59,23 @@ body {
   .u-container {
     max-width: 1180px;
     padding: 0 2.5rem;
+
+/* Product card price overlay positioning: keep existing visual styles from
+   WooCommerce price HTML and only center the overlay horizontally above
+   the card content (over the image). */
+.product-card { position: relative; }
+.product-card__price-overlay {
+  position: absolute;
+  top: 12px; /* small offset from top of image */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none; /* keep overlay non-interactive by default */
+  display: inline-block;
+}
+
+/* Keep price text readable on small images: limit width and center */
+.product-card__price-overlay * { display: inline; }
   }
 }
 
