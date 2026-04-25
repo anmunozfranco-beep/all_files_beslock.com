@@ -1,5 +1,6 @@
 === QUEUE ===
 wp-img-auto-sizes-contain => inline/unknown
+admin-bar => /wp-includes/css/admin-bar.min.css
 wp-emoji-styles => inline/unknown
 woocommerce-inline => inline/unknown
 beslock-main-style => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/main.css

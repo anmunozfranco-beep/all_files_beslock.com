@@ -53,6 +53,21 @@ $products = [
 
 echo '<section id="productos" class="products-portfolio section reveal"><div class="u-container products-portfolio__grid">';
 foreach ($products as $product) {
+  // Try to map this portfolio entry to a WooCommerce product by slug/title.
+  $map_slug = sanitize_title( $product['name'] );
+  $found = get_posts( array( 'post_type' => 'product', 'name' => $map_slug, 'posts_per_page' => 1 ) );
+  if ( empty( $found ) ) {
+    // Fallback: try search by product name (WP search)
+    $found = get_posts( array( 'post_type' => 'product', 's' => $product['name'], 'posts_per_page' => 1 ) );
+  }
+
+  if ( ! empty( $found ) ) {
+    $pobj = $found[0];
+    $product['name'] = $pobj->post_title;
+    $product['link'] = get_permalink( $pobj->ID );
+    $product['product_id'] = $pobj->ID;
+  }
+
   set_query_var('product', $product);
   get_template_part('templates/blocks/product-card');
 }
