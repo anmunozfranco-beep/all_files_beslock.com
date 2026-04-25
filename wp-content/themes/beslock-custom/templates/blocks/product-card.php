@@ -149,7 +149,8 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
           // If simple, purchasable and in stock, use add-to-cart URL/text
           if ( $wc->is_purchasable() && $wc->is_in_stock() && $wc->is_type( 'simple' ) ) {
             $btn_href = $wc->add_to_cart_url();
-            $btn_text = $wc->add_to_cart_text();
+            // Keep UI text consistent: always show 'Ver producto' on portfolio cards
+            $btn_text = __( 'Ver producto', 'beslock' );
             $btn_classes .= ' add_to_cart_button ajax_add_to_cart';
           } else {
             // default: link to single product page
