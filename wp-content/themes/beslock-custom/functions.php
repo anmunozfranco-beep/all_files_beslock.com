@@ -198,6 +198,271 @@ add_action( 'after_setup_theme', function() {
     return 0;
   } );
 
+  /**
+   * Admin Tools page: Import portfolio images into Media Library.
+   */
+  add_action( 'admin_menu', function() {
+    add_management_page(
+      __( 'Import Portfolio Images', 'beslock' ),
+      __( 'Import Portfolio Images', 'beslock' ),
+      'manage_options',
+      'beslock-import-portfolio',
+      'beslock_import_portfolio_page'
+    );
+  } );
+
+  function beslock_import_portfolio_page() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+      wp_die( __( 'Insufficient permissions', 'beslock' ) );
+    }
+
+    echo '<div class="wrap"><h1>' . esc_html__( 'Import Portfolio Images', 'beslock' ) . '</h1>';
+
+    if ( isset( $_POST['beslock_import_images'] ) ) {
+      check_admin_referer( 'beslock_import_images_nonce' );
+      $result = beslock_import_portfolio_images();
+      if ( is_wp_error( $result ) ) {
+        echo '<div class="notice notice-error"><p>' . esc_html( $result->get_error_message() ) . '</p></div>';
+      } else {
+        printf( '<div class="notice notice-success"><p>%s</p></div>', esc_html( sprintf( _n( 'Imported %d image.', 'Imported %d images.', $result['count'], 'beslock' ), $result['count'] ) ) );
+        if ( ! empty( $result['ids'] ) ) {
+          echo '<p>' . esc_html__( 'Attachment IDs:', 'beslock' ) . ' ' . esc_html( implode( ', ', $result['ids'] ) ) . '</p>';
+        }
+      }
+
+      if ( isset( $_POST['beslock_assign_images'] ) ) {
+        check_admin_referer( 'beslock_assign_images_nonce' );
+        $assign = beslock_assign_images_to_products();
+        if ( is_wp_error( $assign ) ) {
+          echo '<div class="notice notice-error"><p>' . esc_html( $assign->get_error_message() ) . '</p></div>';
+        } else {
+          printf( '<div class="notice notice-success"><p>%s</p></div>', esc_html( sprintf( _n( 'Assigned images for %d product.', 'Assigned images for %d products.', $assign['assigned'], 'beslock' ), $assign['assigned'] ) ) );
+          if ( ! empty( $assign['skipped'] ) ) {
+            echo '<p>' . esc_html__( 'Skipped products (no matching images):', 'beslock' ) . ' ' . esc_html( implode( ', ', $assign['skipped'] ) ) . '</p>';
+          }
+        }
+      }
+    }
+    // Add combined import+assign button
+    echo '<form method="post">' . wp_nonce_field( 'beslock_import_images_nonce' );
+    echo '<p>' . esc_html__( 'This will import all images from the theme folder', 'beslock' ) . ': <code>wp-content/themes/beslock-custom/assets/images/</code></p>';
+    echo '<p><button type="submit" name="beslock_import_images" class="button button-primary">' . esc_html__( 'Import images', 'beslock' ) . '</button></p>';
+    echo '<p><button type="submit" name="beslock_assign_images" class="button">' . esc_html__( 'Assign images to products', 'beslock' ) . '</button></p>';
+    echo '<p><button type="submit" name="beslock_import_and_assign" class="button button-primary">' . esc_html__( 'Import and assign images', 'beslock' ) . '</button></p>';
+    echo '</form></div>';
+  }
+
+    // Handle combined action if submitted (separate nonce)
+    if ( isset( $_POST['beslock_import_and_assign'] ) ) {
+      check_admin_referer( 'beslock_import_images_nonce' );
+      $result = beslock_import_and_assign_portfolio_images();
+      if ( is_wp_error( $result ) ) {
+        echo '<div class="notice notice-error"><p>' . esc_html( $result->get_error_message() ) . '</p></div>';
+      } else {
+        // $result contains import_count, import_ids, assigned, skipped
+        printf( '<div class="notice notice-success"><p>%s</p></div>', esc_html( sprintf( _n( 'Imported and assigned for %d image/product.', 'Imported and assigned for %d images/products.', $result['import_count'], 'beslock' ), $result['import_count'] ) ) );
+        if ( isset( $result['import_ids'] ) && ! empty( $result['import_ids'] ) ) {
+          echo '<p>' . esc_html__( 'Attachment IDs:', 'beslock' ) . ' ' . esc_html( implode( ', ', $result['import_ids'] ) ) . '</p>';
+        }
+        if ( isset( $result['assigned'] ) ) {
+          printf( '<p>' . esc_html__( 'Assigned images for %d products.', 'beslock' ) . '</p>', intval( $result['assigned'] ) );
+        }
+        if ( ! empty( $result['skipped'] ) ) {
+          echo '<p>' . esc_html__( 'Skipped products (no matching images):', 'beslock' ) . ' ' . esc_html( implode( ', ', $result['skipped'] ) ) . '</p>';
+        }
+      }
+    }
+
+  function beslock_import_portfolio_images() {
+    $dir = get_stylesheet_directory() . '/assets/images';
+    if ( ! is_dir( $dir ) ) {
+      return new WP_Error( 'no_dir', sprintf( __( 'Directory not found: %s', 'beslock' ), $dir ) );
+    }
+
+    $patterns = array( '/*.webp', '/*.png', '/*.jpg', '/*.jpeg', '/*.gif' );
+    $files = array();
+    foreach ( $patterns as $p ) {
+      $found = glob( $dir . $p );
+      if ( $found ) $files = array_merge( $files, $found );
+    }
+
+    if ( empty( $files ) ) {
+      return array( 'count' => 0, 'ids' => array() );
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+
+    $upload_dir = wp_upload_dir();
+    $imported = array();
+
+    foreach ( $files as $file ) {
+      $filename = wp_basename( $file );
+
+      // Check if an attachment with this filename already exists (search by meta _wp_attached_file)
+      $existing = get_posts( array(
+        'post_type' => 'attachment',
+        'posts_per_page' => 1,
+        'meta_query' => array(
+          array( 'key' => '_wp_attached_file', 'value' => $filename, 'compare' => 'LIKE' ),
+        ),
+      ) );
+      if ( ! empty( $existing ) ) {
+        // skip existing
+        $imported[] = $existing[0]->ID;
+        continue;
+      }
+
+      // Copy file into uploads
+      $unique = wp_unique_filename( $upload_dir['path'], $filename );
+      $new_path = trailingslashit( $upload_dir['path'] ) . $unique;
+      if ( ! copy( $file, $new_path ) ) {
+        // skip on failure
+        continue;
+      }
+
+      $filetype = wp_check_filetype( $unique );
+      $attachment = array(
+        'post_mime_type' => $filetype['type'] ?: 'image/jpeg',
+        'post_title'     => sanitize_file_name( pathinfo( $filename, PATHINFO_FILENAME ) ),
+        'post_content'   => '',
+        'post_status'    => 'inherit',
+      );
+
+      $attach_id = wp_insert_attachment( $attachment, $new_path );
+      if ( is_wp_error( $attach_id ) ) continue;
+
+      $attach_data = wp_generate_attachment_metadata( $attach_id, $new_path );
+      wp_update_attachment_metadata( $attach_id, $attach_data );
+
+      $imported[] = $attach_id;
+    }
+
+    return array( 'count' => count( $imported ), 'ids' => $imported );
+  }
+
+  /**
+   * Combined import + assign helper for admin and WP-CLI.
+   * Returns array: import_count, import_ids, assigned, skipped
+   */
+  function beslock_import_and_assign_portfolio_images() {
+    $imp = beslock_import_portfolio_images();
+    if ( is_wp_error( $imp ) ) {
+      return $imp;
+    }
+    $assign = beslock_assign_images_to_products();
+    if ( is_wp_error( $assign ) ) {
+      return $assign;
+    }
+    return array(
+      'import_count' => isset( $imp['count'] ) ? $imp['count'] : 0,
+      'import_ids'   => isset( $imp['ids'] ) ? $imp['ids'] : array(),
+      'assigned'     => isset( $assign['assigned'] ) ? $assign['assigned'] : 0,
+      'skipped'      => isset( $assign['skipped'] ) ? $assign['skipped'] : array(),
+    );
+  }
+
+  /**
+   * Assign imported images to products:
+   * - Finds attachments whose filename contains the product slug
+   * - Sets the first match as featured image, others as product gallery
+   */
+  function beslock_assign_images_to_products() {
+    // Normalize string: lower, transliterate accents, replace non-alnum with hyphen
+    if ( ! function_exists( 'beslock_normalize_string' ) ) {
+      function beslock_normalize_string( $s ) {
+        $s = (string) $s;
+        $s = mb_strtolower( $s, 'UTF-8' );
+        if ( function_exists( 'iconv' ) ) {
+          $norm = @iconv( 'UTF-8', 'ASCII//TRANSLIT', $s );
+          if ( $norm !== false ) {
+            $s = $norm;
+          }
+        }
+        // Replace any non-alphanumeric with a dash
+        $s = preg_replace( '/[^a-z0-9]+/', '-', $s );
+        $s = trim( $s, '-' );
+        return $s;
+      }
+    }
+
+    $assigned = 0;
+    $skipped = array();
+
+    $products = get_posts( array( 'post_type' => 'product', 'numberposts' => -1, 'post_status' => array( 'publish', 'private', 'draft' ) ) );
+    if ( empty( $products ) ) {
+      return new WP_Error( 'no_products', __( 'No products found', 'beslock' ) );
+    }
+
+    global $wpdb;
+
+    foreach ( $products as $p ) {
+      $slug = $p->post_name ?: '';
+      $title = $p->post_title ?: '';
+
+      // Prefer slug for matching, fall back to normalized title
+      $match_key = $slug ? $slug : $title;
+      $norm_key = beslock_normalize_string( $match_key );
+      if ( ! $norm_key ) {
+        $skipped[] = $p->post_title . '(no-slug)';
+        continue;
+      }
+
+      // First, query candidate attachments by a conservative LIKE using raw slug/title
+      $like_slug = '%' . $wpdb->esc_like( $slug ) . '%';
+      $like_title = '%' . $wpdb->esc_like( $title ) . '%';
+      $query = $wpdb->prepare(
+        "SELECT ID, pm.meta_value as file FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id WHERE p.post_type='attachment' AND pm.meta_key='_wp_attached_file' AND (pm.meta_value LIKE %s OR pm.meta_value LIKE %s)",
+        $like_slug,
+        $like_title
+      );
+      $rows = $wpdb->get_results( $query );
+
+      $matches = array();
+      if ( ! empty( $rows ) ) {
+        foreach ( $rows as $r ) {
+          $filename = pathinfo( $r->file, PATHINFO_FILENAME );
+          $norm_filename = beslock_normalize_string( $filename );
+          if ( $norm_filename === $norm_key || strpos( $norm_filename, $norm_key ) !== false || strpos( $norm_key, $norm_filename ) !== false ) {
+            $matches[] = $r->ID;
+          }
+        }
+      }
+
+      // Fallback: if no matches found, try a broader scan (all attachments up to a reasonable limit)
+      if ( empty( $matches ) ) {
+        $all_query = "SELECT ID, pm.meta_value as file FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id WHERE p.post_type='attachment' AND pm.meta_key='_wp_attached_file' LIMIT 1000";
+        $rows2 = $wpdb->get_results( $all_query );
+        if ( ! empty( $rows2 ) ) {
+          foreach ( $rows2 as $r ) {
+            $filename = pathinfo( $r->file, PATHINFO_FILENAME );
+            $norm_filename = beslock_normalize_string( $filename );
+            if ( $norm_filename === $norm_key || strpos( $norm_filename, $norm_key ) !== false || strpos( $norm_key, $norm_filename ) !== false ) {
+              $matches[] = $r->ID;
+            }
+          }
+        }
+      }
+
+      if ( empty( $matches ) ) {
+        $skipped[] = $p->post_title;
+        continue;
+      }
+
+      $first = array_shift( $matches );
+      set_post_thumbnail( $p->ID, $first );
+      if ( ! empty( $matches ) ) {
+        $gallery_val = implode( ',', $matches );
+        update_post_meta( $p->ID, '_product_image_gallery', $gallery_val );
+      }
+
+      $assigned++;
+    }
+
+    return array( 'assigned' => $assigned, 'skipped' => $skipped );
+  }
+
 // Enqueue a minimal CSS reset for WooCommerce pages. The stylesheet is scoped
 // to `body.woocommerce` selectors so it's safe to include globally — this
 // ensures the shop/cart/checkout pages receive the intended header fixes.
