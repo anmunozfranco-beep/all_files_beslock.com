@@ -64,9 +64,10 @@ body {
    WooCommerce price HTML and only center the overlay horizontally above
    the card content (over the image). */
 .product-card { position: relative; }
+.product-card__image { position: relative; }
 .product-card__price-overlay {
   position: absolute;
-  top: 12px; /* small offset from top of image */
+  bottom: -1.2rem; /* sit between image and title (overlapping slightly) */
   left: 50%;
   transform: translateX(-50%);
   z-index: 5;

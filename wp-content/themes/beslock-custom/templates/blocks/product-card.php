@@ -92,20 +92,20 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
     <?php else : ?>
       <div style="width:100%;height:0;padding-bottom:100%;background:#f3f3f3;border-radius:12px;"></div>
     <?php endif; ?>
-  </div>
-  <?php
-    // Price overlay: show WC price HTML when product mapped
-    $price_html = '';
-    if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
-      $wc_tmp = wc_get_product( intval( $product['product_id'] ) );
-      if ( $wc_tmp ) {
-        $price_html = $wc_tmp->get_price_html();
+    <?php
+      // Price overlay: show WC price HTML when product mapped
+      $price_html = '';
+      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
+        $wc_tmp = wc_get_product( intval( $product['product_id'] ) );
+        if ( $wc_tmp ) {
+          $price_html = $wc_tmp->get_price_html();
+        }
       }
-    }
-  ?>
-  <?php if ( $price_html ) : ?>
-    <div class="product-card__price-overlay"><?php echo wp_kses_post( $price_html ); ?></div>
-  <?php endif; ?>
+    ?>
+    <?php if ( $price_html ) : ?>
+      <div class="product-card__price-overlay"><?php echo wp_kses_post( $price_html ); ?></div>
+    <?php endif; ?>
+  </div>
 
   <div class="product-card__content">
     <h3 class="product-card__title"><?php echo esc_html( $product['name'] ?? '' ); ?></h3>
