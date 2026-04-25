@@ -431,7 +431,6 @@ return array(
 		),
 		'apiVersion' => 3,
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
-		'viewScriptModule' => 'woocommerce/add-to-cart-with-options',
 		'style' => 'file:../woocommerce/add-to-cart-with-options-style.css',
 		'editorStyle' => 'file:../woocommerce/add-to-cart-with-options-editor.css'
 	),
@@ -755,7 +754,20 @@ return array(
 				'enum' => array(
 					'pills',
 					'dropdown'
-				)
+				),
+				'default' => 'pills'
+			),
+			'autoselect' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'disabledAttributesAction' => array(
+				'type' => 'string',
+				'enum' => array(
+					'disable',
+					'hide'
+				),
+				'default' => 'disable'
 			)
 		),
 		'textdomain' => 'woocommerce',
@@ -983,16 +995,11 @@ return array(
 		),
 		'example' => array(
 			'attributes' => array(
-				'isPreview' => true,
 				'cartIcon' => 'cart',
 				'content' => 'Cart'
 			)
 		),
 		'attributes' => array(
-			'isPreview' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
 			'cartIcon' => array(
 				'type' => 'string',
 				'default' => 'cart'
@@ -1039,6 +1046,82 @@ return array(
 		'apiVersion' => 3,
 		'$schema' => 'https://schemas.wp.org/trunk/block.json'
 	),
+	'category-description' => array(
+		'name' => 'woocommerce/category-description',
+		'title' => 'Product Category Description',
+		'description' => 'Displays the current category description.',
+		'category' => 'woocommerce',
+		'apiVersion' => 3,
+		'textdomain' => 'woocommerce',
+		'attributes' => array(
+			'textAlign' => array(
+				'type' => 'string'
+			)
+		),
+		'supports' => array(
+			'align' => false,
+			'color' => array(
+				'background' => true,
+				'text' => true
+			),
+			'html' => false,
+			'spacing' => array(
+				'margin' => true,
+				'padding' => true
+			),
+			'typography' => true
+		),
+		'usesContext' => array(
+			'termId',
+			'termTaxonomy'
+		)
+	),
+	'category-title' => array(
+		'name' => 'woocommerce/category-title',
+		'title' => 'Product Category Title',
+		'description' => 'Displays the current category title and lets permitted users edit it.',
+		'category' => 'woocommerce',
+		'apiVersion' => 3,
+		'textdomain' => 'woocommerce',
+		'attributes' => array(
+			'isLink' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
+			'level' => array(
+				'type' => 'number',
+				'default' => 2
+			),
+			'linkTarget' => array(
+				'type' => 'string',
+				'default' => '_self'
+			),
+			'rel' => array(
+				'type' => 'string',
+				'default' => ''
+			),
+			'textAlign' => array(
+				'type' => 'string'
+			)
+		),
+		'supports' => array(
+			'align' => false,
+			'color' => array(
+				'background' => true,
+				'text' => true
+			),
+			'html' => false,
+			'spacing' => array(
+				'margin' => true,
+				'padding' => true
+			),
+			'typography' => true
+		),
+		'usesContext' => array(
+			'termId',
+			'termTaxonomy'
+		)
+	),
 	'checkout' => array(
 		'name' => 'woocommerce/checkout',
 		'version' => '1.0.0',
@@ -1056,17 +1139,9 @@ return array(
 			'multiple' => false
 		),
 		'example' => array(
-			'attributes' => array(
-				'isPreview' => true
-			),
 			'viewportWidth' => 800
 		),
 		'attributes' => array(
-			'isPreview' => array(
-				'type' => 'boolean',
-				'default' => false,
-				'save' => false
-			),
 			'align' => array(
 				'type' => 'string',
 				'default' => 'wide'
@@ -1141,6 +1216,44 @@ return array(
 			'inserter' => false
 		)
 	),
+	'coupon-code' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'woocommerce/coupon-code',
+		'version' => '1.0.0',
+		'title' => 'Coupon Code',
+		'category' => 'woocommerce',
+		'description' => 'Include a coupon code to entice customers to make a purchase.',
+		'supports' => array(
+			'email' => true,
+			'html' => false,
+			'align' => true,
+			'color' => array(
+				'text' => true,
+				'background' => true
+			),
+			'typography' => array(
+				'fontSize' => true
+			),
+			'spacing' => array(
+				'margin' => true,
+				'padding' => true
+			),
+			'__experimentalBorder' => array(
+				'color' => true,
+				'radius' => true,
+				'style' => true,
+				'width' => true
+			)
+		),
+		'attributes' => array(
+			'couponCode' => array(
+				'type' => 'string',
+				'default' => ''
+			)
+		),
+		'textdomain' => 'woocommerce'
+	),
 	'customer-account' => array(
 		'name' => 'woocommerce/customer-account',
 		'title' => 'Customer account',
@@ -1151,13 +1264,11 @@ return array(
 			'My Account'
 		),
 		'supports' => array(
-			'interactivity' => array(
-				'clientNavigation' => true
-			),
 			'align' => true,
 			'color' => array(
 				'text' => true
 			),
+			'interactivity' => true,
 			'typography' => array(
 				'fontSize' => true,
 				'__experimentalFontFamily' => true
@@ -1172,6 +1283,10 @@ return array(
 				'type' => 'string',
 				'default' => 'icon_and_text'
 			),
+			'hasDropdownNavigation' => array(
+				'type' => 'boolean',
+				'default' => false
+			),
 			'iconStyle' => array(
 				'type' => 'string',
 				'default' => 'default'
@@ -1181,6 +1296,9 @@ return array(
 				'default' => 'icon'
 			)
 		),
+		'viewScriptModule' => 'woocommerce/customer-account',
+		'style' => 'file:../woocommerce/customer-account-style.css',
+		'editorStyle' => 'file:../woocommerce/customer-account-editor.css',
 		'textdomain' => 'woocommerce',
 		'apiVersion' => 3,
 		'$schema' => 'https://schemas.wp.org/trunk/block.json'
@@ -1198,6 +1316,9 @@ return array(
 		'attributes' => array(
 			'emailType' => array(
 				'type' => 'string'
+			),
+			'postId' => array(
+				'type' => 'integer'
 			)
 		),
 		'apiVersion' => 3,
@@ -1220,10 +1341,13 @@ return array(
 				'full'
 			),
 			'ariaLabel' => true,
-			'html' => false,
 			'color' => array(
 				'background' => true,
 				'text' => true
+			),
+			'html' => false,
+			'filter' => array(
+				'duotone' => true
 			),
 			'spacing' => array(
 				'padding' => true,
@@ -1236,6 +1360,11 @@ return array(
 				'color' => true,
 				'radius' => true,
 				'width' => true,
+				'__experimentalDefaultControls' => array(
+					'color' => true,
+					'radius' => true,
+					'width' => true
+				),
 				'__experimentalSkipSerialization' => true
 			)
 		),
@@ -1251,10 +1380,6 @@ return array(
 			'dimRatio' => array(
 				'type' => 'number',
 				'default' => 50
-			),
-			'editMode' => array(
-				'type' => 'boolean',
-				'default' => true
 			),
 			'focalPoint' => array(
 				'type' => 'object',
@@ -1304,15 +1429,24 @@ return array(
 			'previewCategory' => array(
 				'type' => 'object',
 				'default' => null
-			),
-			'showDesc' => array(
-				'type' => 'boolean',
-				'default' => true
+			)
+		),
+		'selectors' => array(
+			'filter' => array(
+				'duotone' => '.wp-block-woocommerce-featured-category .wc-block-featured-category__background-image'
 			)
 		),
 		'textdomain' => 'woocommerce',
 		'apiVersion' => 3,
-		'$schema' => 'https://schemas.wp.org/trunk/block.json'
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'usesContext' => array(
+			'termId',
+			'termTaxonomy'
+		),
+		'providesContext' => array(
+			'termId' => 'categoryId',
+			'termTaxonomy' => 'termTaxonomy'
+		)
 	),
 	'featured-product' => array(
 		'name' => 'woocommerce/featured-product',
@@ -1332,6 +1466,9 @@ return array(
 			),
 			'ariaLabel' => true,
 			'html' => false,
+			'filter' => array(
+				'duotone' => true
+			),
 			'color' => array(
 				'background' => true,
 				'text' => true
@@ -1347,6 +1484,11 @@ return array(
 				'color' => true,
 				'radius' => true,
 				'width' => true,
+				'__experimentalDefaultControls' => array(
+					'color' => true,
+					'radius' => true,
+					'width' => true
+				),
 				'__experimentalSkipSerialization' => true
 			),
 			'multiple' => true
@@ -1363,10 +1505,6 @@ return array(
 			'dimRatio' => array(
 				'type' => 'number',
 				'default' => 50
-			),
-			'editMode' => array(
-				'type' => 'boolean',
-				'default' => true
 			),
 			'focalPoint' => array(
 				'type' => 'object',
@@ -1416,14 +1554,11 @@ return array(
 			'previewProduct' => array(
 				'type' => 'object',
 				'default' => null
-			),
-			'showDesc' => array(
-				'type' => 'boolean',
-				'default' => true
-			),
-			'showPrice' => array(
-				'type' => 'boolean',
-				'default' => true
+			)
+		),
+		'selectors' => array(
+			'filter' => array(
+				'duotone' => '.wp-block-woocommerce-featured-product .wc-block-featured-product__background-image'
 			)
 		),
 		'textdomain' => 'woocommerce',
@@ -1571,15 +1706,10 @@ return array(
 		),
 		'example' => array(
 			'attributes' => array(
-				'isPreview' => true,
 				'className' => 'wc-block-mini-cart--preview'
 			)
 		),
 		'attributes' => array(
-			'isPreview' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
 			'miniCartIcon' => array(
 				'type' => 'string',
 				'default' => 'cart'
@@ -1650,10 +1780,6 @@ return array(
 			)
 		),
 		'attributes' => array(
-			'isPreview' => array(
-				'type' => 'boolean',
-				'default' => false
-			),
 			'lock' => array(
 				'type' => 'object',
 				'default' => array(
@@ -2670,6 +2796,7 @@ return array(
 			'query',
 			'queryId',
 			'postId',
+			'collection',
 			'woocommerce/isDescendantOfAddToCartWithOptions'
 		),
 		'textdomain' => 'woocommerce',
@@ -3906,7 +4033,7 @@ return array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
 		'name' => 'woocommerce/product-gallery',
-		'title' => 'Product Gallery (Beta)',
+		'title' => 'Product Gallery',
 		'description' => 'Showcase your products relevant images and media.',
 		'category' => 'woocommerce',
 		'keywords' => array(
@@ -3959,8 +4086,8 @@ return array(
 		'$schema' => 'https://schemas.wp.org/trunk/block.json',
 		'apiVersion' => 3,
 		'name' => 'woocommerce/product-gallery-large-image',
-		'title' => 'Large Image',
-		'description' => 'Display the Large Image of a product.',
+		'title' => 'Viewer',
+		'description' => 'Container for the current gallery image, navigation buttons, zoom functionality and more.',
 		'category' => 'woocommerce',
 		'keywords' => array(
 			'WooCommerce'
@@ -3972,11 +4099,6 @@ return array(
 		),
 		'supports' => array(
 			'interactivity' => true
-		),
-		'allowedBlocks' => array(
-			'woocommerce/product-image',
-			'woocommerce/product-sale-badge',
-			'woocommerce/product-gallery-large-image-next-previous'
 		),
 		'textdomain' => 'woocommerce',
 		'ancestor' => array(
@@ -4060,6 +4182,10 @@ return array(
 			'aspectRatio' => array(
 				'type' => 'string',
 				'default' => '1'
+			),
+			'activeThumbnailStyle' => array(
+				'type' => 'string',
+				'default' => 'overlay'
 			)
 		),
 		'supports' => array(
@@ -4447,8 +4573,7 @@ return array(
 			'color' => array(
 				'text' => true,
 				'background' => true,
-				'link' => false,
-				'__experimentalSkipSerialization' => true
+				'link' => false
 			),
 			'typography' => array(
 				'fontSize' => true,
@@ -4456,7 +4581,6 @@ return array(
 				'__experimentalFontFamily' => true,
 				'__experimentalFontWeight' => true,
 				'__experimentalFontStyle' => true,
-				'__experimentalSkipSerialization' => true,
 				'__experimentalLetterSpacing' => true
 			),
 			'__experimentalSelector' => '.wp-block-woocommerce-product-price .wc-block-components-product-price',
@@ -4468,6 +4592,7 @@ return array(
 		),
 		'ancestor' => array(
 			'woocommerce/all-products',
+			'woocommerce/featured-product',
 			'woocommerce/single-product',
 			'woocommerce/product-template',
 			'core/post-template'
@@ -4686,9 +4811,6 @@ return array(
 			'typography' => array(
 				'fontSize' => true
 			)
-		),
-		'attributes' => array(
-			
 		),
 		'usesContext' => array(
 			'queryId'
@@ -5008,9 +5130,6 @@ return array(
 		'category' => 'woocommerce',
 		'ancestor' => array(
 			'woocommerce/product-reviews'
-		),
-		'attributes' => array(
-			
 		),
 		'description' => 'Contains the block elements used to display product reviews, like the title, author, date, rating and more.',
 		'textdomain' => 'woocommerce',
@@ -5737,6 +5856,7 @@ return array(
 		),
 		'ancestor' => array(
 			'woocommerce/all-products',
+			'woocommerce/featured-product',
 			'woocommerce/single-product',
 			'woocommerce/product-template',
 			'core/post-template'

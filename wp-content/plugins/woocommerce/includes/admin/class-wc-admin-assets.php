@@ -265,6 +265,12 @@ if ( ! class_exists( 'WC_Admin_Assets', false ) ) :
 					'version'      => $version,
 				),
 				array(
+					'handle'       => 'wc-shipping-providers',
+					'path'         => $plugin_url . '/assets/js/admin/wc-shipping-providers' . $suffix . '.js',
+					'dependencies' => array( 'jquery', 'wp-util', 'underscore', 'backbone', 'wc-backbone-modal' ),
+					'version'      => $version,
+				),
+				array(
 					'handle'       => 'wc-clipboard',
 					'path'         => $plugin_url . '/assets/js/admin/wc-clipboard' . $suffix . '.js',
 					'dependencies' => array( 'jquery' ),
@@ -534,7 +540,10 @@ if ( ! class_exists( 'WC_Admin_Assets', false ) ) :
 					'wc-admin-order-meta-boxes',
 					'woocommerce_admin_meta_boxes_order',
 					array(
-						'countries'              => wp_json_encode( array_merge( WC()->countries->get_allowed_country_states(), WC()->countries->get_shipping_country_states() ) ),
+						'countries'              => wp_json_encode(
+							array_merge( WC()->countries->get_allowed_country_states(), WC()->countries->get_shipping_country_states() ),
+							JSON_HEX_TAG | JSON_UNESCAPED_SLASHES
+						),
 						'i18n_select_state_text' => esc_attr__( 'Select an option&hellip;', 'woocommerce' ),
 						'default_country'        => isset( $default_location['country'] ) ? $default_location['country'] : '',
 						'default_state'          => isset( $default_location['state'] ) ? $default_location['state'] : '',
@@ -672,6 +681,7 @@ if ( ! class_exists( 'WC_Admin_Assets', false ) ) :
 
 				$woocommerce_term_order_params = array(
 					'taxonomy' => $taxonomy,
+					'nonce'    => wp_create_nonce( 'term-ordering' ),
 				);
 
 				wp_localize_script( 'woocommerce_term_ordering', 'woocommerce_term_ordering_params', $woocommerce_term_order_params );
@@ -682,6 +692,12 @@ if ( ! class_exists( 'WC_Admin_Assets', false ) ) :
 			if ( current_user_can( 'edit_others_pages' ) && 'edit-product' === $screen_id && isset( $wp_query->query['orderby'] ) && 'menu_order title' === $wp_query->query['orderby'] ) {
 				wp_register_script( 'woocommerce_product_ordering', WC()->plugin_url() . '/assets/js/admin/product-ordering' . $suffix . '.js', array( 'jquery-ui-sortable' ), $version, true );
 				wp_enqueue_script( 'woocommerce_product_ordering' );
+
+				wp_localize_script(
+					'woocommerce_product_ordering',
+					'woocommerce_product_ordering_params',
+					array( 'nonce' => wp_create_nonce( 'product-ordering' ) )
+				);
 			}
 
 			// Reports Pages.
@@ -739,7 +755,10 @@ if ( ! class_exists( 'WC_Admin_Assets', false ) ) :
 					'wc-users',
 					'wc_users_params',
 					array(
-						'countries'              => wp_json_encode( array_merge( WC()->countries->get_allowed_country_states(), WC()->countries->get_shipping_country_states() ) ),
+						'countries'              => wp_json_encode(
+							array_merge( WC()->countries->get_allowed_country_states(), WC()->countries->get_shipping_country_states() ),
+							JSON_HEX_TAG | JSON_UNESCAPED_SLASHES
+						),
 						'i18n_select_state_text' => esc_attr__( 'Select an option&hellip;', 'woocommerce' ),
 					)
 				);
@@ -787,7 +806,7 @@ if ( ! class_exists( 'WC_Admin_Assets', false ) ) :
 
 				wp_add_inline_script(
 					'wc-admin-app',
-					'window.wcMarketplace = ' . wp_json_encode( array( 'promotions' => $promotions ) ),
+					'window.wcMarketplace = ' . wp_json_encode( array( 'promotions' => $promotions ), JSON_HEX_TAG | JSON_UNESCAPED_SLASHES ),
 					'before'
 				);
 			}

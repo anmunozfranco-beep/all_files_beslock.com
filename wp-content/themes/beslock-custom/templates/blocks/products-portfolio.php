@@ -51,7 +51,7 @@ $products = [
   ],
 ];
 
-echo '<section class="products-portfolio section reveal"><div class="u-container products-portfolio__grid">';
+echo '<section id="productos" class="products-portfolio section reveal"><div class="u-container products-portfolio__grid">';
 foreach ($products as $product) {
   set_query_var('product', $product);
   get_template_part('templates/blocks/product-card');

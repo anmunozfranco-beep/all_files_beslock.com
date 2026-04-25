@@ -177,6 +177,27 @@ add_action( 'after_setup_theme', function() {
   }
 }, 11 );
 
+  /**
+   * Redirect the WooCommerce Shop page to the front-page products portfolio section.
+   * This makes the homepage portfolio act as the shop landing.
+   */
+  add_action( 'template_redirect', function() {
+    if ( function_exists( 'is_shop' ) && is_shop() ) {
+      // Use a 301 redirect to the homepage anchor where the products portfolio is located
+      wp_safe_redirect( home_url( '/' ) . '#productos', 301 );
+      exit;
+    }
+  }, 5 );
+
+  /**
+   * For safety, ensure WooCommerce canonical URLs that expect a shop page don't break.
+   * When WooCommerce queries for the shop page, prefer the home URL so internal links remain valid.
+   */
+  add_filter( 'woocommerce_get_shop_page_id', function( $page_id ) {
+    // return 0 to indicate no special shop page; redirect handles UX
+    return 0;
+  } );
+
 // Enqueue a minimal CSS reset for WooCommerce pages. The stylesheet is scoped
 // to `body.woocommerce` selectors so it's safe to include globally — this
 // ensures the shop/cart/checkout pages receive the intended header fixes.
