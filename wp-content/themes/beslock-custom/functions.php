@@ -384,7 +384,9 @@ add_action( 'after_setup_theme', function() {
     if ( ! $amount || ! is_scalar( $amount ) ) {
       return new WP_Error( 'invalid_amount', __( 'Invalid amount', 'beslock' ) );
     }
-    $amount = (string) $amount;
+    // Normalize to decimal string with two places (WooCommerce expects dot decimal)
+    $amount_float = floatval( str_replace( ',', '.', (string) $amount ) );
+    $amount = number_format( $amount_float, 2, '.', '' );
 
     $products = get_posts( array( 'post_type' => 'product', 'numberposts' => -1, 'post_status' => array( 'publish', 'private', 'draft' ) ) );
     if ( empty( $products ) ) {
@@ -394,37 +396,50 @@ add_action( 'after_setup_theme', function() {
     $updated = 0;
     foreach ( $products as $p ) {
       $pid = $p->ID;
+      // Use WC CRUD when available to keep caches consistent
       if ( function_exists( 'wc_get_product' ) ) {
         $wc = wc_get_product( $pid );
-        if ( ! $wc ) continue;
-        // Variable products: update variations
-        if ( $wc->is_type( 'variable' ) ) {
-          $child_ids = $wc->get_children();
-          foreach ( $child_ids as $cid ) {
-            $vc = wc_get_product( $cid );
-            if ( $vc ) {
-              $vc->set_regular_price( $amount );
-              $vc->set_sale_price( '' );
-              $vc->save();
-              update_post_meta( $cid, '_price', $amount );
+        if ( $wc ) {
+          if ( $wc->is_type( 'variable' ) ) {
+            // Update each variation explicitly
+            $child_ids = $wc->get_children();
+            foreach ( $child_ids as $cid ) {
+              $vc = wc_get_product( $cid );
+              if ( $vc ) {
+                $vc->set_regular_price( $amount );
+                $vc->set_sale_price( '' );
+                // Save CRUD and also ensure meta keys are written
+                $vc->save();
+                update_post_meta( $cid, '_regular_price', $amount );
+                update_post_meta( $cid, '_price', $amount );
+                delete_post_meta( $cid, '_sale_price' );
+              }
             }
+            // For the parent variable product, set price meta to the same amount
+            $wc->set_regular_price( $amount );
+            $wc->save();
+            update_post_meta( $pid, '_regular_price', $amount );
+            update_post_meta( $pid, '_price', $amount );
+            delete_post_meta( $pid, '_sale_price' );
+          } else {
+            // Simple / grouped / external: set regular price
+            $wc->set_regular_price( $amount );
+            $wc->set_sale_price( '' );
+            $wc->save();
+            update_post_meta( $pid, '_regular_price', $amount );
+            update_post_meta( $pid, '_price', $amount );
+            delete_post_meta( $pid, '_sale_price' );
           }
-          // Also set parent min/max via WC internal methods by saving parent
-          $wc->save();
-        } else {
-          $wc->set_regular_price( $amount );
-          $wc->set_sale_price( '' );
-          $wc->save();
-          update_post_meta( $pid, '_price', $amount );
+          $updated++;
+          continue;
         }
-        $updated++;
-      } else {
-        // Fallback: directly set post meta
-        update_post_meta( $pid, '_regular_price', $amount );
-        update_post_meta( $pid, '_price', $amount );
-        delete_post_meta( $pid, '_sale_price' );
-        $updated++;
       }
+
+      // Fallback if WC not available or wc_get_product failed
+      update_post_meta( $pid, '_regular_price', $amount );
+      update_post_meta( $pid, '_price', $amount );
+      delete_post_meta( $pid, '_sale_price' );
+      $updated++;
     }
 
     return array( 'updated' => $updated );
