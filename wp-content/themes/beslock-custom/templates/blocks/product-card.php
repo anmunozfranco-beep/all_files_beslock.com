@@ -146,35 +146,12 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
         $pid = intval( $product['product_id'] );
         $wc = wc_get_product( $pid );
         if ( $wc ) {
-          // If simple, purchasable and in stock, use add-to-cart URL/text
-          if ( $wc->is_purchasable() && $wc->is_in_stock() && $wc->is_type( 'simple' ) ) {
-            $btn_href = $wc->add_to_cart_url();
-            // Keep UI text consistent: always show 'Ver Producto' on portfolio cards
-            $btn_text = __( 'Ver Producto', 'beslock' );
-            $btn_classes .= ' add_to_cart_button ajax_add_to_cart';
-          } else {
-            // default: link to single product page
-            $btn_href = get_permalink( $pid );
-            $btn_text = __( 'Ver producto', 'beslock' );
-          }
+          // Always link to the single product page from portfolio cards.
+          $btn_href = get_permalink( $pid );
+          $btn_text = __( 'Ver Producto', 'beslock' );
         }
       }
     ?>
-    <?php
-      // If button will perform "add to cart", include data attributes so WC JS can handle it via AJAX.
-      $extra_attrs = '';
-      if ( strpos( $btn_classes, 'add_to_cart_button' ) !== false && ! empty( $product['product_id'] ) ) {
-        $pid = intval( $product['product_id'] );
-        $sku = '';
-        if ( function_exists( 'wc_get_product' ) ) {
-          $pobj = wc_get_product( $pid );
-          if ( $pobj ) {
-            $sku = $pobj->get_sku();
-          }
-        }
-        $extra_attrs = ' data-quantity="1" data-product_id="' . esc_attr( $pid ) . '" data-product_sku="' . esc_attr( $sku ) . '"';
-      }
-    ?>
-    <a href="<?php echo esc_url( $btn_href ); ?>" class="<?php echo esc_attr( $btn_classes ); ?>" tabindex="0" rel="nofollow"<?php echo $extra_attrs; ?>><?php echo esc_html( $btn_text ); ?></a>
+    <a href="<?php echo esc_url( $btn_href ); ?>" class="<?php echo esc_attr( $btn_classes ); ?>" tabindex="0" rel="nofollow"><?php echo esc_html( $btn_text ); ?></a>
   </div>
 </div>
