@@ -142,22 +142,19 @@ $images = array_values( array_unique( $normalized ) );
       }
     ?>
     <div class="product-card__actions">
-      <a href="<?php echo esc_url( $btn_href ); ?>" class="<?php echo esc_attr( $btn_classes ); ?> product-card__view" tabindex="0" rel="nofollow"><?php echo esc_html( $btn_text ); ?></a>
+      <a href="<?php echo esc_url( $btn_href ); ?>" class="<?php echo esc_attr( $btn_classes ); ?> product-card__btn--link" tabindex="0" rel="nofollow"><?php echo esc_html( $btn_text ); ?></a>
 
-      <?php
-        // Render an 'add to cart' quick button when we have a WC product that's purchasable.
-        if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
-          $pid = intval( $product['product_id'] );
-          $wc = wc_get_product( $pid );
-          if ( $wc && $wc->is_purchasable() ) {
-            $add_url = esc_url( add_query_arg( 'add-to-cart', $pid, home_url( '/' ) ) );
-            $add_lbl = __( 'Añadir al carrito', 'beslock' );
+      <?php if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) :
+        $add_to_cart_url = esc_url( add_query_arg( 'add-to-cart', intval( $product['product_id'] ), home_url( '/' ) ) );
       ?>
-        <a href="<?php echo $add_url; ?>" data-quantity="1" class="btn product-card__add-to-cart" rel="nofollow"><?php echo esc_html( $add_lbl ); ?></a>
-      <?php
-          }
-        }
-      ?>
+        <a href="<?php echo $add_to_cart_url; ?>" class="product-card__add-to-cart" aria-label="<?php esc_attr_e( 'Añadir al carrito', 'beslock' ); ?>" rel="nofollow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <path d="M7 4H3v2h2l3.6 7.59-1.35 2.44A1 1 0 0 0 8.2 17h8.45v-2H9.42l.93-1.68L18 6H7z" fill="currentColor"/>
+            <circle cx="10" cy="20" r="1" fill="currentColor"/>
+            <circle cx="18" cy="20" r="1" fill="currentColor"/>
+          </svg>
+        </a>
+      <?php endif; ?>
     </div>
   </div>
 </div>
