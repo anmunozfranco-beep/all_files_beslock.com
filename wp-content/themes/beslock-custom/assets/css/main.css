@@ -276,7 +276,7 @@ body {
 .header__icon--cart:hover,
 .header__icon--menu:focus,
 .header__icon--cart:focus {
-  color: var(--beslock-white);
+  color: var(--beslock-white) !important;
 }
 
 .header__logo {
