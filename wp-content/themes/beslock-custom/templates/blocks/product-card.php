@@ -91,6 +91,15 @@ $images = array_values( array_unique( $normalized ) );
     <?php if ( $price_html ) : ?>
       <div class="product-card__price-overlay"><?php echo wp_kses_post( $price_html ); ?></div>
     <?php endif; ?>
+    <?php
+      // Badges for specific products (overlay in corner)
+      $badge_names = array( 'e-Orbit', 'e-Flex', 'e-Prime', 'e-Shield' );
+      $prod_name = isset( $product['name'] ) ? (string) $product['name'] : '';
+      if ( $prod_name && in_array( strtolower( $prod_name ), array_map( 'strtolower', $badge_names ), true ) ) :
+        $badge_src = get_stylesheet_directory_uri() . '/assets/images/instal.jpg';
+    ?>
+      <img class="product-card__badge" src="<?php echo esc_url( $badge_src ); ?>" alt="<?php esc_attr_e( 'Badge', 'beslock' ); ?>" aria-hidden="true" />
+    <?php endif; ?>
   </div>
 
   <div class="product-card__content">

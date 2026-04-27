@@ -559,6 +559,21 @@ hero__title {
   border-radius: 16px 16px 0 0;
   display: block;
 }
+/* Badge overlay shown on selected products */
+.product-card__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 64px;
+  height: auto;
+  z-index: 12;
+  pointer-events: none;
+  transform: rotate(-8deg);
+  box-shadow: 0 6px 18px rgba(7,5,5,0.12);
+}
+@media (max-width: 600px) {
+  .product-card__badge { width: 48px; top: 8px; right: 8px; }
+}
 .product-card__content {
   padding: 1rem 1.2rem 1.5rem;
   text-align: center;
