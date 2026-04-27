@@ -325,7 +325,7 @@ body {
   place a compact add-to-cart button next to it. Matches screenshot: large
   pill primary button + small square cart button. */
 .product-card__actions { position: absolute; left: 1.2rem; right: 1.2rem; bottom: 1rem; display: flex; gap: 0.5rem; align-items: center; justify-content: center; z-index: 6; }
-.product-card__btn--link { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.1rem; border-radius: 10px; background: var(--beslock-green); color: #fff; border: none; font-weight: 700; }
+.product-card__btn--link { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.1rem; border-radius: 10px; background: var(--beslock-green); color: #fff; border: none; font-weight: 700; opacity: 0.65; transition: opacity 0.18s ease; }
 .product-card__btn--link:hover { opacity: 0.95; }
 .product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14); }
 .product-card__add-to-cart { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:10px; background:var(--beslock-bg-2); color:#fff; text-decoration:none; }
