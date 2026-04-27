@@ -810,7 +810,8 @@ function beslock_kadence_archive_hero_buffer_end() {
     }
     echo '<div class="beslock-confianza">';
     echo '<h3>Confianza</h3>';
-    echo '<p>Producto verificado. Garantía local y soporte técnico.</p>';
+    echo '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>';
+    echo '<p>Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa.</p>';
     echo '</div>';
   } );
 
@@ -820,9 +821,9 @@ function beslock_kadence_archive_hero_buffer_end() {
       return;
     }
     echo '<div class="beslock-psb">';
-    echo '<div class="psb-col"><h4>Problema</h4><p>' . wp_kses_post( get_post_meta( $post->ID, 'beslock_problema', true ) ?: 'Describe aquí el problema que resuelve este producto.' ) . '</p></div>';
-    echo '<div class="psb-col"><h4>Solución</h4><p>' . wp_kses_post( get_post_meta( $post->ID, 'beslock_solucion', true ) ?: wp_trim_words( $post->post_excerpt ?: $post->post_content, 40 ) ) . '</p></div>';
-    echo '<div class="psb-col"><h4>Beneficios</h4><p>' . wp_kses_post( get_post_meta( $post->ID, 'beslock_beneficios', true ) ?: 'Listado breve de beneficios del producto.' ) . '</p></div>';
+    echo '<div class="psb-col"><h4>Problema</h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p></div>';
+    echo '<div class="psb-col"><h4>Solución</h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra.</p></div>';
+    echo '<div class="psb-col"><h4>Beneficios</h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.</p></div>';
     echo '</div>';
   } );
 
@@ -833,12 +834,11 @@ function beslock_kadence_archive_hero_buffer_end() {
     }
     echo '<div class="beslock-specs">';
     echo '<h3>Especificaciones técnicas</h3>';
+    echo '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>';
     if ( function_exists( 'wc_display_product_attributes' ) ) {
       echo '<div class="beslock-specs__attrs">';
       echo wc_display_product_attributes( $product );
       echo '</div>';
-    } else {
-      echo '<p>No hay especificaciones disponibles.</p>';
     }
     echo '</div>';
   } );
@@ -854,17 +854,17 @@ function beslock_kadence_archive_hero_buffer_end() {
     if ( $embed ) {
       echo '<div class="beslock-demo__embed">' . wp_kses_post( $embed ) . '</div>';
     } else {
-      echo '<p>Enlace o vídeo de demostración no proporcionado.</p>';
+      echo '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>';
     }
     echo '</div>';
   } );
 
   add_action( 'beslock_product_who', function() {
-    echo '<div class="beslock-who"><h3>Para quién es</h3><p>Pequeñas y medianas empresas, instaladores técnicos y usuarios finales que buscan solución profesional.</p></div>';
+    echo '<div class="beslock-who"><h3>Para quién es</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p></div>';
   } );
 
   add_action( 'beslock_product_faq', function() {
-    echo '<div class="beslock-faq"><h3>Preguntas frecuentes</h3><p>Agregar preguntas frecuentes en el editor del producto (meta fields: beslock_faq_1, beslock_faq_2 ...)</p></div>';
+    echo '<div class="beslock-faq"><h3>Preguntas frecuentes</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante. Donec id elit non mi porta gravida at eget metus.</p></div>';
   } );
 
   add_action( 'beslock_product_cta', function() {
