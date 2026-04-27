@@ -674,6 +674,8 @@
         }
       }
 
+      // Ensure features are repositioned after slide change (keeps 15px from hero top)
+      try { positionFeaturesAtHeroTop(); } catch(e) {}
       // Update dots accessibility state
       dots.forEach(function(d,i){ d.classList.toggle('is-active', i===current); d.setAttribute('aria-selected', i===current? 'true':'false'); });
 
@@ -844,6 +846,9 @@
     relocateFeaturesForBreakpoint();
     var _relocTid = null;
     window.addEventListener('resize', function(){ if (_relocTid) clearTimeout(_relocTid); _relocTid = setTimeout(relocateFeaturesForBreakpoint, 140); }, { passive: true });
+    // Recompute feature positions on scroll as hero's top changes with page scroll
+    var _featScrollTid = null;
+    window.addEventListener('scroll', function(){ if (_featScrollTid) clearTimeout(_featScrollTid); _featScrollTid = setTimeout(positionFeaturesAtHeroTop, 80); }, { passive: true });
 
     function startAutoplay(){ stopAutoplay(); isPlaying=true; autoplayDeadline = Date.now() + H.slideDuration; timer = setTimeout(nextSlide, H.slideDuration); }
     function stopAutoplay(){ if (timer){ clearTimeout(timer); timer=null; } isPlaying=false; autoplayDeadline = null; autoplayRemaining = null; }
