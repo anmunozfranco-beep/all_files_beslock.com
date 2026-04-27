@@ -1159,6 +1159,37 @@ hero__title {
   }
 }
 
+/* Global: keep features visually centered and scaled to 75% on desktop/tablet
+   This preserves the current central positioning while reducing visual size. */
+@media (min-width: 600px) {
+  .hero-slide .features-wrapper {
+    left: 50%;
+    transform: translateX(-50%) scale(0.75);
+    transform-origin: center top;
+    /* ensure absolute positioning still functions when present */
+    position: absolute;
+    z-index: 4;
+  }
+
+  .hero-slide .features-wrapper .features-list {
+    gap: calc(7rem * 0.75);
+    justify-content: center;
+  }
+
+  .hero-slide .features-wrapper .feature__icon,
+  .hero-slide .features-wrapper .features-list .feature img {
+    width: calc(6rem * 0.75);
+    height: calc(6rem * 0.75);
+  }
+
+  .hero-slide .features-wrapper .feature__text,
+  .hero-slide .features-wrapper .feature__title,
+  .hero-slide .features-wrapper .feature__subtitle {
+    font-size: calc(1.8rem * 0.75);
+    line-height: 1.18;
+  }
+}
+
 /* ------------------------------------------------------------------
    Consolidated feature overrides
    - Mobile (<=600px): left-aligned vertical list, 36px icons
