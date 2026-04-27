@@ -330,8 +330,13 @@ body {
 .product-card__btn--link:active { transform: translateY(0) scale(0.995); box-shadow: 0 4px 10px rgba(3,69,38,0.06); }
 .product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14); }
 .product-card__add-to-cart { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:10px; background:var(--beslock-bg-2); color:#fff; text-decoration:none; transition: transform 360ms cubic-bezier(.16,.84,.29,1), background 240ms cubic-bezier(.16,.84,.29,1), box-shadow 360ms cubic-bezier(.16,.84,.29,1); will-change: transform, background, box-shadow; backface-visibility: hidden; }
-.product-card__add-to-cart .bi { color:var(--beslock-green); font-size: calc(22px * 1.25); line-height:1; /* visual weight */
-  text-shadow: 0.75px 0 var(--beslock-green), -0.75px 0 var(--beslock-green), 0 0.75px var(--beslock-green), 0 -0.75px var(--beslock-green);
+.product-card__add-to-cart .bi {
+  color: var(--beslock-green);
+  font-size: 2rem; /* match .header__icon */
+  line-height: 1;
+  font-weight: 400; /* remove bold visual weight */
+  text-shadow: none;
+  transition: color 180ms ease;
 }
 .product-card__add-to-cart:hover { background: var(--beslock-green); transform: translateY(-2px) scale(1.02); box-shadow: 0 7px 20px rgba(3,69,38,0.09); }
 .product-card__add-to-cart:active { transform: translateY(0) scale(0.995); box-shadow: 0 3px 8px rgba(3,69,38,0.06); }
