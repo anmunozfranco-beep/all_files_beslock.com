@@ -88,6 +88,24 @@ body {
 .section--lined {
   position: relative;
 }
+
+/* Ensure price overlay is horizontally centered on all viewports
+   and keeps same vertical offset used by the theme. This provides a
+   consistent look on small screens where the media-query rule
+   previously only applied for large desktop sizes. */
+.product-card { position: relative; }
+.product-card__image { position: relative; }
+.product-card__price-overlay {
+  position: absolute;
+  bottom: -1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+  display: inline-block;
+  text-align: center;
+}
+.product-card__price-overlay * { display: inline; }
 .section--lined::before {
   content: "";
   position: absolute;
