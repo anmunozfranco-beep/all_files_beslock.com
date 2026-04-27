@@ -47,6 +47,15 @@ function beslock_import_portfolio_page_plugin() {
       if ( isset( $res['imported_images'] ) ) {
         echo '<p>' . sprintf( esc_html__( 'Images imported: %d', 'beslock' ), intval( $res['imported_images'] ) ) . '</p>';
       }
+      // show mapping if available (helpful for debugging)
+      if ( isset( $res['mapping'] ) && is_array( $res['mapping'] ) && ! empty( $res['mapping'] ) ) {
+        echo '<h2>' . esc_html__( 'Mapping (slug => product ID)', 'beslock' ) . '</h2>';
+        echo '<ul>';
+        foreach ( $res['mapping'] as $s => $id ) {
+          echo '<li>' . esc_html( $s ) . ' => ' . intval( $id ) . '</li>';
+        }
+        echo '</ul>';
+      }
     }
   }
 
@@ -694,10 +703,12 @@ function beslock_plugin_sync_portfolio_products_and_set_price() {
       beslock_plugin_build_portfolio_mapping();
     }
 
+    $mapping = get_option( 'beslock_portfolio_mapping', array() );
     return array(
       'created' => isset( $sync['created'] ) ? intval( $sync['created'] ) : 0,
       'updated' => isset( $sync['updated'] ) ? intval( $sync['updated'] ) : 0,
       'imported_images' => $imported_count,
+      'mapping' => is_array( $mapping ) ? $mapping : array(),
     );
   }
 
