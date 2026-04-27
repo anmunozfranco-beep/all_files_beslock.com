@@ -1165,17 +1165,17 @@ hero__title {
    integer pixels to avoid subpixel blur on some browsers.
  ------------------------------------------------------------------ */
 @media (min-width: 600px) {
-  /* 'Varias formas' seemed shifted slightly right — nudge left */
-  .feature--varias_aperturas .feature__icon img { transform: translateX(-2px); }
+  /* User reported icons visually shifted left — nudge right on desktop */
+  .feature--varias_aperturas .feature__icon img { transform: translateX(4px); }
 
-  /* 'Total control' looked low; lift it 2px */
-  .feature--total_control .feature__icon img { transform: translateY(-2px); }
+  /* 'Total control' needs a slight right and lift to align with text */
+  .feature--total_control .feature__icon img { transform: translateX(3px) translateY(-2px); }
 }
 
 @media (max-width: 600px) {
-  /* Mobile-specific milder nudges */
-  .feature--varias_aperturas .feature__icon img { transform: translateX(-1px); }
-  .feature--total_control .feature__icon img { transform: translateY(-1px); }
+  /* Mobile-specific milder nudges: smaller values to avoid layout breaks */
+  .feature--varias_aperturas .feature__icon img { transform: translateX(2px); }
+  .feature--total_control .feature__icon img { transform: translateX(1px) translateY(-1px); }
 }
 
 /* ------------------------------------------------------------------
