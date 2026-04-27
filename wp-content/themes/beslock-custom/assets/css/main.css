@@ -324,14 +324,14 @@ body {
 /* Product card action buttons: remove underline from 'Ver Producto' and
   place a compact add-to-cart button next to it. Matches screenshot: large
   pill primary button + small square cart button. */
-.product-card__actions { display: flex; gap: 0.5rem; align-items: center; }
-.product-card__btn--link { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.1rem; border-radius: 10px; background: #ff5a1f; color: #fff; border: none; font-weight: 700; }
+.product-card__actions { display: flex; gap: 0.5rem; align-items: center; justify-content: center; width: 100%; }
+.product-card__btn--link { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.1rem; border-radius: 10px; background: var(--beslock-green); color: #fff; border: none; font-weight: 700; }
 .product-card__btn--link:hover { opacity: 0.95; }
-.product-card__btn--link:focus { outline: 3px solid rgba(255,90,31,0.14); }
-.product-card__add-to-cart { display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:10px; background:#183047; color:#fff; text-decoration:none; }
-.product-card__add-to-cart svg { display:block; width:18px; height:18px; color:#fff; }
+.product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14); }
+.product-card__add-to-cart { display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:10px; background:var(--beslock-green); color:#fff; text-decoration:none; }
+.product-card__add-to-cart .bi { color:#fff; font-size:18px; line-height:1; }
 .product-card__add-to-cart:hover { opacity:0.95; }
-.product-card__add-to-cart:focus { outline: 3px solid rgba(24,48,71,0.14); }
+.product-card__add-to-cart:focus { outline: 3px solid rgba(3,69,38,0.14); }
 .btn:hover,
 .beslock-btn:hover,
 .beslock-btn:active,

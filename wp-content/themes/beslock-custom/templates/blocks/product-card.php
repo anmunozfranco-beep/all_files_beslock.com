@@ -148,11 +148,7 @@ $images = array_values( array_unique( $normalized ) );
         $add_to_cart_url = esc_url( add_query_arg( 'add-to-cart', intval( $product['product_id'] ), home_url( '/' ) ) );
       ?>
         <a href="<?php echo $add_to_cart_url; ?>" class="product-card__add-to-cart" aria-label="<?php esc_attr_e( 'Añadir al carrito', 'beslock' ); ?>" rel="nofollow">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-            <path d="M7 4H3v2h2l3.6 7.59-1.35 2.44A1 1 0 0 0 8.2 17h8.45v-2H9.42l.93-1.68L18 6H7z" fill="currentColor"/>
-            <circle cx="10" cy="20" r="1" fill="currentColor"/>
-            <circle cx="18" cy="20" r="1" fill="currentColor"/>
-          </svg>
+          <i class="bi bi-cart" aria-hidden="true"></i>
         </a>
       <?php endif; ?>
     </div>
