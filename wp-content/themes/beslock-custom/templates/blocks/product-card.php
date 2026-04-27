@@ -141,7 +141,24 @@ $images = array_values( array_unique( $normalized ) );
         }
       }
     ?>
-    <a href="<?php echo esc_url( $btn_href ); ?>" class="<?php echo esc_attr( $btn_classes ); ?>" tabindex="0" rel="nofollow"><?php echo esc_html( $btn_text ); ?></a>
+    <div class="product-card__actions">
+      <a href="<?php echo esc_url( $btn_href ); ?>" class="<?php echo esc_attr( $btn_classes ); ?> product-card__view" tabindex="0" rel="nofollow"><?php echo esc_html( $btn_text ); ?></a>
+
+      <?php
+        // Render an 'add to cart' quick button when we have a WC product that's purchasable.
+        if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
+          $pid = intval( $product['product_id'] );
+          $wc = wc_get_product( $pid );
+          if ( $wc && $wc->is_purchasable() ) {
+            $add_url = esc_url( add_query_arg( 'add-to-cart', $pid, home_url( '/' ) ) );
+            $add_lbl = __( 'Añadir al carrito', 'beslock' );
+      ?>
+        <a href="<?php echo $add_url; ?>" data-quantity="1" class="btn product-card__add-to-cart" rel="nofollow"><?php echo esc_html( $add_lbl ); ?></a>
+      <?php
+          }
+        }
+      ?>
+    </div>
   </div>
 </div>
 

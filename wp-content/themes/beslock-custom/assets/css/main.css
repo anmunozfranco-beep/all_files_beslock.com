@@ -118,6 +118,29 @@ body {
   z-index: 1;
   display: none;
 }
+
+/* Product card action buttons: remove underline from 'Ver Producto' and
+   place an 'Añadir al carrito' button beside it. Keep spacing and small
+   visual parity with `.btn`. */
+.product-card__actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.9rem;
+}
+.product-card__actions a {
+  text-decoration: none; /* remove underline */
+}
+.product-card__view {
+  padding: 0.6rem 1rem;
+}
+.product-card__add-to-cart {
+  padding: 0.6rem 1rem;
+  background: var(--beslock-green);
+  color: #fff;
+  border: 2px solid var(--beslock-green);
+}
+.product-card__add-to-cart:hover { background: var(--beslock-green-lite); border-color: var(--beslock-green-lite); }
 @media (min-width: 600px) {
   .section--lined::before {
     display: block;
