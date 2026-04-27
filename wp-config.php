@@ -97,7 +97,16 @@ $table_prefix = 'wptq_';
  *
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
-define( 'WP_DEBUG', false );
+// Enable debug logging for troubleshooting (do not display errors to users).
+if ( ! defined( 'WP_DEBUG' ) ) {
+	define( 'WP_DEBUG', true );
+}
+if ( ! defined( 'WP_DEBUG_LOG' ) ) {
+	define( 'WP_DEBUG_LOG', true );
+}
+if ( ! defined( 'WP_DEBUG_DISPLAY' ) ) {
+	define( 'WP_DEBUG_DISPLAY', false );
+}
 
 /* Add any custom values between this line and the "stop editing" line. */
 
