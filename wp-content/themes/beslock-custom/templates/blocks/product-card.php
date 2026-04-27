@@ -156,14 +156,28 @@ $images = array_values( array_unique( $normalized ) );
 
     <?php
       $btn_text = __( 'Ver Producto', 'beslock' );
-      $btn_href = isset( $product['link'] ) ? $product['link'] : '#';
+      $btn_href = '#';
       $btn_classes = 'btn product-card__btn';
-      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
+
+      // Prefer explicit product mapping by ID
+      if ( ! empty( $product['product_id'] ) ) {
         $pid = intval( $product['product_id'] );
-        $wc = wc_get_product( $pid );
-        if ( $wc ) {
-          $btn_href = get_permalink( $pid );
-          $btn_text = __( 'Ver Producto', 'beslock' );
+        $permalink = get_permalink( $pid );
+        if ( $permalink ) {
+          $btn_href = $permalink;
+        }
+      }
+
+      // Fallback to explicit link provided in the product array
+      if ( ( empty( $btn_href ) || $btn_href === '#' ) && ! empty( $product['link'] ) ) {
+        $btn_href = $product['link'];
+      }
+
+      // Try resolving by slug if still missing
+      if ( ( empty( $btn_href ) || $btn_href === '#' ) && ! empty( $product['slug'] ) ) {
+        $post = get_page_by_path( sanitize_title( $product['slug'] ), OBJECT, 'product' );
+        if ( $post && ! is_wp_error( $post ) ) {
+          $btn_href = get_permalink( $post->ID );
         }
       }
     ?>
