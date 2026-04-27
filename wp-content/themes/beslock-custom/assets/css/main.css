@@ -266,27 +266,10 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.18s, transform 200ms cubic-bezier(.22,.9,.41,1), box-shadow 220ms cubic-bezier(.22,.9,.41,1);
-  will-change: transform, box-shadow;
+  transition: color 0.18s;
 }
 .header__icon--menu {}
 .header__icon--cart {}
-
-/* Header icon hover 'lift' effect — subtle translate and shadow like product cards */
-.header__icon:hover,
-.header__icon:focus {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 26px rgba(7,5,5,0.12);
-}
-
-/* Slightly larger lift for desktop pointer devices */
-@media (hover: hover) and (pointer: fine) {
-  .header__icon:hover,
-  .header__icon:focus {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 34px rgba(7,5,5,0.14);
-  }
-}
 
 .header__logo {
   position: absolute;
@@ -346,8 +329,8 @@ body {
 .product-card__btn--link:hover { opacity: 0.95; }
 .product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14); }
 .product-card__add-to-cart { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:10px; background:var(--beslock-bg-2); color:#fff; text-decoration:none; }
-.product-card__add-to-cart .bi { color:var(--beslock-green); font-size:22px; line-height:1; /* visual weight */
-  text-shadow: 0.6px 0 var(--beslock-green), -0.6px 0 var(--beslock-green), 0 0.6px var(--beslock-green), 0 -0.6px var(--beslock-green);
+.product-card__add-to-cart .bi { color:var(--beslock-green); font-size: calc(22px * 1.25); line-height:1; /* visual weight */
+  text-shadow: 0.75px 0 var(--beslock-green), -0.75px 0 var(--beslock-green), 0 0.75px var(--beslock-green), 0 -0.75px var(--beslock-green);
 }
 .product-card__add-to-cart:hover { background: var(--beslock-green); }
 .product-card__add-to-cart:hover .bi { color: var(--beslock-bg-2); text-shadow: none; }
