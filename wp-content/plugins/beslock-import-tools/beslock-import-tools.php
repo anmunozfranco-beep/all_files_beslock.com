@@ -400,6 +400,34 @@ function beslock_plugin_sync_portfolio_products_and_set_price() {
       if ( function_exists( 'clean_post_cache' ) ) {
         clean_post_cache( $pid );
       }
+
+      // If WooCommerce CRUD is available, use it to initialize product properties
+      if ( function_exists( 'wc_get_product' ) ) {
+        try {
+          $wc = wc_get_product( $pid );
+          if ( $wc ) {
+            // set name/description explicitly
+            if ( method_exists( $wc, 'set_name' ) ) {
+              $wc->set_name( $name );
+            }
+            if ( method_exists( $wc, 'set_description' ) ) {
+              $wc->set_description( $desc );
+            }
+            if ( method_exists( $wc, 'set_regular_price' ) ) {
+              $wc->set_regular_price( '500000' );
+            }
+            if ( method_exists( $wc, 'set_price' ) ) {
+              $wc->set_price( '500000' );
+            }
+            if ( method_exists( $wc, 'save' ) ) {
+              $wc->save();
+            }
+          }
+        } catch ( Exception $e ) {
+          // ignore and continue — WP post exists even if WC not available
+        }
+      }
+
       $created++;
     } else {
       $pobj = $existing[0];
@@ -413,6 +441,33 @@ function beslock_plugin_sync_portfolio_products_and_set_price() {
       if ( function_exists( 'clean_post_cache' ) ) {
         clean_post_cache( $pid );
       }
+
+      // If WooCommerce CRUD is available, use it to update product properties
+      if ( function_exists( 'wc_get_product' ) ) {
+        try {
+          $wc = wc_get_product( $pid );
+          if ( $wc ) {
+            if ( method_exists( $wc, 'set_name' ) ) {
+              $wc->set_name( $name );
+            }
+            if ( method_exists( $wc, 'set_description' ) ) {
+              $wc->set_description( $desc );
+            }
+            if ( method_exists( $wc, 'set_regular_price' ) ) {
+              $wc->set_regular_price( '500000' );
+            }
+            if ( method_exists( $wc, 'set_price' ) ) {
+              $wc->set_price( '500000' );
+            }
+            if ( method_exists( $wc, 'save' ) ) {
+              $wc->save();
+            }
+          }
+        } catch ( Exception $e ) {
+          // ignore
+        }
+      }
+
       $updated++;
     }
 
