@@ -674,8 +674,6 @@
         }
       }
 
-      // Ensure features are repositioned after slide change (keeps 15px from hero top)
-      try { positionFeaturesAtHeroTop(); } catch(e) {}
       // Update dots accessibility state
       dots.forEach(function(d,i){ d.classList.toggle('is-active', i===current); d.setAttribute('aria-selected', i===current? 'true':'false'); });
 
@@ -807,48 +805,13 @@
             if (fw.parentNode !== sc) sc.appendChild(fw);
           }
         });
-        // After relocating DOM nodes, recompute the fixed positioning so
-        // each features-wrapper sits 15px from the top of the hero viewport.
-        try { positionFeaturesAtHeroTop(); }catch(e){}
       } catch (e) { console.warn('relocateFeaturesForBreakpoint error', e); }
-    }
-
-    // Place each .features-wrapper at 15px from the top of the .hero's viewport
-    // by setting position:fixed and computing coordinates. We keep the
-    // element inside its slide in the DOM so existing slide-based show/hide
-    // and scheduling logic continues to work.
-    function positionFeaturesAtHeroTop() {
-      try {
-        var hero = document.querySelector('.hero');
-        if (!hero) return;
-        var heroRect = hero.getBoundingClientRect();
-        var heroTop = Math.max(0, heroRect.top);
-        var heroLeft = heroRect.left || 0;
-        var heroCenterX = heroLeft + (heroRect.width || window.innerWidth) / 2;
-        var fws = document.querySelectorAll('.features-wrapper');
-        Array.prototype.forEach.call(fws, function(fw){
-          try {
-            // Keep DOM position (child of slide) but render visually at fixed coords
-            fw.style.position = 'fixed';
-            fw.style.top = (heroRect.top + 15) + 'px';
-            fw.style.left = (heroCenterX) + 'px';
-            // Preserve existing transform scale for the breakpoint range.
-            var scale = (window.innerWidth >= 600 && window.innerWidth <= 1023) ? 0.75 : 1;
-            fw.style.transform = 'translateX(-50%) scale(' + scale + ')';
-            fw.style.zIndex = 1200;
-            fw.style.pointerEvents = 'auto';
-          } catch(e) {}
-        });
-      } catch(e) { console.warn('positionFeaturesAtHeroTop error', e); }
     }
 
     // run once on init and on resize (debounced)
     relocateFeaturesForBreakpoint();
     var _relocTid = null;
     window.addEventListener('resize', function(){ if (_relocTid) clearTimeout(_relocTid); _relocTid = setTimeout(relocateFeaturesForBreakpoint, 140); }, { passive: true });
-    // Recompute feature positions on scroll as hero's top changes with page scroll
-    var _featScrollTid = null;
-    window.addEventListener('scroll', function(){ if (_featScrollTid) clearTimeout(_featScrollTid); _featScrollTid = setTimeout(positionFeaturesAtHeroTop, 80); }, { passive: true });
 
     function startAutoplay(){ stopAutoplay(); isPlaying=true; autoplayDeadline = Date.now() + H.slideDuration; timer = setTimeout(nextSlide, H.slideDuration); }
     function stopAutoplay(){ if (timer){ clearTimeout(timer); timer=null; } isPlaying=false; autoplayDeadline = null; autoplayRemaining = null; }
