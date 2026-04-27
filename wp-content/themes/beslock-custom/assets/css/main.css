@@ -1310,6 +1310,11 @@ hero__title {
     line-height: 1.18;
   }
 
+  /* Increase the feature subtitle by 4pt at this breakpoint per request. */
+  .hero-slide .features-wrapper .feature__subtitle {
+    font-size: calc(1.8rem * 0.75 + 4pt);
+  }
+
   /* Increase only the feature descriptive text by 3pt at this breakpoint
      to match the designer request. We add the 3pt using `calc()` so the
      relative scaling remains intact. */
