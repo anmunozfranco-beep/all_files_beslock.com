@@ -125,60 +125,6 @@
               $subtitle = isset($hero_subtitles[$product_key]) ? $hero_subtitles[$product_key] : ucwords($title_raw);
             ?>
             <?php
-            // Render features icons first (icons only). We'll render a single
-            // composition line below the icons, then the title and subtitle
-            // so the visual order top->bottom is: icons, composition, title, subtitle.
-            ?>
-
-            <div class="features-wrapper" aria-hidden="true">
-              <div class="features-list">
-                <?php
-                  // Render icons only (no per-feature text as requested)
-                  $rendered = 0;
-                  foreach ($selected_keys as $fk) {
-                    if ($rendered >= 3) break;
-                    if (isset($icons_map[$fk])) {
-                      $file = $icons_map[$fk];
-                      $file_fs = $icon_dir_fs . $file;
-                      if ( file_exists( $file_fs ) ) {
-                        $url = $icon_dir_uri . rawurlencode( $file );
-                      } else {
-                        $url = isset( $fallbacks[ $fk ] ) ? $fallbacks[ $fk ] : '';
-                      }
-                      $img_html = $url ? '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $feature_texts[$fk]['title'] ?? '' ) . '" />' : '';
-                      echo '<div class="feature"><span class="feature__icon">' . $img_html . '</span></div>';
-                      $rendered++;
-                    }
-                  }
-                ?>
-              </div>
-            </div>
-
-            <?php
-              // Build a single composition line from the selected feature titles
-              $comp_parts = array();
-              foreach ($selected_keys as $fk) {
-                if ( isset( $feature_texts[$fk] ) ) $comp_parts[] = $feature_texts[$fk]['title'];
-              }
-              $composition = '';
-              if ( count($comp_parts) === 1 ) {
-                $composition = $comp_parts[0];
-              } elseif ( count($comp_parts) === 2 ) {
-                $composition = $comp_parts[0] . ' y ' . $comp_parts[1];
-              } elseif ( count($comp_parts) > 2 ) {
-                $last = array_pop($comp_parts);
-                $composition = implode(', ', $comp_parts) . ' y ' . $last;
-              }
-            ?>
-
-            <?php if ( $composition ) : ?>
-              <p class="hero__composition"><?php echo esc_html( $composition ); ?></p>
-            <?php endif; ?>
-
-            <h1 class="hero__title"><?php echo esc_html($title_raw); ?></h1>
-            <p class="hero__subtitle"><?php echo esc_html($subtitle); ?></p>
-
-            <?php
               // Feature pool (use the same HTML structure and exact texts already present)
               // Prefer local SVG icons located in assets/images/icons/.
               $icon_dir_uri = get_stylesheet_directory_uri() . '/assets/images/icons/';
@@ -238,7 +184,25 @@
               $selected_keys = isset($features_by_product[$product_key]) ? $features_by_product[$product_key] : array_keys($feature_pool);
             ?>
 
-            <!-- features rendered above -->
+            <!-- Features module (maqueta) - moved above the title per request -->
+            <div class="features-wrapper" aria-hidden="true">
+              <div class="features-list">
+                <?php
+                  // Render exactly the 3 features for this product, preserving existing markup
+                  $rendered = 0;
+                  foreach ($selected_keys as $fk) {
+                    if ($rendered >= 3) break;
+                    if (isset($feature_pool[$fk])) {
+                      echo $feature_pool[$fk];
+                      $rendered++;
+                    }
+                  }
+                ?>
+              </div>
+            </div>
+
+            <h1 class="hero__title"><?php echo esc_html($title_raw); ?></h1>
+            <p class="hero__subtitle"><?php echo esc_html($subtitle); ?></p>
           </div>
         </div>
       </article>
