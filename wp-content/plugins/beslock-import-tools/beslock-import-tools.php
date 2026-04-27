@@ -52,27 +52,7 @@ function beslock_import_portfolio_page_plugin() {
         echo '<h2>' . esc_html__( 'Mapping (slug => product ID)', 'beslock' ) . '</h2>';
         echo '<ul>';
         foreach ( $res['mapping'] as $s => $id ) {
-            echo '<li>' . esc_html( $s ) . ' => ' . intval( $id );
-            // show thumbnail and gallery for quick diagnostics
-            $thumb = get_post_thumbnail_id( intval( $id ) );
-            $gallery = get_post_meta( intval( $id ), '_product_image_gallery', true );
-            if ( $thumb ) {
-              $url = wp_get_attachment_image_url( $thumb, 'thumbnail' );
-              echo ' — thumb: <a href="' . esc_url( $url ) . '" target="_blank">' . intval( $thumb ) . '</a>';
-            }
-            if ( $gallery ) {
-              echo ' — gallery: ' . esc_html( $gallery );
-              $gids = array_filter( array_map( 'intval', explode( ',', $gallery ) ) );
-              if ( ! empty( $gids ) ) {
-                echo '<ul>';
-                foreach ( $gids as $gid ) {
-                  $gurl = wp_get_attachment_image_url( $gid, 'thumbnail' );
-                  echo '<li><a href="' . esc_url( $gurl ) . '" target="_blank">' . intval( $gid ) . '</a></li>';
-                }
-                echo '</ul>';
-              }
-            }
-            echo '</li>';
+          echo '<li>' . esc_html( $s ) . ' => ' . intval( $id ) . '</li>';
         }
         echo '</ul>';
       }
@@ -555,6 +535,35 @@ function beslock_plugin_sync_portfolio_products_and_set_price() {
             }
           }
         }
+      }
+    }
+
+    // Assign gallery images when the template provides multiple images
+    if ( ! empty( $item['images'] ) && is_array( $item['images'] ) ) {
+      global $wpdb;
+      $gallery_ids = array();
+      foreach ( $item['images'] as $img_item ) {
+        // normalize to filename
+        $fname = wp_basename( $img_item );
+        if ( ! $fname ) continue;
+        $like = '%' . $wpdb->esc_like( $fname ) . '%';
+        $rows = $wpdb->get_results( $wpdb->prepare( "SELECT p.ID, pm.meta_value as file FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id WHERE p.post_type='attachment' AND pm.meta_key='_wp_attached_file' AND pm.meta_value LIKE %s", $like ) );
+        if ( ! empty( $rows ) ) {
+          foreach ( $rows as $r ) {
+            $gid = intval( $r->ID );
+            if ( $gid && ! in_array( $gid, $gallery_ids, true ) ) {
+              $gallery_ids[] = $gid;
+            }
+          }
+        }
+      }
+      if ( ! empty( $gallery_ids ) ) {
+        // if no featured set, pick first gallery item as featured
+        $current_thumb = get_post_thumbnail_id( $pid );
+        if ( ! $current_thumb ) {
+          set_post_thumbnail( $pid, intval( $gallery_ids[0] ) );
+        }
+        update_post_meta( $pid, '_product_image_gallery', implode( ',', $gallery_ids ) );
       }
     }
   }
