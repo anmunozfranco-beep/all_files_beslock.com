@@ -1315,6 +1315,12 @@ hero__title {
     font-size: calc(1.8rem * 0.75 + 4pt);
   }
 
+  /* Increase the feature title by 4pt at this breakpoint per request. */
+  .hero-slide .features-wrapper .feature__title {
+    font-size: calc(1.8rem * 0.75 + 4pt);
+    font-weight: 700;
+  }
+
   /* Increase only the feature descriptive text by 3pt at this breakpoint
      to match the designer request. We add the 3pt using `calc()` so the
      relative scaling remains intact. */
