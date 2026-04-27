@@ -789,12 +789,12 @@
     }
 
     // Ensure the .features-wrapper is placed where CSS expects for each breakpoint.
-    // On desktop (>=600px) we want the features block to be direct child of .hero-slide
-    // so absolute positioning (top) is relative to the slide. On mobile we move it
-    // back inside .slide-content so it sits under the subtitle.
+    // On large desktop (>=1024px) we want the features block to be direct child of .hero-slide
+    // so absolute positioning (top) is relative to the slide. For widths <1024px we keep
+    // the features block inside .slide-content so it sits directly under the subtitle.
     function relocateFeaturesForBreakpoint() {
       try {
-        var isDesktop = window.innerWidth >= 600;
+        var isDesktop = window.innerWidth >= 1024;
         slides.forEach(function(s){
           var fw = s.querySelector('.features-wrapper');
           var sc = s.querySelector('.slide-content');
