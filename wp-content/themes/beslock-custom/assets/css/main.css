@@ -271,6 +271,14 @@ body {
 .header__icon--menu {}
 .header__icon--cart {}
 
+/* On hover/focus make hamburger and cart icons white for contrast */
+.header__icon--menu:hover,
+.header__icon--cart:hover,
+.header__icon--menu:focus,
+.header__icon--cart:focus {
+  color: var(--beslock-white);
+}
+
 .header__logo {
   position: absolute;
   left: 50%;
