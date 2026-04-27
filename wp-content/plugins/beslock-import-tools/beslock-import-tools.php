@@ -52,7 +52,27 @@ function beslock_import_portfolio_page_plugin() {
         echo '<h2>' . esc_html__( 'Mapping (slug => product ID)', 'beslock' ) . '</h2>';
         echo '<ul>';
         foreach ( $res['mapping'] as $s => $id ) {
-          echo '<li>' . esc_html( $s ) . ' => ' . intval( $id ) . '</li>';
+            echo '<li>' . esc_html( $s ) . ' => ' . intval( $id );
+            // show thumbnail and gallery for quick diagnostics
+            $thumb = get_post_thumbnail_id( intval( $id ) );
+            $gallery = get_post_meta( intval( $id ), '_product_image_gallery', true );
+            if ( $thumb ) {
+              $url = wp_get_attachment_image_url( $thumb, 'thumbnail' );
+              echo ' — thumb: <a href="' . esc_url( $url ) . '" target="_blank">' . intval( $thumb ) . '</a>';
+            }
+            if ( $gallery ) {
+              echo ' — gallery: ' . esc_html( $gallery );
+              $gids = array_filter( array_map( 'intval', explode( ',', $gallery ) ) );
+              if ( ! empty( $gids ) ) {
+                echo '<ul>';
+                foreach ( $gids as $gid ) {
+                  $gurl = wp_get_attachment_image_url( $gid, 'thumbnail' );
+                  echo '<li><a href="' . esc_url( $gurl ) . '" target="_blank">' . intval( $gid ) . '</a></li>';
+                }
+                echo '</ul>';
+              }
+            }
+            echo '</li>';
         }
         echo '</ul>';
       }
