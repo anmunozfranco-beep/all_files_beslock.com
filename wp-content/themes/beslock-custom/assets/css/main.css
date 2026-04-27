@@ -1166,16 +1166,16 @@ hero__title {
  ------------------------------------------------------------------ */
 @media (min-width: 600px) {
   /* User reported icons visually shifted left — nudge right on desktop */
-  .feature--varias_aperturas .feature__icon img { transform: translateX(4px); }
+  .feature--varias_aperturas .feature__icon img { transform: translateX(8px); }
 
-  /* 'Total control' needs a slight right and lift to align with text */
-  .feature--total_control .feature__icon img { transform: translateX(3px) translateY(-2px); }
+  /* 'Total control' needs a stronger right nudge and slight lift to align with text */
+  .feature--total_control .feature__icon img { transform: translateX(6px) translateY(-2px); }
 }
 
 @media (max-width: 600px) {
   /* Mobile-specific milder nudges: smaller values to avoid layout breaks */
-  .feature--varias_aperturas .feature__icon img { transform: translateX(2px); }
-  .feature--total_control .feature__icon img { transform: translateX(1px) translateY(-1px); }
+  .feature--varias_aperturas .feature__icon img { transform: translateX(4px); }
+  .feature--total_control .feature__icon img { transform: translateX(3px) translateY(-1px); }
 }
 
 /* ------------------------------------------------------------------
