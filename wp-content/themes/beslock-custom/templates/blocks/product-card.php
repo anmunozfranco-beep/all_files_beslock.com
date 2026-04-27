@@ -92,10 +92,21 @@ $images = array_values( array_unique( $normalized ) );
       <div class="product-card__price-overlay"><?php echo wp_kses_post( $price_html ); ?></div>
     <?php endif; ?>
     <?php
+      // Determine display name (prefer WC product name when mapped)
+      $display_name = '';
+      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
+        $wc_tmp2 = wc_get_product( intval( $product['product_id'] ) );
+        if ( $wc_tmp2 && method_exists( $wc_tmp2, 'get_name' ) ) {
+          $display_name = $wc_tmp2->get_name() ?: ( $product['name'] ?? '' );
+        }
+      }
+      if ( empty( $display_name ) ) {
+        $display_name = isset( $product['name'] ) ? (string) $product['name'] : '';
+      }
+
       // Badges for specific products (overlay in corner)
       $badge_names = array( 'e-Orbit', 'e-Flex', 'e-Prime', 'e-Shield' );
-      $prod_name = isset( $product['name'] ) ? (string) $product['name'] : '';
-      if ( $prod_name && in_array( strtolower( $prod_name ), array_map( 'strtolower', $badge_names ), true ) ) :
+      if ( $display_name && in_array( strtolower( $display_name ), array_map( 'strtolower', $badge_names ), true ) ) :
         $badge_src = get_stylesheet_directory_uri() . '/assets/images/instal.jpg';
     ?>
       <img class="product-card__badge" src="<?php echo esc_url( $badge_src ); ?>" alt="<?php esc_attr_e( 'Badge', 'beslock' ); ?>" aria-hidden="true" />
