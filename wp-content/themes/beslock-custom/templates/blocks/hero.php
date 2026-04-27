@@ -129,13 +129,49 @@
 
             <?php
               // Feature pool (use the same HTML structure and exact texts already present)
-              $feature_pool = array(
-                'visitas_temporales' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=26111&format=png&color=000000" alt="icon-1" /></span><div class="feature__text"><span class="feature__title">Ideal para</span><span class="feature__subtitle">visitas temporales</span></div></div>',
-                'multiples_usuarios' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=3734&format=png&color=000000" alt="icon-2" /></span><div class="feature__text"><span class="feature__title">Múltiples</span><span class="feature__subtitle">usuarios</span></div></div>',
-                'liberarte_llaves' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=QSpdbW6kJ2lS&format=png&color=000000" alt="icon-3" /></span><div class="feature__text"><span class="feature__title">Libérate</span><span class="feature__subtitle">de cargar llaves</span></div></div>',
-                'varias_aperturas' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/?size=100&id=48917&format=png&color=000000" alt="icon-4" /></span><div class="feature__text"><span class="feature__title">Varias formas</span><span class="feature__subtitle">de apertura</span></div></div>',
-                'total_control' => '<div class="feature"><span class="feature__icon"><img src="https://img.icons8.com/ios/100/000000/phonelink-lock.png" alt="icon-5" /></span><div class="feature__text"><span class="feature__title">Total control</span><span class="feature__subtitle">en el celular</span></div></div>',
+              // Prefer local SVG icons located in assets/images/icons/.
+              $icon_dir_uri = get_stylesheet_directory_uri() . '/assets/images/icons/';
+              $icon_dir_fs  = get_stylesheet_directory() . '/assets/images/icons/';
+
+              $icons_map = array(
+                'visitas_temporales' => 'visitas_temporales.svg',
+                'multiples_usuarios' => 'multiples usuarios.svg',
+                'liberarte_llaves'   => 'liberate_llaves.svg',
+                'varias_aperturas'   => 'varias_aperturas.svg',
+                'total_control'      => 'tota_control.svg',
               );
+
+              $feature_texts = array(
+                'visitas_temporales' => array('title' => 'Ideal para', 'subtitle' => 'visitas temporales'),
+                'multiples_usuarios' => array('title' => 'Múltiples',  'subtitle' => 'usuarios'),
+                'liberarte_llaves'   => array('title' => 'Libérate',   'subtitle' => 'de cargar llaves'),
+                'varias_aperturas'   => array('title' => 'Varias formas','subtitle' => 'de apertura'),
+                'total_control'      => array('title' => 'Total control','subtitle' => 'en el celular'),
+              );
+
+              $fallbacks = array(
+                'visitas_temporales' => 'https://img.icons8.com/?size=100&id=26111&format=png&color=000000',
+                'multiples_usuarios' => 'https://img.icons8.com/?size=100&id=3734&format=png&color=000000',
+                'liberarte_llaves'   => 'https://img.icons8.com/?size=100&id=QSpdbW6kJ2lS&format=png&color=000000',
+                'varias_aperturas'   => 'https://img.icons8.com/?size=100&id=48917&format=png&color=000000',
+                'total_control'      => 'https://img.icons8.com/ios/100/000000/phonelink-lock.png',
+              );
+
+              $feature_pool = array();
+              foreach ( $icons_map as $key => $file ) {
+                $file_fs = $icon_dir_fs . $file;
+                if ( file_exists( $file_fs ) ) {
+                  $url = $icon_dir_uri . rawurlencode( $file );
+                } else {
+                  $url = isset( $fallbacks[ $key ] ) ? $fallbacks[ $key ] : '';
+                }
+
+                $t = isset( $feature_texts[ $key ] ) ? $feature_texts[ $key ] : array( 'title' => '', 'subtitle' => '' );
+
+                $img_html = $url ? '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $t['title'] . ' ' . $t['subtitle'] ) . '" />' : '';
+
+                $feature_pool[ $key ] = '<div class="feature"><span class="feature__icon">' . $img_html . '</span><div class="feature__text"><span class="feature__title">' . esc_html( $t['title'] ) . '</span><span class="feature__subtitle">' . esc_html( $t['subtitle'] ) . '</span></div></div>';
+              }
 
               // Selection per product (exact required selections, order preserved)
               $features_by_product = array(
