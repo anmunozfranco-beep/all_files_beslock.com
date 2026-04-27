@@ -931,10 +931,12 @@ hero__title {
 .features-wrapper { position: relative; margin-top: 0.8rem; }
 .features-list { display: flex; gap: 1rem; align-items: flex-start; justify-content: flex-start; flex-wrap: nowrap; }
 .features-list .feature { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; max-width: 120px; }
-.features-list .feature img { width: 6rem; height: 6rem; object-fit: contain; opacity: 0.92; transform: translateY(0); }
-/* Icon wrapper to support bolt badge and color-tinting */
-.feature__icon { display:inline-block; width:6rem; height:6rem; position:relative; flex:0 0 auto; }
-.feature__icon img { width:100%; height:100%; object-fit:contain; display:block; /* force white via filter (works for monochrome PNGs) */ filter: brightness(0) invert(1); }
+.features-list .feature img { width: 100%; height: 100%; object-fit: contain; opacity: 0.92; }
+/* Icon wrapper: use flexbox to center the SVG glyph inside its fixed box.
+  This helps when SVG viewBoxes include internal whitespace—the visible
+  glyph will be horizontally and vertically centered relative to the text. */
+.feature__icon { display: inline-flex; align-items: center; justify-content: center; width: 6rem; height: 6rem; flex: 0 0 auto; }
+.feature__icon img { max-width: 86%; max-height: 86%; width: auto; height: auto; display: block; object-fit: contain; object-position: center center; filter: brightness(0) invert(1); }
 .feature__text { font-size: 0.95rem; color: rgba(7,5,5,0.9); text-align: center; line-height: 1.15; margin: 0; }
 
 /* Hidden by default (visibility controlled by JS via .feature--visible) */
