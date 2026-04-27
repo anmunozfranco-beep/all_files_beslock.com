@@ -1317,6 +1317,11 @@ hero__title {
     font-size: calc(1.8rem * 0.75 + 3pt);
   }
 
+  /* Reduce subtitle size by 8pt at this breakpoint as requested */
+  .hero-slide .features-wrapper .feature__subtitle {
+    font-size: calc((1.8rem * 0.75) - 8pt);
+  }
+
   /* Keep features horizontally centered like desktop */
   .hero-slide .features-wrapper .features-list {
     gap: calc(7rem * 0.75);
