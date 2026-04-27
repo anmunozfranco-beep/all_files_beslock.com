@@ -107,7 +107,13 @@ $images = array_values( array_unique( $normalized ) );
       // Badges for specific products (overlay in corner)
       $badge_names = array( 'e-Orbit', 'e-Flex', 'e-Prime', 'e-Shield' );
       if ( $display_name && in_array( strtolower( $display_name ), array_map( 'strtolower', $badge_names ), true ) ) :
-        $badge_src = get_stylesheet_directory_uri() . '/assets/images/instal.jpg';
+        // prefer PNG (file present in theme); fallback to JPG if needed
+        $png = get_stylesheet_directory() . '/assets/images/instal.png';
+        if ( file_exists( $png ) ) {
+          $badge_src = get_stylesheet_directory_uri() . '/assets/images/instal.png';
+        } else {
+          $badge_src = get_stylesheet_directory_uri() . '/assets/images/instal.jpg';
+        }
     ?>
       <img class="product-card__badge" src="<?php echo esc_url( $badge_src ); ?>" alt="<?php esc_attr_e( 'Badge', 'beslock' ); ?>" aria-hidden="true" />
     <?php endif; ?>
