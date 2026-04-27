@@ -6,12 +6,22 @@
 defined( 'ABSPATH' ) || exit;
 get_header();
 
-global $product;
-if ( ! $product ) {
-    while ( have_posts() ) {
-        the_post();
-        $product = wc_get_product( get_the_ID() );
+global $product, $post;
+// Ensure global $post and $product are properly set for WooCommerce templates/hooks.
+if ( have_posts() ) {
+  the_post();
+  $post = get_post();
+  setup_postdata( $post );
+  if ( function_exists( 'wc_get_product' ) ) {
+    $wc_product = wc_get_product( $post->ID );
+    if ( $wc_product && is_object( $wc_product ) ) {
+      $product = $wc_product;
+    } else {
+      $product = null;
     }
+  }
+} else {
+  $product = null;
 }
 
 ?>
