@@ -45,31 +45,7 @@
         </div>
       </li>
 
-      <li class="mobile-menu__item" role="none">
-        <?php
-        // Link to the WooCommerce Shop page if available, otherwise fallback to /tienda
-        $shop_id = ( function_exists( 'wc_get_page_id' ) ) ? wc_get_page_id( 'shop' ) : 0;
-        $shop_url = $shop_id ? get_permalink( $shop_id ) : home_url( '/tienda' );
-
-        // Determine if the store has published products to show a small flag/badge
-        $product_count = 0;
-        if ( post_type_exists( 'product' ) ) {
-          $counts = wp_count_posts( 'product' );
-          $product_count = isset( $counts->publish ) ? (int) $counts->publish : 0;
-        }
-        ?>
-        <a class="mobile-menu__link" href="<?php echo esc_url( $shop_url ); ?>" role="menuitem">
-          <i class="bi bi-shop-window" aria-hidden="true"></i>
-          <div class="mobile-menu__meta">
-            <span class="mobile-menu__title">Tienda de productos
-              <?php if ( $product_count > 0 ) : ?>
-                <span class="mobile-menu__badge" aria-hidden="true"><?php echo esc_html( $product_count ); ?></span>
-              <?php endif; ?>
-            </span>
-            <span class="mobile-menu__subtitle">Compra fácil y rápida</span>
-          </div>
-        </a>
-      </li>
+      <!-- 'Tienda de productos' item removed as requested -->
 
       <li class="mobile-menu__item" role="none">
         <a class="mobile-menu__link" href="<?php echo esc_url( home_url('/offers') ); ?>" role="menuitem">
