@@ -1317,15 +1317,16 @@ hero__title {
     font-size: calc(1.8rem * 0.75 + 3pt);
   }
 
-  /* Reduce the subtitle size by 4pt at this breakpoint per request */
-  .hero-slide .features-wrapper .feature__subtitle {
-    font-size: calc(1.8rem * 0.75 - 4pt);
-  }
-
   /* Keep features horizontally centered like desktop */
   .hero-slide .features-wrapper .features-list {
     gap: calc(7rem * 0.75);
     justify-content: center;
+  }
+
+  /* Increase hero subtitle by 4pt at this breakpoint per request */
+  .hero-slide .hero__subtitle {
+    font-size: calc(2.1rem * 0.75 + 4pt);
+    will-change: font-size;
   }
 
   /* Slight vertical adjustment so scaled content doesn't overlap header */
