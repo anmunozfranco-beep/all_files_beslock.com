@@ -23,34 +23,22 @@ if ( ! $product ) {
       <div class="product-page__media">
         <?php
         /**
-         * Show product images (uses WooCommerce template function)
+         * Use WooCommerce hook to render product gallery/images.
+         * This ensures functions are available only when WooCommerce is active
+         * and avoids calling template helper functions directly.
          */
-        if ( function_exists( 'woocommerce_show_product_images' ) ) {
-            woocommerce_show_product_images();
-        } else {
-            echo get_the_post_thumbnail( get_the_ID(), 'large' );
-        }
+        do_action( 'woocommerce_before_single_product_summary' );
         ?>
       </div>
 
       <div class="product-page__info">
         <?php
-        // Title
-        if ( function_exists( 'woocommerce_template_single_title' ) ) {
-            woocommerce_template_single_title();
-        } else {
-            echo '<h1 class="product-title">' . get_the_title() . '</h1>';
-        }
-
-        // Price
-        if ( function_exists( 'woocommerce_template_single_price' ) ) {
-            woocommerce_template_single_price();
-        }
-
-        // Short description
-        if ( function_exists( 'woocommerce_template_single_excerpt' ) ) {
-            woocommerce_template_single_excerpt();
-        }
+        /**
+         * Render the product summary (title, rating, price, excerpt, add-to-cart)
+         * via the standard WooCommerce hook. Theme CSS can reposition the
+         * resulting markup into columns as needed.
+         */
+        do_action( 'woocommerce_single_product_summary' );
 
         // Trust / badges area placeholder
         echo '<div class="product-page__trust">';
@@ -58,20 +46,6 @@ if ( ! $product ) {
         echo '</div>';
         ?>
       </div>
-
-      <aside class="product-page__buy">
-        <?php
-        // Add to cart (preserve WooCommerce functionality)
-        if ( function_exists( 'woocommerce_template_single_add_to_cart' ) ) {
-            woocommerce_template_single_add_to_cart();
-        }
-
-        // Small product meta or stock
-        if ( function_exists( 'woocommerce_template_single_meta' ) ) {
-            woocommerce_template_single_meta();
-        }
-        ?>
-      </aside>
     </div>
 
     <!-- Secondary sections scaffold -->
