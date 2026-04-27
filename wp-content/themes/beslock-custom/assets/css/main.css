@@ -545,8 +545,8 @@ hero__title {
   will-change: transform, box-shadow;
 }
 .product-card:hover {
-  box-shadow: 0 12px 40px rgba(7,5,5,0.14);
-  transform: translateY(-8px) !important;
+  box-shadow: 0 18px 60px rgba(7,5,5,0.18);
+  transform: translateY(-10px) !important;
 }
 .product-card__image {
   padding-top: 34px;    /* 85% del padding vertical (antes solo abajo) */
