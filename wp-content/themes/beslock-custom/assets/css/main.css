@@ -1323,14 +1323,17 @@ hero__title {
     justify-content: center;
   }
 
-  /* Increase hero subtitle by 4pt at this breakpoint per request */
-  .hero-slide .hero__subtitle {
-    font-size: calc(2.1rem * 0.75 + 4pt);
-    will-change: font-size;
-  }
-
   /* Slight vertical adjustment so scaled content doesn't overlap header */
   .hero-viewport { padding-top: calc(1rem * 0.75); }
+
+  /* Reduce hero subtitle by 4pt at this breakpoint per design request. We
+     subtract 4pt from the same clamp used for larger viewports so sizing
+     remains proportional while honoring the requested reduction. */
+  .hero__subtitle,
+  .hero-slide .hero__subtitle {
+    font-size: calc(clamp(2.1rem, 8.5vw, 2.7rem) - 4pt) !important;
+    line-height: 1.02;
+  }
 }
 
 /* Mobile overrides placed at EOF so they take precedence for <=600px
