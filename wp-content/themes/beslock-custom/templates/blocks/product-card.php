@@ -102,12 +102,35 @@ $srcset_attr = ! empty( $srcset_parts ) ? implode( ', ', $srcset_parts ) : '';
         }
       }
     ?>
+    <?php
+      // Fallback: if WC price HTML is empty, try _regular_price meta and format with wc_price().
+      if ( empty( $price_html ) && ! empty( $product['product_id'] ) ) {
+        $pid = intval( $product['product_id'] );
+        $reg = get_post_meta( $pid, '_regular_price', true );
+        if ( $reg ) {
+          if ( function_exists( 'wc_price' ) ) {
+            $price_html = wc_price( $reg );
+          } else {
+            $price_html = esc_html( $reg );
+          }
+        }
+      }
+    ?>
     <?php if ( $price_html ) : ?>
       <div class="product-card__price-overlay"><?php echo wp_kses_post( $price_html ); ?></div>
     <?php endif; ?>
   </div>
 
   <div class="product-card__content">
+    <?php
+      // Ensure title uses WC product name when mapped
+      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
+        $wc_tmp2 = wc_get_product( intval( $product['product_id'] ) );
+        if ( $wc_tmp2 && method_exists( $wc_tmp2, 'get_name' ) ) {
+          $product['name'] = $wc_tmp2->get_name() ?: ( $product['name'] ?? '' );
+        }
+      }
+    ?>
     <h3 class="product-card__title"><?php echo esc_html( $product['name'] ?? '' ); ?></h3>
     <?php
       // Description: prefer WooCommerce product short description (or excerpt/content) when product_id is present
