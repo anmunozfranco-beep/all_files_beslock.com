@@ -52,10 +52,22 @@ $products = [
 ];
 
 echo '<section id="productos" class="products-portfolio section reveal"><div class="u-container products-portfolio__grid">';
-foreach ($products as $product) {
+  foreach ($products as $product) {
   // Try to map this portfolio entry to a WooCommerce product by slug/title.
   $map_slug = sanitize_title( $product['name'] );
-  $found = get_posts( array( 'post_type' => 'product', 'name' => $map_slug, 'posts_per_page' => 1 ) );
+  // Prefer mapping stored by the import plugin for reliability on live
+  $mapping = get_option( 'beslock_portfolio_mapping', array() );
+  $found = array();
+  if ( ! empty( $mapping ) && isset( $mapping[ $map_slug ] ) ) {
+    $pid = intval( $mapping[ $map_slug ] );
+    $pobj = get_post( $pid );
+    if ( $pobj && $pobj->post_type === 'product' ) {
+      $found = array( $pobj );
+    }
+  }
+  if ( empty( $found ) ) {
+    $found = get_posts( array( 'post_type' => 'product', 'name' => $map_slug, 'posts_per_page' => 1 ) );
+  }
   if ( empty( $found ) ) {
     // Fallback: try search by product name (WP search)
     $found = get_posts( array( 'post_type' => 'product', 's' => $product['name'], 'posts_per_page' => 1 ) );
