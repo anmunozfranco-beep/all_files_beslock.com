@@ -56,10 +56,17 @@ body {
   }
 }
 @media (min-width: 1200px) {
-  .u-container {
-    max-width: 1180px;
-    padding: 0 2.5rem;
+  /* Apply stronger, specific desktop nudges to both <img> and inline <svg>.
+     Use !important to override competing rules; these target only desktop. */
+  .feature--varias_aperturas .feature__icon img,
+  .feature--varias_aperturas .feature__icon svg {
+    transform: translateX(10px) !important;
+  }
 
+  .feature--total_control .feature__icon img,
+  .feature--total_control .feature__icon svg {
+    transform: translateX(8px) translateY(-2px) !important;
+  }
 /* Product card price overlay positioning: keep existing visual styles from
    WooCommerce price HTML and only center the overlay horizontally above
    the card content (over the image). */
@@ -1173,9 +1180,13 @@ hero__title {
 }
 
 @media (max-width: 600px) {
-  /* Mobile-specific milder nudges: smaller values to avoid layout breaks */
-  .feature--varias_aperturas .feature__icon img { transform: translateX(4px); }
-  .feature--total_control .feature__icon img { transform: translateX(3px) translateY(-1px); }
+  /* Mobile: keep default (left-aligned) — no nudges so layout remains as designed */
+  .feature--varias_aperturas .feature__icon img,
+  .feature--varias_aperturas .feature__icon svg,
+  .feature--total_control .feature__icon img,
+  .feature--total_control .feature__icon svg {
+    transform: none !important;
+  }
 }
 
 /* ------------------------------------------------------------------
