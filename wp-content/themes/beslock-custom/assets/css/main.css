@@ -527,6 +527,7 @@ hero__title {
     flex-wrap: wrap;
     justify-content: center;
     gap: 2rem;
+    align-items: flex-start; /* prevent sibling cards from shifting when one is lifted */
   }
   .product-card {
     flex: 1 1 270px;
