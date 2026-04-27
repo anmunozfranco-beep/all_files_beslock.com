@@ -1276,7 +1276,7 @@ hero__title {
      a scale transform so its visual center remains aligned with the text. */
   .slide-content .features-wrapper,
   .hero-slide .slide-content .features-wrapper {
-    transform: scale(0.75);
+    transform: translateY(-15px) scale(0.75);
     transform-origin: center top;
     margin: 0 auto;
     width: auto;
@@ -1288,7 +1288,7 @@ hero__title {
   /* If for any reason the features-wrapper is a direct child of .hero-slide
      (edge cases), keep a fallback that keeps it centered using translateX. */
   .hero-slide > .features-wrapper {
-    transform: translateX(-50%) scale(0.75);
+    transform: translateX(-50%) translateY(-15px) scale(0.75);
     transform-origin: center top;
     left: 50%;
     top: calc((var(--hero-features-offset, 105px) + 60px) * 0.75);
