@@ -266,17 +266,26 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.18s;
+  transition: color 0.18s, transform 200ms cubic-bezier(.22,.9,.41,1), box-shadow 220ms cubic-bezier(.22,.9,.41,1);
+  will-change: transform, box-shadow;
 }
 .header__icon--menu {}
 .header__icon--cart {}
 
-/* On hover/focus make hamburger and cart icons white for contrast */
-.header__icon--menu:hover,
-.header__icon--cart:hover,
-.header__icon--menu:focus,
-.header__icon--cart:focus {
-  color: var(--beslock-white) !important;
+/* Header icon hover 'lift' effect — subtle translate and shadow like product cards */
+.header__icon:hover,
+.header__icon:focus {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 26px rgba(7,5,5,0.12);
+}
+
+/* Slightly larger lift for desktop pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  .header__icon:hover,
+  .header__icon:focus {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 34px rgba(7,5,5,0.14);
+  }
 }
 
 .header__logo {
