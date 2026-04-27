@@ -31,62 +31,107 @@ if ( have_posts() ) {
 
     <div class="product-page__hero">
       <div class="product-page__hero-grid">
+        <!-- LEFT: Media + thumbnails + social proof -->
         <div class="product-page__media"> 
           <?php
-            // Product gallery / main image
             if ( function_exists( 'woocommerce_show_product_images' ) ) {
                 woocommerce_show_product_images();
             } else {
                 do_action( 'woocommerce_before_single_product_summary' );
             }
           ?>
+
+          <div class="product-page__thumbnails">
+            <?php
+              // Render thumbnails row (if available)
+              if ( function_exists( 'woocommerce_show_product_thumbnails' ) ) {
+                woocommerce_show_product_thumbnails();
+              }
+            ?>
+          </div>
+
+          <div class="product-page__social-proof">
+            <span class="product-page__views">50 people viewed this product today</span>
+          </div>
         </div>
 
+        <!-- CENTER: Title, rating, price, short description -->
         <div class="product-page__info"> 
-          <?php
-            // Breadcrumbs
-            if ( function_exists( 'woocommerce_breadcrumb' ) ) {
-                woocommerce_breadcrumb();
-            }
-            // Title + rating
-            if ( function_exists( 'woocommerce_template_single_title' ) ) {
+          <div class="product-page__meta-top">
+            <?php if ( function_exists( 'woocommerce_breadcrumb' ) ) { woocommerce_breadcrumb(); } ?>
+            <div class="product-page__wishlist">
+              <a href="#" class="beslock-wishlist">❤ Wishlist</a>
+            </div>
+          </div>
+
+          <div class="product-page__title-block">
+            <?php
+              if ( function_exists( 'woocommerce_template_single_title' ) ) {
                 woocommerce_template_single_title();
-            } else {
-                do_action( 'woocommerce_single_product_summary' );
-            }
-            if ( function_exists( 'woocommerce_template_single_rating' ) ) {
+              } else {
+                the_title( '<h1 class="product-page__title">', '</h1>' );
+              }
+
+              if ( function_exists( 'woocommerce_template_single_rating' ) ) {
                 woocommerce_template_single_rating();
-            }
+              }
 
-            // Excerpt / short description
-            if ( function_exists( 'woocommerce_template_single_excerpt' ) ) {
-                woocommerce_template_single_excerpt();
-            }
+              // Sale flash + price inline
+              if ( function_exists( 'woocommerce_show_product_sale_flash' ) ) {
+                woocommerce_show_product_sale_flash();
+              }
+              if ( function_exists( 'woocommerce_template_single_price' ) ) {
+                woocommerce_template_single_price();
+              }
+            ?>
+          </div>
 
-            // Trust badges inline
-            echo '<div class="product-page__trust">';
-            do_action( 'beslock_product_trust_badges' );
-            echo '</div>';
-          ?>
+          <div class="product-page__excerpt">
+            <?php if ( function_exists( 'woocommerce_template_single_excerpt' ) ) { woocommerce_template_single_excerpt(); } ?>
+          </div>
+
+          <div class="product-page__meta-bottom">
+            <a class="product-page__size-guide" href="#">Size guide</a>
+            <div class="product-page__color-chooser">Choose color: <span class="color-swatch" style="background:#222"></span><span class="color-swatch" style="background:#666"></span><span class="color-swatch" style="background:#ccc"></span></div>
+          </div>
+
+          <div class="product-page__trust-inline">
+            <?php do_action( 'beslock_product_trust_badges' ); ?>
+          </div>
         </div>
 
+        <!-- RIGHT: Buy box (price, stock, options, add-to-cart) -->
         <aside class="product-page__buy"> 
           <?php
-            // Price
-            if ( function_exists( 'woocommerce_template_single_price' ) ) {
-                woocommerce_template_single_price();
-            }
-            // Add to cart (preserve variations handling)
-            if ( function_exists( 'woocommerce_template_single_add_to_cart' ) ) {
-                echo '<div class="product-page__buy-box">';
-                woocommerce_template_single_add_to_cart();
-                echo '</div>';
-            }
+            global $product;
+            if ( $product && is_object( $product ) ) {
+              // Stock hint
+              if ( $product->managing_stock() ) {
+                $qty = $product->get_stock_quantity();
+                if ( $qty !== null && $qty <= 5 ) {
+                  echo '<div class="product-page__stock">Only ' . intval( $qty ) . ' left!</div>';
+                }
+              } elseif ( $product->is_on_backorder() ) {
+                echo '<div class="product-page__stock product-page__stock--backorder">Available on backorder</div>';
+              }
 
-            // Small checkout logos / trust icons
-            echo '<div class="product-page__checkout-icons">';
-            echo '<img src="' . esc_url( get_stylesheet_directory_uri() . '/assets/images/payments.png' ) . '" alt="pagos"/>';
-            echo '</div>';
+              // Price (redundant, already shown but keep in buy box)
+              if ( function_exists( 'woocommerce_template_single_price' ) ) {
+                woocommerce_template_single_price();
+              }
+
+              // Add-to-cart (this will render variation form for variable products)
+              echo '<div class="product-page__buy-box">';
+              if ( function_exists( 'woocommerce_template_single_add_to_cart' ) ) {
+                woocommerce_template_single_add_to_cart();
+              }
+              echo '</div>';
+
+              // Checkout logos
+              echo '<div class="product-page__checkout-icons">';
+              echo '<img src="' . esc_url( get_stylesheet_directory_uri() . '/assets/images/payments.png' ) . '" alt="pagos"/>';
+              echo '</div>';
+            }
           ?>
         </aside>
       </div>
