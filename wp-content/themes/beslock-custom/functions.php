@@ -773,3 +773,115 @@ function beslock_kadence_archive_hero_buffer_end() {
   // Otherwise, echo the captured content so parent theme output is preserved.
   echo $content;
 }
+
+  /**
+   * Render basic product page sections for theme scaffold hooks.
+   * These provide safe, minimal outputs and fallbacks when product meta is missing.
+   */
+  add_action( 'beslock_product_trust_badges', function() {
+    global $product;
+    if ( ! $product ) {
+      return;
+    }
+    $name = $product->get_name();
+    $badges = array();
+    $candidates = array( 'e-Orbit', 'e-Flex', 'e-Prime', 'e-Shield' );
+    foreach ( $candidates as $c ) {
+      if ( stripos( $name, $c ) !== false ) {
+        $badges[] = $c;
+      }
+    }
+    if ( empty( $badges ) ) {
+      return;
+    }
+    echo '<div class="beslock-trust-badges">';
+    foreach ( $badges as $b ) {
+      $slug = sanitize_title( $b );
+      $src = get_stylesheet_directory_uri() . '/assets/images/instal.png';
+      echo '<span class="beslock-badge beslock-badge--' . esc_attr( $slug ) . '"><img src="' . esc_url( $src ) . '" alt="' . esc_attr( $b ) . '"/></span>';
+    }
+    echo '</div>';
+  }, 10 );
+
+  add_action( 'beslock_product_confianza', function() {
+    global $product;
+    if ( ! $product ) {
+      return;
+    }
+    echo '<div class="beslock-confianza">';
+    echo '<h3>Confianza</h3>';
+    echo '<p>Producto verificado. Garantía local y soporte técnico.</p>';
+    echo '</div>';
+  } );
+
+  add_action( 'beslock_product_psb', function() {
+    global $product, $post;
+    if ( ! $product ) {
+      return;
+    }
+    echo '<div class="beslock-psb">';
+    echo '<div class="psb-col"><h4>Problema</h4><p>' . wp_kses_post( get_post_meta( $post->ID, 'beslock_problema', true ) ?: 'Describe aquí el problema que resuelve este producto.' ) . '</p></div>';
+    echo '<div class="psb-col"><h4>Solución</h4><p>' . wp_kses_post( get_post_meta( $post->ID, 'beslock_solucion', true ) ?: wp_trim_words( $post->post_excerpt ?: $post->post_content, 40 ) ) . '</p></div>';
+    echo '<div class="psb-col"><h4>Beneficios</h4><p>' . wp_kses_post( get_post_meta( $post->ID, 'beslock_beneficios', true ) ?: 'Listado breve de beneficios del producto.' ) . '</p></div>';
+    echo '</div>';
+  } );
+
+  add_action( 'beslock_product_specs', function() {
+    global $product;
+    if ( ! $product ) {
+      return;
+    }
+    echo '<div class="beslock-specs">';
+    echo '<h3>Especificaciones técnicas</h3>';
+    if ( function_exists( 'wc_display_product_attributes' ) ) {
+      echo '<div class="beslock-specs__attrs">';
+      echo wc_display_product_attributes( $product );
+      echo '</div>';
+    } else {
+      echo '<p>No hay especificaciones disponibles.</p>';
+    }
+    echo '</div>';
+  } );
+
+  add_action( 'beslock_product_demo', function() {
+    global $product, $post;
+    if ( ! $product ) {
+      return;
+    }
+    $embed = get_post_meta( $post->ID, 'beslock_demo_embed', true );
+    echo '<div class="beslock-demo">';
+    echo '<h3>Demo / Uso</h3>';
+    if ( $embed ) {
+      echo '<div class="beslock-demo__embed">' . wp_kses_post( $embed ) . '</div>';
+    } else {
+      echo '<p>Enlace o vídeo de demostración no proporcionado.</p>';
+    }
+    echo '</div>';
+  } );
+
+  add_action( 'beslock_product_who', function() {
+    echo '<div class="beslock-who"><h3>Para quién es</h3><p>Pequeñas y medianas empresas, instaladores técnicos y usuarios finales que buscan solución profesional.</p></div>';
+  } );
+
+  add_action( 'beslock_product_faq', function() {
+    echo '<div class="beslock-faq"><h3>Preguntas frecuentes</h3><p>Agregar preguntas frecuentes en el editor del producto (meta fields: beslock_faq_1, beslock_faq_2 ...)</p></div>';
+  } );
+
+  add_action( 'beslock_product_cta', function() {
+    global $product;
+    if ( ! $product ) {
+      return;
+    }
+    echo '<div class="beslock-cta">';
+    echo '<div class="beslock-cta__price">' . $product->get_price_html() . '</div>';
+    // Use WC template for add-to-cart to preserve variations handling
+    if ( function_exists( 'woocommerce_template_single_add_to_cart' ) ) {
+      echo '<div class="beslock-cta__buy">';
+      woocommerce_template_single_add_to_cart();
+      echo '</div>';
+    } else {
+      echo '<a class="button" href="' . esc_url( get_permalink( $product->get_id() ) ) . '">Comprar</a>';
+    }
+    echo '</div>';
+  } );
+
