@@ -1263,18 +1263,20 @@ hero__title {
   /* Scale slide content (title, subtitle, CTA) */
   .hero-slide > .slide-inner > .slide-content {
     transform: scale(0.75);
-    transform-origin: left top;
-    /* Ensure the element remains horizontally centered after scaling */
+    transform-origin: center top;
+    /* keep centered under viewport */
     left: 50%;
+    transform: translateX(-50%) scale(0.75);
     width: calc(100% - 2rem);
   }
 
   /* Scale the features block and nudge its vertical offset proportionally */
+  /* Center features under the slide content horizontally while scaling */
   .hero-slide > .features-wrapper {
-    transform: scale(0.75);
-    transform-origin: left top;
-    left: 40vw;
-    top: calc(var(--hero-features-offset, 105px) * 0.75 + 45px); /* (105+60)*0.75 => 78.75 ~ use 45px for the +60 scaling */
+    transform: translateX(-50%) scale(0.75);
+    transform-origin: center top;
+    left: 50%;
+    top: calc((var(--hero-features-offset, 105px) + 60px) * 0.75);
     width: auto;
     padding-top: 0;
   }
