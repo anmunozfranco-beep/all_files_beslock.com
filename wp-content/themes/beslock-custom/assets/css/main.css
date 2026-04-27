@@ -56,17 +56,10 @@ body {
   }
 }
 @media (min-width: 1200px) {
-  /* Apply stronger, specific desktop nudges to both <img> and inline <svg>.
-     Use !important to override competing rules; these target only desktop. */
-  .feature--varias_aperturas .feature__icon img,
-  .feature--varias_aperturas .feature__icon svg {
-    transform: translateX(10px) !important;
-  }
+  .u-container {
+    max-width: 1180px;
+    padding: 0 2.5rem;
 
-  .feature--total_control .feature__icon img,
-  .feature--total_control .feature__icon svg {
-    transform: translateX(8px) translateY(-2px) !important;
-  }
 /* Product card price overlay positioning: keep existing visual styles from
    WooCommerce price HTML and only center the overlay horizontally above
    the card content (over the image). */
@@ -1167,29 +1160,6 @@ hero__title {
 }
 
 /* ------------------------------------------------------------------
-   Per-feature micro-adjustments (nudge) for pixel-perfect alignment
-   Adjust only the visible glyph inside the icon box. Scale in small
-   integer pixels to avoid subpixel blur on some browsers.
- ------------------------------------------------------------------ */
-@media (min-width: 600px) {
-  /* User reported icons visually shifted left — nudge right on desktop */
-  .feature--varias_aperturas .feature__icon img { transform: translateX(8px); }
-
-  /* 'Total control' needs a stronger right nudge and slight lift to align with text */
-  .feature--total_control .feature__icon img { transform: translateX(6px) translateY(-2px); }
-}
-
-@media (max-width: 600px) {
-  /* Mobile: keep default (left-aligned) — no nudges so layout remains as designed */
-  .feature--varias_aperturas .feature__icon img,
-  .feature--varias_aperturas .feature__icon svg,
-  .feature--total_control .feature__icon img,
-  .feature--total_control .feature__icon svg {
-    transform: none !important;
-  }
-}
-
-/* ------------------------------------------------------------------
    Consolidated feature overrides
    - Mobile (<=600px): left-aligned vertical list, 36px icons
    - Desktop (>=600px): horizontal list, centered texts, 50px icons
@@ -1283,6 +1253,54 @@ hero__title {
     z-index: 4;
     padding-top: 0;
   }
+}
+
+/* Scale hero content to 75% for intermediate widths (600px - 1023px)
+   Keep elements at the same relative positions as desktop but scaled so
+   text, icons and overlays visually match at 75% size. Adjust top offsets
+   accordingly to preserve alignment with the hero title anchor. */
+@media (min-width: 600px) and (max-width: 1023px) {
+  /* Scale slide content (title, subtitle, CTA) */
+  .hero-slide > .slide-inner > .slide-content {
+    transform: scale(0.75);
+    transform-origin: left top;
+    /* Ensure the element remains horizontally centered after scaling */
+    left: 50%;
+    width: calc(100% - 2rem);
+  }
+
+  /* Scale the features block and nudge its vertical offset proportionally */
+  .hero-slide > .features-wrapper {
+    transform: scale(0.75);
+    transform-origin: left top;
+    left: 40vw;
+    top: calc(var(--hero-features-offset, 105px) * 0.75 + 45px); /* (105+60)*0.75 => 78.75 ~ use 45px for the +60 scaling */
+    width: auto;
+    padding-top: 0;
+  }
+
+  /* Reduce icon and text sizes proportionally to avoid subpixel layout issues */
+  .hero-slide .features-wrapper .feature__icon,
+  .hero-slide .features-wrapper .features-list .feature img {
+    width: calc(6rem * 0.75);
+    height: calc(6rem * 0.75);
+  }
+
+  .hero-slide .features-wrapper .feature__text,
+  .hero-slide .features-wrapper .feature__title,
+  .hero-slide .features-wrapper .feature__subtitle {
+    font-size: calc(1.8rem * 0.75);
+    line-height: 1.18;
+  }
+
+  /* Keep features horizontally centered like desktop */
+  .hero-slide .features-wrapper .features-list {
+    gap: calc(7rem * 0.75);
+    justify-content: center;
+  }
+
+  /* Slight vertical adjustment so scaled content doesn't overlap header */
+  .hero-viewport { padding-top: calc(1rem * 0.75); }
 }
 
 /* Mobile overrides placed at EOF so they take precedence for <=600px
