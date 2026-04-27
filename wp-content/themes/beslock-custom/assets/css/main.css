@@ -564,16 +564,20 @@ hero__title {
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 48px; /* reduced so it doesn't cover the product */
+  width: 35%; /* show as 35% of card width */
+  max-width: 110px;
   height: auto;
   z-index: 12;
   pointer-events: none;
   background: transparent;
   transform: rotate(-6deg);
-  box-shadow: 0 6px 12px rgba(7,5,5,0.10);
+  /* remove any drop shadow so only the stamp icon is visible */
+  box-shadow: none;
+  /* blend white background away so PNG with white bg appears transparent */
+  mix-blend-mode: multiply;
 }
 @media (max-width: 600px) {
-  .product-card__badge { width: 36px; top: 8px; right: 8px; transform: rotate(-4deg); }
+  .product-card__badge { width: 32%; top: 8px; right: 8px; transform: rotate(-4deg); max-width:72px; }
 }
 .product-card__content {
   padding: 1rem 1.2rem 1.5rem;
