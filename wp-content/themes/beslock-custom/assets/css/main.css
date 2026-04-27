@@ -546,7 +546,7 @@ hero__title {
 }
 .product-card:hover {
   box-shadow: 0 12px 40px rgba(7,5,5,0.14);
-  transform: translateY(-8px);
+  transform: translateY(-8px) !important;
 }
 .product-card__image {
   padding-top: 34px;    /* 85% del padding vertical (antes solo abajo) */
