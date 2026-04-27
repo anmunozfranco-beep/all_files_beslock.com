@@ -1160,6 +1160,25 @@ hero__title {
 }
 
 /* ------------------------------------------------------------------
+   Per-feature micro-adjustments (nudge) for pixel-perfect alignment
+   Adjust only the visible glyph inside the icon box. Scale in small
+   integer pixels to avoid subpixel blur on some browsers.
+ ------------------------------------------------------------------ */
+@media (min-width: 600px) {
+  /* 'Varias formas' seemed shifted slightly right — nudge left */
+  .feature--varias_aperturas .feature__icon img { transform: translateX(-2px); }
+
+  /* 'Total control' looked low; lift it 2px */
+  .feature--total_control .feature__icon img { transform: translateY(-2px); }
+}
+
+@media (max-width: 600px) {
+  /* Mobile-specific milder nudges */
+  .feature--varias_aperturas .feature__icon img { transform: translateX(-1px); }
+  .feature--total_control .feature__icon img { transform: translateY(-1px); }
+}
+
+/* ------------------------------------------------------------------
    Consolidated feature overrides
    - Mobile (<=600px): left-aligned vertical list, 36px icons
    - Desktop (>=600px): horizontal list, centered texts, 50px icons

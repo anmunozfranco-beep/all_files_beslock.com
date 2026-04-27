@@ -170,7 +170,8 @@
 
                 $img_html = $url ? '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $t['title'] . ' ' . $t['subtitle'] ) . '" />' : '';
 
-                $feature_pool[ $key ] = '<div class="feature"><span class="feature__icon">' . $img_html . '</span><div class="feature__text"><span class="feature__title">' . esc_html( $t['title'] ) . '</span><span class="feature__subtitle">' . esc_html( $t['subtitle'] ) . '</span></div></div>';
+                $key_class = 'feature--' . sanitize_html_class( $key );
+                $feature_pool[ $key ] = '<div class="feature ' . esc_attr( $key_class ) . '"><span class="feature__icon">' . $img_html . '</span><div class="feature__text"><span class="feature__title">' . esc_html( $t['title'] ) . '</span><span class="feature__subtitle">' . esc_html( $t['subtitle'] ) . '</span></div></div>';
               }
 
               // Selection per product (exact required selections, order preserved)
