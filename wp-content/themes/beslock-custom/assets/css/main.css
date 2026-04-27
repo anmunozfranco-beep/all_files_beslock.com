@@ -1296,25 +1296,6 @@ hero__title {
     padding-top: 0;
   }
 
-  /* Position features at 15px from top of the hero viewport for this
-     breakpoint range. We ensure the hero container is a positioned ancestor
-     so absolute positioning is anchored to the hero area, not the page. */
-  .hero, .hero-slide {
-    position: relative;
-  }
-
-  .hero .features-wrapper,
-  .hero-slide .features-wrapper {
-    position: absolute;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%) scale(0.75);
-    transform-origin: center top;
-    margin: 0; /* remove margin auto when absolute */
-    width: auto;
-    padding-top: 0;
-  }
-
   /* Reduce icon and text sizes proportionally to avoid subpixel layout issues */
   .hero-slide .features-wrapper .feature__icon,
   .hero-slide .features-wrapper .features-list .feature img {
@@ -1327,6 +1308,13 @@ hero__title {
   .hero-slide .features-wrapper .feature__subtitle {
     font-size: calc(1.8rem * 0.75);
     line-height: 1.18;
+  }
+
+  /* Increase only the feature descriptive text by 3pt at this breakpoint
+     to match the designer request. We add the 3pt using `calc()` so the
+     relative scaling remains intact. */
+  .hero-slide .features-wrapper .feature__text {
+    font-size: calc(1.8rem * 0.75 + 3pt);
   }
 
   /* Keep features horizontally centered like desktop */
