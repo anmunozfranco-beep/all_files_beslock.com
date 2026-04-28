@@ -795,17 +795,14 @@ function beslock_kadence_archive_hero_buffer_end() {
     if ( ! $product ) {
       return;
     }
-    $name = $product->get_name();
-    $badges = array();
-    $candidates = array( 'e-Orbit', 'e-Flex', 'e-Prime', 'e-Shield' );
-    foreach ( $candidates as $c ) {
-      if ( stripos( $name, $c ) !== false ) {
-        $badges[] = $c;
-      }
-    }
-    if ( empty( $badges ) ) {
+    // Only render trust badges if explicit product meta `beslock_trust_badges` exists.
+    $pid = intval( $product->get_id() );
+    $badges_meta = get_post_meta( $pid, 'beslock_trust_badges', true );
+    if ( empty( $badges_meta ) ) {
       return;
     }
+    $badges = is_array( $badges_meta ) ? $badges_meta : array_map( 'trim', explode( ',', (string) $badges_meta ) );
+    if ( empty( $badges ) ) return;
     echo '<div class="beslock-trust-badges">';
     foreach ( $badges as $b ) {
       $slug = sanitize_title( $b );
@@ -820,10 +817,13 @@ function beslock_kadence_archive_hero_buffer_end() {
     if ( ! $product ) {
       return;
     }
+    $pid = intval( $product->get_id() );
+    $conf = get_post_meta( $pid, 'beslock_confianza', true );
+    if ( empty( $conf ) ) {
+      return;
+    }
     echo '<div class="beslock-confianza">';
-    echo '<h3>Confianza</h3>';
-    echo '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>';
-    echo '<p>Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa.</p>';
+    echo wp_kses_post( $conf );
     echo '</div>';
   } );
 
@@ -832,10 +832,17 @@ function beslock_kadence_archive_hero_buffer_end() {
     if ( ! $product ) {
       return;
     }
+    $pid = intval( $post->ID );
+    $problem = get_post_meta( $pid, 'beslock_psb_problem', true );
+    $solution = get_post_meta( $pid, 'beslock_psb_solution', true );
+    $benefits = get_post_meta( $pid, 'beslock_psb_benefits', true );
+    if ( empty( $problem ) && empty( $solution ) && empty( $benefits ) ) {
+      return;
+    }
     echo '<div class="beslock-psb">';
-    echo '<div class="psb-col"><h4>Problema</h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p></div>';
-    echo '<div class="psb-col"><h4>Solución</h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra.</p></div>';
-    echo '<div class="psb-col"><h4>Beneficios</h4><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.</p></div>';
+    if ( $problem ) echo '<div class="psb-col"><h4>Problema</h4><div>' . wp_kses_post( $problem ) . '</div></div>';
+    if ( $solution ) echo '<div class="psb-col"><h4>Solución</h4><div>' . wp_kses_post( $solution ) . '</div></div>';
+    if ( $benefits ) echo '<div class="psb-col"><h4>Beneficios</h4><div>' . wp_kses_post( $benefits ) . '</div></div>';
     echo '</div>';
   } );
 
@@ -844,10 +851,18 @@ function beslock_kadence_archive_hero_buffer_end() {
     if ( ! $product ) {
       return;
     }
+    $pid = intval( $product->get_id() );
+    $has_attrs = ( ! empty( $product->get_attributes() ) );
+    $specs_meta = get_post_meta( $pid, 'beslock_specs', true );
+    if ( ! $has_attrs && empty( $specs_meta ) ) {
+      return;
+    }
     echo '<div class="beslock-specs">';
     echo '<h3>Especificaciones técnicas</h3>';
-    echo '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>';
-    if ( function_exists( 'wc_display_product_attributes' ) ) {
+    if ( ! empty( $specs_meta ) ) {
+      echo '<div class="beslock-specs__meta">' . wp_kses_post( $specs_meta ) . '</div>';
+    }
+    if ( function_exists( 'wc_display_product_attributes' ) && $has_attrs ) {
       echo '<div class="beslock-specs__attrs">';
       echo wc_display_product_attributes( $product );
       echo '</div>';
@@ -861,22 +876,25 @@ function beslock_kadence_archive_hero_buffer_end() {
       return;
     }
     $embed = get_post_meta( $post->ID, 'beslock_demo_embed', true );
+    if ( empty( $embed ) ) return;
     echo '<div class="beslock-demo">';
     echo '<h3>Demo / Uso</h3>';
-    if ( $embed ) {
-      echo '<div class="beslock-demo__embed">' . wp_kses_post( $embed ) . '</div>';
-    } else {
-      echo '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>';
-    }
+    echo '<div class="beslock-demo__embed">' . wp_kses_post( $embed ) . '</div>';
     echo '</div>';
   } );
 
   add_action( 'beslock_product_who', function() {
-    echo '<div class="beslock-who"><h3>Para quién es</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p></div>';
+    global $post;
+    $who = get_post_meta( $post->ID, 'beslock_who', true );
+    if ( empty( $who ) ) return;
+    echo '<div class="beslock-who"><h3>Para quién es</h3><div>' . wp_kses_post( $who ) . '</div></div>';
   } );
 
   add_action( 'beslock_product_faq', function() {
-    echo '<div class="beslock-faq"><h3>Preguntas frecuentes</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante. Donec id elit non mi porta gravida at eget metus.</p></div>';
+    global $post;
+    $faq = get_post_meta( $post->ID, 'beslock_faq', true );
+    if ( empty( $faq ) ) return;
+    echo '<div class="beslock-faq"><h3>Preguntas frecuentes</h3><div>' . wp_kses_post( $faq ) . '</div></div>';
   } );
 
   add_action( 'beslock_product_cta', function() {

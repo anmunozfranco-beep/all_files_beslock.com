@@ -29,14 +29,8 @@ if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) 
   }
 }
 
-// Fallback to provided template images
-if ( empty( $images ) ) {
-  if ( ! empty( $product['images'] ) && is_array( $product['images'] ) ) {
-    $images = $product['images'];
-  } elseif ( ! empty( $product['image'] ) ) {
-    $images = array( $product['image'] );
-  }
-}
+// Do NOT fallback to theme template images; only use WooCommerce attachments.
+// If no images available, leave $images empty so template shows empty placeholder.
 
 // Normalize to absolute URLs where possible
 $normalized = array();
@@ -104,18 +98,19 @@ $images = array_values( array_unique( $normalized ) );
         $display_name = isset( $product['name'] ) ? (string) $product['name'] : '';
       }
 
-      // Badges for specific products (overlay in corner)
-      $badge_names = array( 'e-Orbit', 'e-Flex', 'e-Prime', 'e-Shield' );
-      if ( $display_name && in_array( strtolower( $display_name ), array_map( 'strtolower', $badge_names ), true ) ) :
-        // prefer PNG (file present in theme); fallback to JPG if needed
+      // Badge overlay: only render if explicit post meta `beslock_badge` exists (comma-separated names)
+      $badge_meta = '';
+      if ( ! empty( $product['product_id'] ) ) {
+        $badge_meta = get_post_meta( intval( $product['product_id'] ), 'beslock_badge', true );
+      }
+      if ( $badge_meta ) :
+        $badge_names = is_array( $badge_meta ) ? $badge_meta : array_map( 'trim', explode( ',', (string) $badge_meta ) );
+        // use first badge label as alt text
+        $badge_label = reset( $badge_names );
         $png = get_stylesheet_directory() . '/assets/images/instal.png';
-        if ( file_exists( $png ) ) {
-          $badge_src = get_stylesheet_directory_uri() . '/assets/images/instal.png';
-        } else {
-          $badge_src = get_stylesheet_directory_uri() . '/assets/images/instal.jpg';
-        }
+        $badge_src = file_exists( $png ) ? get_stylesheet_directory_uri() . '/assets/images/instal.png' : get_stylesheet_directory_uri() . '/assets/images/instal.jpg';
     ?>
-      <img class="product-card__badge" src="<?php echo esc_url( $badge_src ); ?>" alt="<?php esc_attr_e( 'Badge', 'beslock' ); ?>" aria-hidden="true" />
+      <img class="product-card__badge" src="<?php echo esc_url( $badge_src ); ?>" alt="<?php echo esc_attr( $badge_label ); ?>" aria-hidden="true" />
     <?php endif; ?>
   </div>
 
@@ -156,28 +151,14 @@ $images = array_values( array_unique( $normalized ) );
 
     <?php
       $btn_text = __( 'Ver Producto', 'beslock' );
-      $btn_href = '#';
+      $btn_href = isset( $product['link'] ) ? $product['link'] : '#';
       $btn_classes = 'btn product-card__btn';
-
-      // Prefer explicit product mapping by ID
-      if ( ! empty( $product['product_id'] ) ) {
+      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
         $pid = intval( $product['product_id'] );
-        $permalink = get_permalink( $pid );
-        if ( $permalink ) {
-          $btn_href = $permalink;
-        }
-      }
-
-      // Fallback to explicit link provided in the product array
-      if ( ( empty( $btn_href ) || $btn_href === '#' ) && ! empty( $product['link'] ) ) {
-        $btn_href = $product['link'];
-      }
-
-      // Try resolving by slug if still missing
-      if ( ( empty( $btn_href ) || $btn_href === '#' ) && ! empty( $product['slug'] ) ) {
-        $post = get_page_by_path( sanitize_title( $product['slug'] ), OBJECT, 'product' );
-        if ( $post && ! is_wp_error( $post ) ) {
-          $btn_href = get_permalink( $post->ID );
+        $wc = wc_get_product( $pid );
+        if ( $wc ) {
+          $btn_href = get_permalink( $pid );
+          $btn_text = __( 'Ver Producto', 'beslock' );
         }
       }
     ?>
