@@ -26,7 +26,12 @@ if ( have_posts() ) {
 
 ?>
 <main id="site-content" class="site-main">
-  <div class="u-container product-page">
+  <div class="product-detail-layout">
+    <aside class="product-page__guide product-page__guide--left" aria-hidden="true">
+      <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/Layout-product.jpeg' ); ?>" alt="Layout guide" />
+    </aside>
+
+    <div class="u-container product-page">
     <?php do_action( 'woocommerce_before_single_product' ); ?>
 
     <div class="product-page__hero">
@@ -183,6 +188,11 @@ if ( have_posts() ) {
     </section>
 
     <?php do_action( 'woocommerce_after_single_product' ); ?>
+    </div>
+
+    <aside class="product-page__guide product-page__guide--right" aria-hidden="true">
+      <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/Layout-product.jpeg' ); ?>" alt="Layout guide" />
+    </aside>
   </div>
 </main>
 
