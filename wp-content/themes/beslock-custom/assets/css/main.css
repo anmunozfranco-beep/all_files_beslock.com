@@ -730,6 +730,36 @@ body.single-product a.single_add_to_cart_button .bi,
   color: #ffffff !important;
 }
 
+/* Specific product-card variant: default gray button with green cart icon;
+   on hover invert to green button and gray cart icon. Higher specificity
+   + !important ensures this wins in production where other styles override. */
+.product-card .product-card__add-to-cart {
+  background: var(--beslock-bg-2) !important;
+  color: var(--beslock-green) !important;
+  border: 2px solid rgba(0,0,0,0.06) !important;
+  padding: 0.5rem 0.75rem !important;
+  width: 48px !important;
+  height: 48px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 14px rgba(3,69,38,0.04) !important;
+  transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease !important;
+}
+.product-card .product-card__add-to-cart .bi {
+  color: var(--beslock-green) !important;
+  transition: color 160ms ease !important;
+}
+.product-card .product-card__add-to-cart:hover {
+  background: var(--beslock-green) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 12px 30px rgba(3,69,38,0.12) !important;
+}
+.product-card .product-card__add-to-cart:hover .bi {
+  color: var(--beslock-bg-2) !important;
+}
+
 /* ========== DETALLE VISUAL SUAVE EN SECCIONES GRANDES ========== */
 @media (min-width: 510px) {
   .hero__content,
