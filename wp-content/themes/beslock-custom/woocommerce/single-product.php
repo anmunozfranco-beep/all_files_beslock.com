@@ -79,10 +79,6 @@ if ( have_posts() ) :
   </div>
 
   <div class="product-page__content">
-    <section class="product-page__problem-solution" aria-labelledby="ps-heading">
-      <h2 id="ps-heading" class="product-page__section-title">Problema → Solución → Beneficios</h2>
-      <?php do_action( 'beslock_product_problem_solution' ); ?>
-    </section>
 
     <div class="product-tabs" data-module="product-tabs">
       <div class="product-tabs__nav" role="tablist" aria-label="Product tabs">
@@ -112,15 +108,7 @@ if ( have_posts() ) :
       </div>
     </div>
 
-    <section class="product-page__extra" aria-labelledby="extra-heading">
-      <h2 id="extra-heading" class="product-page__section-title">Demo · ¿Para quién?</h2>
-      <?php do_action( 'beslock_product_demo' ); ?>
-    </section>
-
-    <aside class="product-page__related" aria-labelledby="related-heading">
-      <h2 id="related-heading" class="product-page__section-title">Productos relacionados</h2>
-      <?php do_action( 'beslock_product_related' ); ?>
-    </aside>
+    <!-- Removed demo/related/problem-solution sections per design request -->
   </div>
 </main>
 
