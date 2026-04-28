@@ -29,6 +29,25 @@
       // mark initialized
       wrap.classList.add('beslock-qty-init');
 
+      // ensure quantity and add-to-cart button are grouped for precise centering
+      try{
+        var form = wrap.closest('form.cart');
+        if(form){
+          var existing = form.querySelector('.beslock-buy-controls');
+          if(!existing){
+            var container = document.createElement('div');
+            container.className = 'beslock-buy-controls';
+            // place container before quantity wrapper
+            form.insertBefore(container, form.querySelector('.quantity'));
+            // move quantity and the add-to-cart button into container
+            var qtyNode = form.querySelector('.quantity');
+            var btn = form.querySelector('.single_add_to_cart_button');
+            if(qtyNode) container.appendChild(qtyNode);
+            if(btn) container.appendChild(btn);
+          }
+        }
+      }catch(e){}
+
       // helpers
       function parseVal(){ var v = parseFloat(input.value); return isNaN(v)? 0 : v; }
       function stepVal(){ var s = parseFloat(input.getAttribute('step')) || 1; return s; }

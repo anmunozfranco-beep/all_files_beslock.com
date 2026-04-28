@@ -54,6 +54,12 @@
   justify-content: center;
 }
 
+/* Group wrapper used to precisely center qty + button */
+.beslock-buy-controls { display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; }
+.beslock-buy-controls .beslock-qty { order:0; }
+.beslock-buy-controls .single_add_to_cart_button { order:1; }
+
+
 /* remove native number input spinners for consistent centering */
 .beslock-qty input.qty::-webkit-outer-spin-button,
 .beslock-qty input.qty::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
