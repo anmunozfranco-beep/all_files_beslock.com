@@ -70,7 +70,7 @@
     var gallery = document.querySelector('.woocommerce div.product div.images .woocommerce-product-gallery');
     if(gallery && window.MutationObserver){
       var mo = new MutationObserver(function(){
-        setTimeout(replacePlaceholders, 100);
+        setTimeout(function(){ replacePlaceholders(); if(typeof makeAnchorsInert === 'function') try{ makeAnchorsInert(); }catch(e){} }, 100);
       });
       mo.observe(gallery, { childList: true, subtree: true });
     }
@@ -194,12 +194,42 @@
 
   // Run once and also after gallery mutations
   try{ removeMagnifierTriggers(); }catch(e){}
+  // Make anchors to uploads inert so tapping thumbnails doesn't navigate away
+  function makeAnchorsInert(){
+    try{
+      var anchors = document.querySelectorAll('.woocommerce div.product div.images a');
+      anchors.forEach(function(a){
+        try{
+          var href = a.getAttribute('href') || a.href || '';
+          if(href && href.indexOf('/wp-content/uploads/') !== -1){
+            if(a.getAttribute('data-beslock-disabled')) return;
+            a.setAttribute('data-beslock-disabled', '1');
+            try{ a.removeAttribute('href'); }catch(e){}
+            a.style.cursor = 'default';
+            a.addEventListener('click', function(ev){ ev.preventDefault(); ev.stopPropagation(); }, true );
+          }
+        }catch(e){}
+      });
+    }catch(e){}
+  }
+  try{ makeAnchorsInert(); }catch(e){}
   if(window.MutationObserver){
     var gallery = document.querySelector('.woocommerce div.product div.images');
     if(gallery){
       var mo2 = new MutationObserver(function(){ removeMagnifierTriggers(); });
       mo2.observe(gallery, { childList:true, subtree:true, attributes:true });
     }
+  }
+
+  // Observe product area for new anchors and make them inert
+  if(window.MutationObserver){
+    try{
+      var productArea = document.querySelector('.woocommerce div.product');
+      if(productArea){
+        var mo3 = new MutationObserver(function(){ try{ makeAnchorsInert(); }catch(e){} });
+        mo3.observe(productArea, { childList:true, subtree:true, attributes:true });
+      }
+    }catch(e){}
   }
 
   /* Lightbox overlay click-to-close helper:
