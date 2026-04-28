@@ -258,6 +258,23 @@ body.tax-product_tag .header__logo img {
   pointer-events: auto !important;
 }
 
+/* ----- Single product overrides (loaded last) -----
+   Ensure product pages replicate frontpage logo geometry and spacing.
+*/
+body.single-product .header__logo {
+  /* nudged upward by 36px to match frontpage visual position */
+  top: calc(50% - 36px) !important;
+}
+body.admin-bar.single-product .header__logo {
+  top: calc(50% - 36px + 16px) !important;
+}
+
+/* Move the product gallery down so it doesn't overlap the header */
+body.single-product .product-page__media,
+body.single-product .woocommerce div.product div.images {
+  margin-top: 90px !important;
+}
+
 /* Define and lock the site-logo size variable used by theme */
 .header {
   --site-logo-height: 32px !important;

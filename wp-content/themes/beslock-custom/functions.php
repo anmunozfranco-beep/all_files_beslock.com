@@ -103,6 +103,12 @@ add_action( 'wp_enqueue_scripts', function() {
     true
   );
 
+  // Small helper to replace placeholder gallery images at runtime
+  $fix_placeholder_js = $theme_dir_path . '/assets/js/fix-placeholder.js';
+  if ( file_exists( $fix_placeholder_js ) ) {
+    wp_enqueue_script( 'beslock-fix-placeholder-js', $theme_dir_uri . '/assets/js/fix-placeholder.js', array( 'beslock-main-js' ), filemtime( $fix_placeholder_js ), true );
+  }
+
   /* -------------------------------
    * JS ESPECÍFICO PARA MENÚ PRODUCTOS MÓVIL
    * Se encola siempre para que el drawer funcione en todas las resoluciones
@@ -188,6 +194,17 @@ add_action( 'after_setup_theme', function() {
     add_theme_support( 'woocommerce' );
   }
 }, 11 );
+
+// If the parent theme or plugins enable WooCommerce gallery lightbox/zoom
+// we can disable them temporarily to prevent the magnifier/overlay behavior
+// while we ensure product images are correct.
+add_action( 'after_setup_theme', function() {
+  if ( function_exists( 'remove_theme_support' ) ) {
+    remove_theme_support( 'wc-product-gallery-zoom' );
+    remove_theme_support( 'wc-product-gallery-lightbox' );
+    remove_theme_support( 'wc-product-gallery-slider' );
+  }
+}, 20 );
 
   /**
    * Redirect the WooCommerce Shop page to the front-page products portfolio section.
@@ -387,6 +404,91 @@ add_action( 'after_setup_theme', function() {
       'skipped'      => isset( $assign['skipped'] ) ? $assign['skipped'] : array(),
     );
   }
+
+/**
+ * Admin Tools: Fix placeholder product attachments
+ * Adds a Tools -> "Fix placeholders" page that runs the existing
+ * `scripts/fix-placeholder-images.php` script. Dry-run by default; Apply
+ * via POST (nonce-protected) to perform changes.
+ */
+add_action( 'admin_menu', function() {
+  add_management_page(
+    __( 'Fix Placeholder Images', 'beslock' ),
+    __( 'Fix placeholders', 'beslock' ),
+    'manage_options',
+    'beslock-fix-placeholders',
+    'beslock_fix_placeholders_page'
+  );
+} );
+
+function beslock_fix_placeholders_page() {
+  if ( ! current_user_can( 'manage_options' ) ) {
+    wp_die( __( 'Insufficient permissions', 'beslock' ) );
+  }
+
+  $script = get_stylesheet_directory() . '/scripts/fix-placeholder-images.php';
+  if ( ! file_exists( $script ) ) {
+    echo '<div class="wrap"><h1>' . esc_html__( 'Fix Placeholder Images', 'beslock' ) . '</h1>';
+    echo '<div class="notice notice-error"><p>' . esc_html__( 'Script not found: scripts/fix-placeholder-images.php', 'beslock' ) . '</p></div>';
+    echo '</div>';
+    return;
+  }
+
+  $applied = false;
+  $output = '';
+
+  // Handle Apply action
+  if ( isset( $_POST['beslock_fix_apply'] ) ) {
+    check_admin_referer( 'beslock_fix_placeholders_nonce' );
+    // Run without dry-run
+    $GLOBALS['argv'] = array();
+    ob_start();
+    include $script;
+    $output = ob_get_clean();
+    $applied = true;
+  } else {
+    // Default: dry-run
+    $GLOBALS['argv'] = array('--dry-run');
+    ob_start();
+    include $script;
+    $output = ob_get_clean();
+  }
+
+  // Additionally scan product pages' rendered HTML to find any remaining
+  // placeholder strings or theme asset references that the attachment scan
+  // would miss (e.g. hard-coded img src or block content). This runs
+  // during both dry-run and apply and reports matching permalinks.
+  $placeholder_pattern = '/lupa|magnif|magnifier|magnifying|search|lens|placeholder|🔍|\/assets\/images\/products\/[\w\-\.]+/i';
+  $found_pages = array();
+  $products = get_posts( array( 'post_type' => 'product', 'posts_per_page' => -1, 'post_status' => array('publish','draft','private') ) );
+  if ( ! empty( $products ) ) {
+    foreach ( $products as $pp ) {
+      $url = get_permalink( $pp->ID );
+      if ( ! $url ) continue;
+      // Use internal HTTP request with short timeout
+      $resp = wp_remote_get( $url, array( 'timeout' => 5 ) );
+      if ( is_wp_error( $resp ) ) continue;
+      $body = wp_remote_retrieve_body( $resp );
+      if ( $body && preg_match( $placeholder_pattern, $body, $m ) ) {
+        $found_pages[ $pp->ID ] = array( 'permalink' => $url, 'match' => $m[0] );
+      }
+    }
+  }
+
+  echo '<div class="wrap"><h1>' . esc_html__( 'Fix Placeholder Images', 'beslock' ) . '</h1>';
+  if ( $applied ) {
+    echo '<div class="notice notice-success"><p>' . esc_html__( 'Apply executed. Review output below and backup file in uploads/beslock-backups/', 'beslock' ) . '</p></div>';
+  } else {
+    echo '<p>' . esc_html__( 'Dry-run output shown below. If the results look safe, click Apply to perform the changes (a backup file will be written by default).', 'beslock' ) . '</p>';
+  }
+
+  echo '<form method="post">' . wp_nonce_field( 'beslock_fix_placeholders_nonce' );
+  echo '<p><button type="submit" name="beslock_fix_apply" class="button button-primary" onclick="return confirm(\'' . esc_js( __( 'Apply replacements? This will modify product attachment meta. A backup file is created by default.', 'beslock' ) ) . '\');">' . esc_html__( 'Apply replacements', 'beslock' ) . '</button></p>';
+  echo '<h2>' . esc_html__( 'Script output', 'beslock' ) . '</h2>';
+  echo '<pre style="white-space:pre-wrap;background:#fff;border:1px solid #ddd;padding:12px;">' . esc_html( $output ) . '</pre>';
+  echo '</form>';
+  echo '</div>';
+}
 
   /**
    * Set all products regular price to given amount (string/number).
@@ -691,6 +793,36 @@ add_action( 'wp_print_styles', function() {
   $file = $dir . '/enqueued-styles.log';
   @file_put_contents( $file, implode( "\n", $out ) );
 }, 100 );
+
+/**
+ * Register a shortcode and helper to render the reusable header widget.
+ * Usage in content: [beslock_header_widget]
+ * Usage in PHP templates: beslock_render_header_widget();
+ */
+if ( ! function_exists( 'beslock_get_header_widget_html' ) ) {
+  function beslock_get_header_widget_html() {
+    $tpl = get_stylesheet_directory() . '/template-parts/header/header-widget.php';
+    if ( file_exists( $tpl ) ) {
+      ob_start();
+      include $tpl;
+      return ob_get_clean();
+    }
+    return '';
+  }
+}
+
+if ( ! function_exists( 'beslock_header_widget_shortcode' ) ) {
+  function beslock_header_widget_shortcode( $atts = array() ) {
+    return beslock_get_header_widget_html();
+  }
+  add_shortcode( 'beslock_header_widget', 'beslock_header_widget_shortcode' );
+}
+
+if ( ! function_exists( 'beslock_render_header_widget' ) ) {
+  function beslock_render_header_widget() {
+    echo beslock_get_header_widget_html();
+  }
+}
 
 /**
  * Buffer `wp_head` output and strip Kadence CSS link/style blocks.

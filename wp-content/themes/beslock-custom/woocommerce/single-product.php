@@ -4,6 +4,8 @@
  * Minimal, accessible scaffold that uses WooCommerce functions where appropriate.
  */
 defined( 'ABSPATH' ) || exit;
+// Use the site's normal header so single-product pages render the original
+// header markup from `header.php`.
 get_header();
 
 if ( have_posts() ) :
