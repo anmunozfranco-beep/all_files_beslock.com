@@ -98,6 +98,77 @@
     }catch(e){}
   }, true);
 
+  // If the anchor navigates directly to the image file (no lightbox present),
+  // prevent default navigation and open a simple fullscreen overlay that
+  // closes when clicked anywhere.
+  (function(){
+    var overlay = null;
+    function openFullscreen(src){
+      closeFullscreen();
+      overlay = document.createElement('div');
+      overlay.className = 'beslock-fullscreen-overlay';
+      overlay.style.position = 'fixed';
+      overlay.style.left = 0;
+      overlay.style.top = 0;
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(8,8,8,0.95)';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = 999999;
+      overlay.style.cursor = 'zoom-out';
+
+      var img = document.createElement('img');
+      img.src = src;
+      img.style.maxWidth = '100%';
+      img.style.maxHeight = '100%';
+      img.style.objectFit = 'contain';
+      img.alt = '';
+
+      overlay.appendChild(img);
+
+      overlay.addEventListener('click', function(){ closeFullscreen(); });
+      document.addEventListener('keydown', onKeyDown);
+      document.body.appendChild(overlay);
+      // prevent body scroll while open
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeFullscreen(){
+      if(overlay && overlay.parentNode){
+        overlay.parentNode.removeChild(overlay);
+      }
+      overlay = null;
+      document.removeEventListener('keydown', onKeyDown);
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
+
+    function onKeyDown(e){
+      if(e.key === 'Escape' || e.keyCode === 27){ closeFullscreen(); }
+    }
+
+    // Capture-phase listener to stop navigation to image files and open overlay
+    document.addEventListener('click', function(ev){
+      try{
+        var a = ev.target.closest('.woocommerce div.product div.images .woocommerce-product-gallery__image a');
+        if(!a) return;
+        // If link points to an uploads image (same origin) and no lightbox is attached,
+        // open our fullscreen overlay instead of navigating.
+        var href = a.getAttribute('href') || a.href || '';
+        if(!href) return;
+        // Only intercept if href points to /wp-content/uploads/ (image file)
+        if(href.indexOf('/wp-content/uploads/') !== -1){
+          ev.preventDefault();
+          ev.stopPropagation();
+          openFullscreen(href);
+        }
+      }catch(e){}
+    }, true);
+  })();
+
   // Remove/hide the photoswipe trigger element (magnifier) if present,
   // and remove any emoji-based magnifier images that may have been injected.
   function removeMagnifierTriggers(){
