@@ -48,6 +48,16 @@
         activeIndex = Math.max(0, Math.min(slides.length-1, i));
         var ds = dots.querySelectorAll('button');
         ds.forEach(function(b, idx){ b.classList.toggle('active', idx===activeIndex); });
+        // update slide active class for subtle visual effect
+        slides.forEach(function(s, idx){ s.classList.toggle('active', idx===activeIndex); });
+        // preload next image for snappier UX
+        var next = slides[activeIndex+1];
+        if(next){
+          var img = next.querySelector('img');
+          if(img && img.src){
+            var p = new Image(); p.src = img.src;
+          }
+        }
       }
 
       function scrollToSlide(i){
