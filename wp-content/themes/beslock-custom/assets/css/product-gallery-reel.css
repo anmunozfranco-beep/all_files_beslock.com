@@ -97,3 +97,12 @@
   font-size: 14px;
 }
 
+/* Counter (e.g. 1 / 4) */
+.beslock-gallery-counter{
+  text-align: center;
+  font-size: 13px;
+  color: #444;
+  margin-top: 8px;
+}
+
+

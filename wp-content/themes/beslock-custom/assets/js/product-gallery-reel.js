@@ -23,6 +23,10 @@
       var dots = document.createElement('div'); dots.className = 'beslock-gallery-dots';
       wrapper.parentNode.insertBefore(dots, wrapper.nextSibling);
 
+      // Counter (1 / N)
+      var counter = document.createElement('div'); counter.className = 'beslock-gallery-counter';
+      dots.parentNode.insertBefore(counter, dots.nextSibling);
+
       var slides = Array.prototype.slice.call(reel.querySelectorAll('.beslock-gallery-slide'));
       slides.forEach(function(s, i){
         var d = document.createElement('button'); d.type = 'button'; d.setAttribute('data-index', i);
@@ -50,14 +54,23 @@
         ds.forEach(function(b, idx){ b.classList.toggle('active', idx===activeIndex); });
         // update slide active class for subtle visual effect
         slides.forEach(function(s, idx){ s.classList.toggle('active', idx===activeIndex); });
-        // preload next image for snappier UX
-        var next = slides[activeIndex+1];
-        if(next){
-          var img = next.querySelector('img');
-          if(img && img.src){
-            var p = new Image(); p.src = img.src;
+        // update counter
+        if(counter) counter.textContent = (activeIndex+1) + ' / ' + slides.length;
+        // preload next image via link rel=preload for best effect
+        try{
+          var next = slides[activeIndex+1];
+          if(next){
+            var img = next.querySelector('img');
+            if(img && img.src){
+              // remove previous preload
+              var old = document.head.querySelector('link[data-beslock-preload]');
+              if(old) old.parentNode.removeChild(old);
+              var l = document.createElement('link');
+              l.rel = 'preload'; l.as = 'image'; l.href = img.src; l.setAttribute('data-beslock-preload','1');
+              document.head.appendChild(l);
+            }
           }
-        }
+        }catch(e){}
       }
 
       function scrollToSlide(i){
@@ -70,7 +83,7 @@
 
       function goToRelative(delta){ scrollToSlide(activeIndex + delta); }
 
-      // Update active on scroll (debounced)
+      // Update active on scroll (debounced - lower latency)
       var scrollTimeout = null;
       reel.addEventListener('scroll', function(){
         if(scrollTimeout) clearTimeout(scrollTimeout);
@@ -83,7 +96,7 @@
             if(diff < bestDiff){ bestDiff = diff; closest = idx; }
           });
           setActive(closest);
-        }, 80);
+        }, 48);
       });
 
       // Pointer swipe handling
