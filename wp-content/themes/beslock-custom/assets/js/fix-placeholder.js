@@ -124,4 +124,56 @@
       mo2.observe(gallery, { childList:true, subtree:true, attributes:true });
     }
   }
+
+  /* Lightbox overlay click-to-close helper:
+     When a gallery lightbox/overlay element appears, attach a click handler
+     to the overlay root so a click anywhere will attempt to close the lightbox.
+  */
+  function attemptCloseLightbox(){
+    var selectors = ['.pswp__button--close', '.mfp-close', '.fancybox-button--close', '.fancybox-close', '.pswp button.pswp__button--close', '.pswp__button--close'];
+    var closed = false;
+    for(var i=0;i<selectors.length;i++){
+      var el = document.querySelector(selectors[i]);
+      if(el){ try{ el.click(); closed = true; }catch(e){} }
+    }
+    if(!closed){
+      // dispatch ESC
+      var ev = new KeyboardEvent('keydown',{key:'Escape',keyCode:27,which:27,bubbles:true});
+      document.dispatchEvent(ev);
+    }
+    // Last resort: remove overlay nodes
+    var ps = document.querySelectorAll('.pswp, .mfp-wrap, .fancybox-container');
+    ps.forEach(function(p){ if(p.parentNode) p.parentNode.removeChild(p); });
+  }
+
+  function attachOverlayClose(el){
+    if(!el) return;
+    if(el.__beslockCloseAttached) return;
+    el.__beslockCloseAttached = true;
+    el.addEventListener('click', function(ev){
+      // If click is on an actionable child (like next/prev controls), ignore
+      var actionable = ev.target.closest('button, a, .pswp__button, .fancybox-button, .mfp-arrow');
+      if(actionable) return;
+      attemptCloseLightbox();
+    }, { capture: true });
+  }
+
+  if(window.MutationObserver){
+    var bodyMo = new MutationObserver(function(mutations){
+      mutations.forEach(function(m){
+        if(m.addedNodes && m.addedNodes.length){
+          Array.prototype.forEach.call(m.addedNodes, function(n){
+            if(!(n instanceof Element)) return;
+            if(n.classList && (n.classList.contains('pswp') || n.classList.contains('mfp-wrap') || n.classList.contains('fancybox-container') || n.getAttribute && n.getAttribute('role')==='dialog')){
+              attachOverlayClose(n);
+            }
+            // Also support descendants that act as overlays
+            var overlay = n.querySelector && n.querySelector('.pswp, .mfp-wrap, .fancybox-container, [role="dialog"]');
+            if(overlay) attachOverlayClose(overlay);
+          });
+        }
+      });
+    });
+    bodyMo.observe(document.body, { childList:true, subtree:true });
+  }
 })();

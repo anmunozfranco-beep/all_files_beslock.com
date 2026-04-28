@@ -87,3 +87,5 @@ body.admin-bar .single-product .header__logo {
 	top: calc(50% - 36px + 16px) !important;
 }
 
+/* (Removed fixed close-button; overlay click-to-close implemented in JS) */
+

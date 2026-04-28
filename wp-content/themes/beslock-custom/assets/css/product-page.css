@@ -37,3 +37,41 @@
 /* Constrain gallery thumbnails and images within the media area */
 .product-page__media .woocommerce-product-gallery{ max-width:100%; }
 .product-page__media .woocommerce-product-gallery__image img{ width:100%; height:auto; object-fit:contain }
+
+/* Mobile-first: present product images in a horizontal reel (snap + swipe) */
+body.single-product .product-page__media .woocommerce-product-gallery__wrapper {
+  display: flex !important;
+  gap: 0.5rem !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-snap-type: x mandatory !important;
+  padding-bottom: 0.5rem !important;
+}
+
+body.single-product .product-page__media .woocommerce-product-gallery__image {
+  flex: 0 0 86% !important; /* each slide ~86% of container width for peek */
+  scroll-snap-align: center !important;
+  display: block !important;
+  min-width: 86% !important;
+}
+
+body.single-product .product-page__media .woocommerce-product-gallery__image img {
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+/* Hide default extra thumbnails that may appear under gallery on small screens */
+body.single-product .woocommerce-product-gallery .flex-control-thumbs {
+  display: none !important;
+}
+
+/* Improve scrollbar appearance (subtle) */
+body.single-product .product-page__media .woocommerce-product-gallery__wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+body.single-product .product-page__media .woocommerce-product-gallery__wrapper::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12);
+  border-radius: 999px;
+}
