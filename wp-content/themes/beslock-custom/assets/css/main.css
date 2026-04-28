@@ -286,7 +286,7 @@ body {
   min-width: 18px !important;
   padding: 0 !important;
   border-radius: 999px !important;
-  background: var(--beslock-green) !important; /* force beslock green */
+  background: rgba(3,69,38,0.6) !important; /* beslock green at 60% opacity */
   color: #fff !important; /* force white text */
   font-size: 11px !important; /* ensure number fits */
   font-weight: 700 !important;
@@ -305,7 +305,7 @@ body {
 /* Extra specificity fallback to override plugin styles */
 .header__icon--cart .header__cart-count,
 .header__icon.header__icon--cart > .header__cart-count {
-  background: var(--beslock-green) !important;
+  background: rgba(3,69,38,0.6) !important;
   color: #fff !important;
   width: 18px !important;
   height: 18px !important;
