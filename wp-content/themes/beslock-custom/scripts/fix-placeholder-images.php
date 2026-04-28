@@ -18,18 +18,25 @@
 
 $argv = isset( $GLOBALS['argv'] ) ? $GLOBALS['argv'] : array();
 $dry_run = in_array('--dry-run', $argv, true) || in_array('--dryrun', $argv, true) || in_array('-n', $argv, true);
+// allow skipping backup when explicitly requested
+$no_backup = in_array('--no-backup', $argv, true) || in_array('--nobackup', $argv, true) || in_array('-B', $argv, true);
+
+// If run via plain PHP (no WP-CLI), attempt to bootstrap WordPress by requiring wp-load.php
+if ( ! function_exists( 'get_posts' ) ) {
+    $maybe = realpath( __DIR__ . '/../../../../wp-load.php' );
+    if ( $maybe && file_exists( $maybe ) ) {
+        require_once $maybe;
+    }
+}
 $pattern = '/lupa|magnif|magnifier|magnifying|search|lens|placeholder/i';
 
 if ( ! function_exists( 'get_posts' ) ) {
-    echo "This script must be run with WP-CLI (wp eval-file) from the WordPress root.\n";
+    echo "This script must be run with WP-CLI (wp eval-file) or PHP from the WordPress root. wp-load.php could not be located.\n";
     exit(1);
 }
 
 $upload = wp_upload_dir();
 $backup_dir = trailingslashit( $upload['basedir'] ) . 'beslock-backups';
-if ( ! file_exists( $backup_dir ) ) {
-    wp_mkdir_p( $backup_dir );
-}
 $backup_file = $backup_dir . '/placeholder-backup-' . date('Ymd-His') . '.json';
 $backup = array( 'meta' => array(), 'actions' => array() );
 $affected_products = array();
@@ -85,7 +92,9 @@ foreach ( $products as $p ) {
 
     if ( ! empty( $bad_ids ) ) {
         $affected_products[] = $pid;
-        $backup['meta'][ $pid ] = $orig;
+        if ( ! $no_backup ) {
+            $backup['meta'][ $pid ] = $orig;
+        }
 
         if ( $dry_run ) {
             echo "[DRY] Product {$pid} has suspicious attachments: " . implode(',', $bad_ids) . "\n";
@@ -165,15 +174,23 @@ foreach ( $products as $p ) {
             $actions[] = 'no_replacement_found';
         }
 
-        $backup['actions'][ $pid ] = $actions;
+        if ( ! $no_backup ) {
+            $backup['actions'][ $pid ] = $actions;
+        }
         echo "[APPLY] Product {$pid}: " . implode( ';', $actions ) . "\n";
     }
 }
 
 // write backup
-file_put_contents( $backup_file, wp_json_encode( $backup, JSON_PRETTY_PRINT ) );
-
-echo "\nBackup written to: {$backup_file}\n";
+if ( ! $no_backup ) {
+    if ( ! file_exists( $backup_dir ) ) {
+        wp_mkdir_p( $backup_dir );
+    }
+    file_put_contents( $backup_file, wp_json_encode( $backup, JSON_PRETTY_PRINT ) );
+    echo "\nBackup written to: {$backup_file}\n";
+} else {
+    echo "\n--no-backup specified: skipping backup file write.\n";
+}
 echo "Products scanned: " . count( $products ) . "\n";
 echo "Affected products: " . count( $affected_products ) . "\n";
 
