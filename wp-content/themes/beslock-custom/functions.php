@@ -184,6 +184,87 @@ add_action( 'wp_enqueue_scripts', function() {
 
 });
 
+// Inline early-capture script: prevent navigation to raw uploads image URLs
+// and open a lightweight fullscreen overlay instead. This runs in the head
+// so it can intercept pointer/touch events before default navigation.
+add_action( 'wp_head', function(){
+  ?>
+  <script>
+  (function(){
+    function openOverlay(src){
+      try{
+        if(window.__beslock_inline_overlay) return;
+        var overlay = document.createElement('div');
+        overlay.id = 'beslock-inline-overlay';
+        overlay.style.position = 'fixed';
+        overlay.style.left = '0';
+        overlay.style.top = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.background = 'rgba(8,8,8,0.95)';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.zIndex = 2147483647;
+        overlay.style.cursor = 'zoom-out';
+
+        var img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        img.style.objectFit = 'contain';
+
+        overlay.appendChild(img);
+
+        function close(){
+          try{ if(overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }catch(e){}
+          window.__beslock_inline_overlay = null;
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
+          document.removeEventListener('keydown', onKey);
+        }
+
+        function onKey(e){ if(e.key === 'Escape' || e.keyCode === 27) close(); }
+
+        overlay.addEventListener('click', function(e){
+          // ignore clicks on actionable children
+          var actionable = e.target.closest && e.target.closest('a, button');
+          if(actionable) return;
+          close();
+        }, { capture: true });
+
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        document.body.appendChild(overlay);
+        window.__beslock_inline_overlay = overlay;
+        document.addEventListener('keydown', onKey);
+      }catch(e){ }
+    }
+
+    function onPointer(e){
+      try{
+        var a = e.target && e.target.closest ? e.target.closest('a') : null;
+        if(!a) return;
+        // only operate inside product area
+        if(!(a.closest && a.closest('.woocommerce div.product'))) return;
+        var href = a.getAttribute('href') || a.href || '';
+        if(!href) return;
+        if(href.indexOf('/wp-content/uploads/') !== -1){
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          openOverlay(href);
+        }
+      }catch(err){}
+    }
+
+    document.addEventListener('pointerdown', onPointer, true);
+    document.addEventListener('touchstart', onPointer, true);
+  })();
+  </script>
+  <?php
+}, 1 );
+
 /**
  * Declare WooCommerce support for the child theme if not already present.
  * Using after_setup_theme with priority > 10 helps run after the parent theme
