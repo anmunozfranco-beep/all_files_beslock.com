@@ -136,6 +136,12 @@ add_action( 'wp_enqueue_scripts', function() {
     wp_enqueue_style( 'beslock-product-widgets', $theme_dir_uri . '/assets/css/product-widgets.css', [ 'beslock-main-style' ], filemtime( $widgets_css ) );
   }
 
+  // Product page styles (mobile-first BEM)
+  $product_page_css = $theme_dir_path . '/assets/css/product-page.css';
+  if ( file_exists( $product_page_css ) ) {
+    wp_enqueue_style( 'beslock-product-page', $theme_dir_uri . '/assets/css/product-page.css', [ 'beslock-main-style' ], filemtime( $product_page_css ) );
+  }
+
   // NOTE: Cross-fade system disabled.
   // We use the rotator implementation (product-rotator.css/js) with `.product-image-rotator` + `.product-frame`.
   // The previous cross-fade assets were targeting different class names and were causing layout drift.

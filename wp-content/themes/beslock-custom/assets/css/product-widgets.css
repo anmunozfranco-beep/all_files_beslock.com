@@ -6,3 +6,40 @@
 .beslock-free-shipping__fill { height:100%; background:linear-gradient(90deg,#06a37a,#028a5b); border-radius:999px; }
 .beslock-social-proof-inline { margin-top:0.8rem; font-weight:600; color:var(--beslock-green); }
 .product-page__social-proof .product-page__views { background:#0b8454; color:#fff; padding:0.5rem 0.8rem; border-radius:8px; font-weight:600; display:inline-block; }
+
+/* Defensive fixes: constrain WooCommerce gallery images and the photoswipe trigger */
+.woocommerce div.product div.images .woocommerce-product-gallery__image img,
+.woocommerce div.product div.images .woocommerce-product-gallery__image a img{
+	max-width:100% !important;
+	height:auto !important;
+	display:block !important;
+	object-fit:contain !important;
+}
+.woocommerce div.product div.images .woocommerce-product-gallery__image{
+	max-width:100% !important;
+	overflow:hidden !important;
+}
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger{
+	width:36px !important;
+	height:36px !important;
+	font-size:1.1rem !important;
+	line-height:1 !important;
+	background:#fff !important;
+	border-radius:999px !important;
+	text-indent:-9999px !important;
+	box-sizing:content-box !important;
+	padding:0 !important;
+}
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger span[aria-hidden="true"]{
+	/* Keep the inner glyph visually hidden (as WooCommerce intends) */
+	border:0 !important;
+	clip-path:inset(50%) !important;
+	height:1px !important;
+	width:1px !important;
+	overflow:hidden !important;
+	position:absolute !important;
+	left:50% !important;
+	top:50% !important;
+	margin:-1px !important;
+}
+

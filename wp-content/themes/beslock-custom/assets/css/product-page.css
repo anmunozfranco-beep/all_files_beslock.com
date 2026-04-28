@@ -1,0 +1,39 @@
+/* Product page — mobile-first, BEM
+   Base styles stack content vertically on small screens.
+   Larger screens use a two-column hero layout.
+*/
+
+.product-page{
+  padding: 1rem;
+  color: var(--text-color, #111);
+  background: var(--page-bg, #fff);
+}
+
+.product-page__hero{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.product-page__media{ order: 0; }
+.product-page__media img{ display:block; width:100%; height:auto; max-width:100%; object-fit:contain; }
+
+.product-page__info{ order: 1; }
+.product-page__title{ font-size: 1.25rem; margin: 0 0 .25rem; }
+.product-page__price{ font-size: 1.1rem; color: var(--beslock-green, #06a37a); margin-bottom: .5rem; font-weight:700 }
+.product-page__excerpt{ color: #444; margin-bottom: .75rem }
+.product-page__buy{ margin-bottom: .75rem }
+
+.product-page__section-title{ font-size:1rem; margin:0 0 .5rem; }
+
+/* Accessibility helper: keep logical reading order but visual two-column on >=768px */
+@media (min-width: 768px){
+  .product-page__hero{ display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items:start; }
+  .product-page__media{ order:0 }
+  .product-page__info{ order:1 }
+  .product-page__title{ font-size:1.6rem }
+}
+
+/* Constrain gallery thumbnails and images within the media area */
+.product-page__media .woocommerce-product-gallery{ max-width:100%; }
+.product-page__media .woocommerce-product-gallery__image img{ width:100%; height:auto; object-fit:contain }
