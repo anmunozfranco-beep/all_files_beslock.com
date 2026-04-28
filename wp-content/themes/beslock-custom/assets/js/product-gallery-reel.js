@@ -6,25 +6,101 @@
     try{
       var reel = document.querySelector('.beslock-gallery-reel');
       if(!reel) return;
-      // Add keyboard navigation (left/right)
-      if(!reel.__beslockEnhanced){
-        reel.__beslockEnhanced = true;
-        reel.tabIndex = 0;
-        reel.addEventListener('keydown', function(e){
-          if(e.key === 'ArrowRight'){
-            e.preventDefault();
-            reel.scrollBy({ left: window.innerWidth * 0.9, behavior: 'smooth' });
-          } else if(e.key === 'ArrowLeft'){
-            e.preventDefault();
-            reel.scrollBy({ left: -window.innerWidth * 0.9, behavior: 'smooth' });
-          }
-        });
-        // Ensure first slide is centered
-        setTimeout(function(){
-          var first = reel.querySelector('.beslock-gallery-slide');
-          if(first) first.scrollIntoView({ inline: 'center', behavior: 'smooth' });
-        }, 60);
+      if(reel.__beslockEnhanced) return;
+      reel.__beslockEnhanced = true;
+      // Wrap reel in a nav container for buttons
+      var wrapper = document.createElement('div');
+      wrapper.className = 'beslock-gallery-nav';
+      reel.parentNode.insertBefore(wrapper, reel);
+      wrapper.appendChild(reel);
+
+      // Prev/Next buttons
+      var btnPrev = document.createElement('button'); btnPrev.className = 'prev'; btnPrev.type = 'button'; btnPrev.innerHTML = '\u2039';
+      var btnNext = document.createElement('button'); btnNext.className = 'next'; btnNext.type = 'button'; btnNext.innerHTML = '\u203A';
+      wrapper.appendChild(btnPrev); wrapper.appendChild(btnNext);
+
+      // Dots container
+      var dots = document.createElement('div'); dots.className = 'beslock-gallery-dots';
+      wrapper.parentNode.insertBefore(dots, wrapper.nextSibling);
+
+      var slides = Array.prototype.slice.call(reel.querySelectorAll('.beslock-gallery-slide'));
+      slides.forEach(function(s, i){
+        var d = document.createElement('button'); d.type = 'button'; d.setAttribute('data-index', i);
+        if(i===0) d.className = 'active';
+        d.addEventListener('click', function(){ scrollToSlide(i); });
+        dots.appendChild(d);
+      });
+
+      // keyboard
+      reel.tabIndex = 0;
+      reel.addEventListener('keydown', function(e){
+        if(e.key === 'ArrowRight'){ e.preventDefault(); goToRelative(1); }
+        else if(e.key === 'ArrowLeft'){ e.preventDefault(); goToRelative(-1); }
+      });
+
+      // button handlers
+      btnPrev.addEventListener('click', function(){ goToRelative(-1); });
+      btnNext.addEventListener('click', function(){ goToRelative(1); });
+
+      // track active index
+      var activeIndex = 0;
+      function setActive(i){
+        activeIndex = Math.max(0, Math.min(slides.length-1, i));
+        var ds = dots.querySelectorAll('button');
+        ds.forEach(function(b, idx){ b.classList.toggle('active', idx===activeIndex); });
       }
+
+      function scrollToSlide(i){
+        var s = slides[i];
+        if(!s) return;
+        var left = s.offsetLeft - (reel.clientWidth - s.clientWidth)/2;
+        reel.scrollTo({ left: left, behavior: 'smooth' });
+        setActive(i);
+      }
+
+      function goToRelative(delta){ scrollToSlide(activeIndex + delta); }
+
+      // Update active on scroll (debounced)
+      var scrollTimeout = null;
+      reel.addEventListener('scroll', function(){
+        if(scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function(){
+          var center = reel.scrollLeft + reel.clientWidth/2;
+          var closest = 0; var bestDiff = Infinity;
+          slides.forEach(function(s, idx){
+            var sCenter = s.offsetLeft + s.clientWidth/2;
+            var diff = Math.abs(sCenter - center);
+            if(diff < bestDiff){ bestDiff = diff; closest = idx; }
+          });
+          setActive(closest);
+        }, 80);
+      });
+
+      // Pointer swipe handling
+      var pointer = { down:false, startX:0, lastX:0, startTime:0 };
+      reel.addEventListener('pointerdown', function(e){
+        pointer.down = true; pointer.startX = e.clientX; pointer.lastX = e.clientX; pointer.startTime = Date.now();
+        reel.setPointerCapture && reel.setPointerCapture(e.pointerId);
+      }, { passive:false });
+      reel.addEventListener('pointermove', function(e){ if(pointer.down) pointer.lastX = e.clientX; }, { passive:true });
+      reel.addEventListener('pointerup', function(e){
+        if(!pointer.down) return; pointer.down = false;
+        var dx = e.clientX - pointer.startX; var dt = Date.now() - pointer.startTime;
+        var vx = dx / Math.max(1, dt);
+        var threshold = Math.min(reel.clientWidth * 0.18, 120);
+        if(Math.abs(dx) > threshold || Math.abs(vx) > 0.5){
+          if(dx < 0) goToRelative(1); else goToRelative(-1);
+        } else {
+          // snap to nearest
+          var center = reel.scrollLeft + reel.clientWidth/2;
+          var closest = 0; var bestDiff = Infinity;
+          slides.forEach(function(s, idx){ var sCenter = s.offsetLeft + s.clientWidth/2; var diff = Math.abs(sCenter - center); if(diff < bestDiff){ bestDiff = diff; closest = idx; } });
+          scrollToSlide(closest);
+        }
+      });
+
+      // initial center
+      setTimeout(function(){ scrollToSlide(0); }, 40);
     }catch(e){ console.warn('beslock reel enhance error', e); }
   }
 

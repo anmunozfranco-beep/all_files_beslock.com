@@ -37,3 +37,57 @@
   color: #666;
   margin-top: 6px;
 }
+
+/* Navigation buttons */
+.beslock-gallery-nav{
+  position: relative;
+}
+.beslock-gallery-nav button{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  border: 0;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+}
+.beslock-gallery-nav button.prev{ left: 8px; }
+.beslock-gallery-nav button.next{ right: 8px; }
+
+/* Dots */
+.beslock-gallery-dots{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  margin-top:10px;
+}
+.beslock-gallery-dots button{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:0;
+  background: rgba(0,0,0,0.2);
+  padding:0;
+}
+.beslock-gallery-dots button.active{ background: rgba(0,0,0,0.8); }
+
+/* Placeholder when no images */
+.beslock-gallery-placeholder{
+  width: 100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height: 46vw;
+  background: #f5f5f7;
+  color: #777;
+  font-size: 14px;
+}
+
