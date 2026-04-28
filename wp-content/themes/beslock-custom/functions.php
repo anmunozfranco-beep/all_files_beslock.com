@@ -130,6 +130,12 @@ add_action( 'wp_enqueue_scripts', function() {
     true
   );
 
+  // Product page widgets (free-shipping bar, social proof)
+  $widgets_css = $theme_dir_path . '/assets/css/product-widgets.css';
+  if ( file_exists( $widgets_css ) ) {
+    wp_enqueue_style( 'beslock-product-widgets', $theme_dir_uri . '/assets/css/product-widgets.css', [ 'beslock-main-style' ], filemtime( $widgets_css ) );
+  }
+
   // NOTE: Cross-fade system disabled.
   // We use the rotator implementation (product-rotator.css/js) with `.product-image-rotator` + `.product-frame`.
   // The previous cross-fade assets were targeting different class names and were causing layout drift.
@@ -884,4 +890,71 @@ function beslock_kadence_archive_hero_buffer_end() {
     }
     echo '</div>';
   } );
+
+  /**
+   * Output a simple social proof line for single product pages.
+   * Uses a transient per product to avoid large fluctuations and reduce DB calls.
+   */
+  function beslock_product_social_proof( $product_id ) {
+    if ( ! $product_id ) {
+      return '';
+    }
+    $transient = 'beslock_product_views_' . intval( $product_id );
+    $val = get_transient( $transient );
+    if ( false === $val ) {
+      // random between 25 and 120
+      $val = rand( 25, 120 );
+      // store for 10-20 minutes randomized
+      set_transient( $transient, $val, rand( 600, 1200 ) );
+    }
+    return sprintf( _n( '%d person viewed this product today', '%d people viewed this product today', $val, 'beslock' ), intval( $val ) );
+  }
+
+  /**
+   * Helper: render free-shipping progress for cart / product pages.
+   * Threshold is configurable; default to 200000 (in site currency minor units) if not specified.
+   */
+  function beslock_free_shipping_progress_html( $threshold = 200000 ) {
+    if ( ! function_exists( 'WC' ) ) {
+      return '';
+    }
+
+    /**
+     * Inject free-shipping bar into single product header area.
+     */
+    add_action( 'woocommerce_before_single_product', function() {
+      // show with low priority so it appears after core notices
+      echo '<div class="beslock-free-shipping-wrap">' . beslock_free_shipping_progress_html( 200000 ) . '</div>';
+    }, 20 );
+
+    /**
+     * Inject social proof near the product gallery (before summary)
+     */
+    add_action( 'woocommerce_before_single_product_summary', function() {
+      global $post;
+      if ( empty( $post ) ) return;
+      $text = beslock_product_social_proof( $post->ID );
+      echo '<div class="beslock-social-proof-inline"><span>' . esc_html( $text ) . '</span></div>';
+    }, 30 );
+    $cart = WC()->cart;
+    $subtotal = 0;
+    if ( $cart ) {
+      $subtotal = intval( round( $cart->get_subtotal() * 100 ) );
+    }
+    // threshold and subtotal are in minor units; compute remaining
+    $remaining = max( 0, intval( $threshold ) - $subtotal );
+    $percent = $threshold > 0 ? min( 100, intval( round( ( $subtotal / $threshold ) * 100 ) ) ) : 0;
+    $currency = function_exists( 'wc_price' ) ? wc_price( $remaining / 100 ) : ( number_format( $remaining / 100, 2 ) );
+    ob_start();
+    ?>
+    <div class="beslock-free-shipping">
+      <div class="beslock-free-shipping__inner">
+      <div class="beslock-free-shipping__text">Only <?php echo $currency; ?> away from free shipping</div>
+      <div class="beslock-free-shipping__bar"><div class="beslock-free-shipping__fill" style="width:<?php echo esc_attr( $percent ); ?>%"></div></div>
+      </div>
+    </div>
+    <?php
+    return ob_get_clean();
+  }
+
 
