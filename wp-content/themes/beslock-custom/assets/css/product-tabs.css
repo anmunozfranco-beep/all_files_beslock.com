@@ -1,0 +1,44 @@
+/* Mobile-first product tabs: Especificaciones | Reviews */
+.product-tabs {
+  margin-top: 16px;
+  background: transparent;
+}
+.product-tabs__nav {
+  display: flex;
+  gap: 8px;
+  padding: 0 12px;
+}
+.product-tabs__tab {
+  flex: 1 1 0;
+  padding: 10px 12px;
+  font-size: 15px;
+  line-height: 1;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  color: #1b1b1b;
+}
+.product-tabs__tab--active {
+  background: #0f62fe;
+  color: #fff;
+  border-color: rgba(15,98,254,0.9);
+}
+.product-tabs__panel {
+  padding: 14px 12px 20px;
+  background: #fff;
+  border-top: 0;
+  margin-top: 10px;
+  border-radius: 10px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+}
+.product-tabs__panel[hidden] { display: none; }
+
+/* Visually hidden helper for headings retained for a11y */
+.visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+
+@media (min-width: 768px) {
+  /* On larger screens keep simple; tabs remain usable */
+  .product-tabs__nav { max-width: 720px; margin: 0 auto; }
+  .product-tabs__panel { max-width: 720px; margin: 10px auto; }
+}

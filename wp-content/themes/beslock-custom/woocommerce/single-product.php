@@ -84,19 +84,26 @@ if ( have_posts() ) :
       <?php do_action( 'beslock_product_problem_solution' ); ?>
     </section>
 
-    <section class="product-page__specs" aria-labelledby="specs-heading">
-      <h2 id="specs-heading" class="product-page__section-title">Especificaciones</h2>
-      <?php do_action( 'beslock_product_specs' ); ?>
-    </section>
+    <div class="product-tabs" data-module="product-tabs">
+      <div class="product-tabs__nav" role="tablist" aria-label="Product tabs">
+        <button id="product-tab-specs" class="product-tabs__tab product-tabs__tab--active" role="tab" aria-selected="true" aria-controls="product-panel-specs">Especificaciones</button>
+        <button id="product-tab-reviews" class="product-tabs__tab" role="tab" aria-selected="false" aria-controls="product-panel-reviews">Reviews</button>
+      </div>
+
+      <div id="product-panel-specs" class="product-tabs__panel" role="tabpanel" aria-labelledby="product-tab-specs">
+        <h2 class="visually-hidden">Especificaciones</h2>
+        <?php do_action( 'beslock_product_specs' ); ?>
+      </div>
+
+      <div id="product-panel-reviews" class="product-tabs__panel" role="tabpanel" aria-labelledby="product-tab-reviews" hidden>
+        <h2 class="visually-hidden">Reviews</h2>
+        <?php comments_template(); ?>
+      </div>
+    </div>
 
     <section class="product-page__extra" aria-labelledby="extra-heading">
       <h2 id="extra-heading" class="product-page__section-title">Demo · ¿Para quién?</h2>
       <?php do_action( 'beslock_product_demo' ); ?>
-    </section>
-
-    <section class="product-page__reviews" aria-labelledby="reviews-heading">
-      <h2 id="reviews-heading" class="product-page__section-title">Opiniones</h2>
-      <?php comments_template(); ?>
     </section>
 
     <aside class="product-page__related" aria-labelledby="related-heading">
