@@ -77,10 +77,13 @@
   }catch(e){}
 
   // Intercept clicks on gallery anchors in capture phase to update href/data-* before lightbox handlers run
+  // Use a broader anchor detection and ensure the link is within the product images container
   document.addEventListener('click', function(ev){
     try{
-      var a = ev.target.closest('.woocommerce div.product div.images .woocommerce-product-gallery__image a');
+      var a = ev.target.closest('a');
       if(!a) return;
+      var imagesWrap = a.closest('.woocommerce div.product div.images');
+      if(!imagesWrap) return;
       var replacement = findReplacement();
       if(replacement){
         a.href = replacement.src;
@@ -151,10 +154,13 @@
     }
 
     // Capture-phase listener to stop navigation to image files and open overlay
+    // Broader detection: intercept any anchor inside the product that points to uploads
     document.addEventListener('click', function(ev){
       try{
-        var a = ev.target.closest('.woocommerce div.product div.images .woocommerce-product-gallery__image a');
+        var a = ev.target.closest('a');
         if(!a) return;
+        var inProduct = a.closest('.woocommerce div.product');
+        if(!inProduct) return;
         // If link points to an uploads image (same origin) and no lightbox is attached,
         // open our fullscreen overlay instead of navigating.
         var href = a.getAttribute('href') || a.href || '';
