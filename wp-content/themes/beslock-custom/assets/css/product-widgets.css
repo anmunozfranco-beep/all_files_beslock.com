@@ -43,3 +43,11 @@
 	margin:-1px !important;
 }
 
+/* Hard-hide the photoswipe trigger completely to remove the visible magnifier */
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
