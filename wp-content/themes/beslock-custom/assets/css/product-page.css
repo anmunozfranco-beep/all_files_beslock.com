@@ -41,6 +41,19 @@
   line-height: 1 !important;
   text-align: center !important;
 }
+
+/* More specific, case-insensitive-safe rules targeting quantity inputs generally */
+.quantity input.qty[aria-label],
+input.qty[aria-label],
+.quantity input.qty,
+input.qty {
+  width: 36px !important;
+  box-sizing: border-box !important;
+  padding: 10px 0 !important;
+  height: 47px !important;
+  line-height: 47px !important;
+  text-align: center !important;
+}
 .beslock-qty button:active { transform:translateY(1px); }
 .beslock-qty button:focus { outline: none; box-shadow: 0 0 0 3px rgba(15,98,254,0.12); }
 
