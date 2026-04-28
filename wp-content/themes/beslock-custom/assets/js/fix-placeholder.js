@@ -213,6 +213,32 @@
     }catch(e){}
   }
   try{ makeAnchorsInert(); }catch(e){}
+  
+    // Stronger: replace anchor wrappers around product images with non-clickable spans
+    // This removes navigation entirely by replacing <a>...</a> with <span>...</span>
+    function replaceAnchorsWithSpan(){
+      try{
+        var imgs = document.querySelectorAll('.woocommerce div.product div.images img');
+        imgs.forEach(function(img){
+          try{
+            var a = img.closest && img.closest('a');
+            if(!a) return;
+            var href = a.getAttribute('href') || a.href || '';
+            if(href.indexOf('/wp-content/uploads/') === -1) return;
+            if(a.getAttribute('data-beslock-replaced')) return;
+            // create span and move children
+            var span = document.createElement('span');
+            span.className = a.className || '';
+            span.setAttribute('data-beslock-replaced','1');
+            // copy inline style if exists
+            if(a.getAttribute('style')) span.setAttribute('style', a.getAttribute('style'));
+            while(a.firstChild){ span.appendChild(a.firstChild); }
+            a.parentNode.replaceChild(span, a);
+          }catch(e){}
+        });
+      }catch(e){}
+    }
+    try{ replaceAnchorsWithSpan(); }catch(e){}
   if(window.MutationObserver){
     var gallery = document.querySelector('.woocommerce div.product div.images');
     if(gallery){
