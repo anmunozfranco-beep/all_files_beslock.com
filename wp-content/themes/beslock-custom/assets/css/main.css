@@ -689,6 +689,47 @@ hero__title {
   margin-top: 1rem;
 }
 
+/* ========== FORCE BESLOCK ADD-TO-CART STYLES (HIGH SPECIFICITY FALLBACK) ==========
+   These rules override theme/plugin styles in production environments where
+   Kadence or block styles may take precedence. We use highly-specific
+   selectors and `!important` for background/color to guarantee the visual.
+*/
+body.single-product .product-card__add-to-cart,
+body.single-product a.single_add_to_cart_button,
+body.single-product button.single_add_to_cart_button,
+.product-card .product-card__add-to-cart,
+.wc-block-grid__product .wc-block-grid__product-add-to-cart .wp-block-button__link,
+.wc-block-grid__product .wc-block-grid__product-add-to-cart a.wp-block-button__link {
+  background: var(--beslock-green) !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255,255,255,0.06) !important;
+  opacity: 0.95 !important;
+  box-shadow: 0 8px 20px rgba(3,69,38,0.09) !important;
+  padding: 0.6rem 1rem !important;
+  border-radius: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  font-weight: 700 !important;
+  transition: transform 220ms cubic-bezier(.16,.84,.29,1), box-shadow 220ms ease !important;
+}
+
+body.single-product .product-card__add-to-cart:hover,
+body.single-product a.single_add_to_cart_button:hover,
+.product-card .product-card__add-to-cart:hover,
+.wc-block-grid__product .wc-block-grid__product-add-to-cart .wp-block-button__link:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 14px 36px rgba(3,69,38,0.12) !important;
+}
+
+/* Ensure icon color inside btn follows text color */
+body.single-product .product-card__add-to-cart .bi,
+body.single-product a.single_add_to_cart_button .bi,
+.product-card .product-card__add-to-cart .bi {
+  color: #ffffff !important;
+}
+
 /* ========== DETALLE VISUAL SUAVE EN SECCIONES GRANDES ========== */
 @media (min-width: 510px) {
   .hero__content,
