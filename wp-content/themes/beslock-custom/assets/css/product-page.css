@@ -96,6 +96,9 @@ input.qty {
   opacity: 1;
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 8px 24px rgba(3,69,38,0.10);
+  /* On product page hover: swap to gray background and beslock green text */
+  background: var(--beslock-bg-2, #f2f2f2) !important;
+  color: var(--beslock-green, #06a37a) !important;
 }
 .product-page__buy .single_add_to_cart_button:active,
 .product-page__buy .button.add_to_cart_button:active,
@@ -107,6 +110,12 @@ input.qty {
 .product-page__buy .button.add_to_cart_button:focus,
 .product-page__buy .button:focus {
   outline: 3px solid rgba(3,69,38,0.14);
+}
+
+/* Ensure icon inside add-to-cart follows text color on hover */
+.product-page__buy .single_add_to_cart_button:hover .bi,
+.product-page__buy .button.add_to_cart_button:hover .bi {
+  color: var(--beslock-green, #06a37a) !important;
 }
 
 /* Group wrapper used to precisely center qty + button */
