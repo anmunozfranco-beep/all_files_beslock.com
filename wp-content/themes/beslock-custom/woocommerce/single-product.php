@@ -92,12 +92,23 @@ if ( have_posts() ) :
 
       <div id="product-panel-specs" class="product-tabs__panel" role="tabpanel" aria-labelledby="product-tab-specs">
         <h2 class="visually-hidden">Especificaciones</h2>
-        <?php do_action( 'beslock_product_specs' ); ?>
+        <ul class="product-specs-list">
+          <li>Material: 100% algodón orgánico.</li>
+          <li>Color: disponible en varias tonalidades.</li>
+          <li>Tamaño: S, M, L, XL.</li>
+          <li>Cuidado: lavar a máquina a 30°C.</li>
+          <li>Garantía: 2 años contra defectos de fabricación.</li>
+          <li>Peso aproximado: 450 g.</li>
+        </ul>
       </div>
 
       <div id="product-panel-reviews" class="product-tabs__panel" role="tabpanel" aria-labelledby="product-tab-reviews" hidden>
         <h2 class="visually-hidden">Reviews</h2>
-        <?php comments_template(); ?>
+        <div class="product-reviews-placeholder">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        </div>
       </div>
     </div>
 
