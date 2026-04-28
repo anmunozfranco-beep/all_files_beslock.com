@@ -215,6 +215,41 @@ add_action( 'wp_head', function(){
         img.style.maxHeight = '100%';
         img.style.objectFit = 'contain';
 
+        // Close button (visible, accessible)
+        var btn = document.createElement('button');
+        btn.setAttribute('type','button');
+        btn.setAttribute('aria-label','Close image');
+        btn.className = 'beslock-inline-close';
+        btn.innerHTML = '\u00D7';
+        btn.style.position = 'absolute';
+        btn.style.top = '12px';
+        btn.style.right = '12px';
+        btn.style.width = '44px';
+        btn.style.height = '44px';
+        btn.style.border = '0';
+        btn.style.borderRadius = '22px';
+        btn.style.background = 'rgba(0,0,0,0.5)';
+        btn.style.color = '#fff';
+        btn.style.fontSize = '28px';
+        btn.style.lineHeight = '44px';
+        btn.style.textAlign = 'center';
+        btn.style.cursor = 'pointer';
+        btn.style.zIndex = 2147483650;
+
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          try{ if(overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }catch(err){}
+          window.__beslock_inline_overlay = null;
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
+          document.removeEventListener('keydown', onKey);
+        }, false);
+
+        // Ensure the overlay is a positioned container so the absolute button sits correctly
+        overlay.style.position = 'fixed';
+        overlay.style.padding = '24px';
+
+        overlay.appendChild(btn);
         overlay.appendChild(img);
 
         function close(){
