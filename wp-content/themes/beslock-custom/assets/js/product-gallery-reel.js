@@ -14,10 +14,7 @@
       reel.parentNode.insertBefore(wrapper, reel);
       wrapper.appendChild(reel);
 
-      // Prev/Next buttons
-      var btnPrev = document.createElement('button'); btnPrev.className = 'prev'; btnPrev.type = 'button'; btnPrev.innerHTML = '\u2039';
-      var btnNext = document.createElement('button'); btnNext.className = 'next'; btnNext.type = 'button'; btnNext.innerHTML = '\u203A';
-      wrapper.appendChild(btnPrev); wrapper.appendChild(btnNext);
+      // No lateral prev/next buttons — navigation is tactical (swipe/scroll/dots)
 
       // Dots container
       var dots = document.createElement('div'); dots.className = 'beslock-gallery-dots';
@@ -42,9 +39,7 @@
         else if(e.key === 'ArrowLeft'){ e.preventDefault(); goToRelative(-1); }
       });
 
-      // button handlers
-      btnPrev.addEventListener('click', function(){ goToRelative(-1); });
-      btnNext.addEventListener('click', function(){ goToRelative(1); });
+      // no button handlers (controls removed)
 
       // track active index
       var activeIndex = 0;
