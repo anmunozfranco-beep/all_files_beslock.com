@@ -1,0 +1,39 @@
+/* Beslock product gallery reel - mobile-first
+   Each slide is centered in the viewport and sized to 85vw
+*/
+.beslock-gallery-reel{
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding: 12px 6px;
+  box-sizing: border-box;
+}
+.beslock-gallery-slide{
+  flex: 0 0 85vw;
+  max-width: 85vw;
+  height: auto;
+  scroll-snap-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.beslock-gallery-slide img{
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+/* hide native controls that might conflict */
+.beslock-gallery-reel:focus{ outline: none; }
+
+/* optional small nav hint */
+.beslock-gallery-hint{
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  margin-top: 6px;
+}
