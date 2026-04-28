@@ -28,7 +28,7 @@
 .product-page__buy .quantity { display:flex; justify-content:center; }
 .beslock-qty { display:inline-flex; align-items:center; gap:8px; border-radius:8px; }
 .beslock-qty button { appearance:none; border:1px solid #e6e6e6; background:#fff; color:#333; padding:0 12px; font-size:calc(1rem + 3pt); cursor:pointer; border-radius:8px; height:47px; line-height:47px; }
-.beslock-qty input.qty { width:36px; box-sizing:border-box; text-align:center !important; font-size:calc(1rem + 6pt); padding:0; height:47px; line-height:47px; border:1px solid #e6e6e6; border-radius:8px; -moz-appearance: textfield; }
+.beslock-qty input.qty { width:36px; box-sizing:border-box; text-align:center !important; font-size:20px !important; padding:0; height:47px; line-height:47px; border:1px solid #e6e6e6; border-radius:8px; -moz-appearance: textfield; }
 
 /* Specific override for inputs that use aria-label="Product Quantity" */
 .beslock-qty input[aria-label="Product Quantity"],
@@ -40,6 +40,7 @@
   height: auto !important;
   line-height: 1 !important;
   text-align: center !important;
+  font-size: 20px !important;
 }
 
 /* More specific, case-insensitive-safe rules targeting quantity inputs generally */
@@ -53,6 +54,7 @@ input.qty {
   height: 47px !important;
   line-height: 47px !important;
   text-align: center !important;
+  font-size: 20px !important;
 }
 .beslock-qty button:active { transform:translateY(1px); }
 .beslock-qty button:focus { outline: none; box-shadow: 0 0 0 3px rgba(15,98,254,0.12); }
