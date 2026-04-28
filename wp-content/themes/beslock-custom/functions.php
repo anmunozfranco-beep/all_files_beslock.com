@@ -158,10 +158,10 @@ add_action( 'wp_enqueue_scripts', function() {
     wp_enqueue_script( 'beslock-product-tabs-js', $theme_dir_uri . '/assets/js/product-tabs.js', [ 'beslock-main-js' ], filemtime( $product_tabs_js ), true );
   }
 
-  // Quantity controls enhancement (inject +/- buttons around WooCommerce quantity inputs)
+  // Product quantity controls script (inject +/- buttons)
   $qty_js = $theme_dir_path . '/assets/js/product-quantity-controls.js';
   if ( file_exists( $qty_js ) ) {
-    wp_enqueue_script( 'beslock-product-quantity-js', $theme_dir_uri . '/assets/js/product-quantity-controls.js', [ 'beslock-main-js' ], filemtime( $qty_js ), true );
+    wp_enqueue_script( 'beslock-product-qty-js', $theme_dir_uri . '/assets/js/product-quantity-controls.js', [ 'beslock-main-js' ], filemtime( $qty_js ), true );
   }
 
   // NOTE: Cross-fade system disabled.
@@ -365,6 +365,11 @@ add_action( 'after_setup_theme', function() {
     add_theme_support( 'woocommerce' );
   }
 }, 11 );
+
+// Change single product add-to-cart button text to Spanish
+add_filter( 'woocommerce_product_single_add_to_cart_text', function( $text ) {
+  return 'Agregar al carrito';
+} );
 
 // If the parent theme or plugins enable WooCommerce gallery lightbox/zoom
 // we can disable them temporarily to prevent the magnifier/overlay behavior
