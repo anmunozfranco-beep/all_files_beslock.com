@@ -277,24 +277,53 @@ add_action( 'wp_head', function(){
       }catch(e){ }
     }
 
+    function inertAnchors(){
+      try{
+        var anchors = document.querySelectorAll('.woocommerce div.product div.images a');
+        anchors.forEach(function(a){
+          try{
+            var href = a.getAttribute('href') || a.href || '';
+            if(href && href.indexOf('/wp-content/uploads/') !== -1){
+              a.setAttribute('data-beslock-inert','1');
+              try{ a.removeAttribute('href'); }catch(e){}
+              a.style.cursor = 'default';
+            }
+          }catch(e){}
+        });
+      }catch(e){}
+    }
+
     function onPointer(e){
       try{
         var a = e.target && e.target.closest ? e.target.closest('a') : null;
         if(!a) return;
-        // only operate inside product area
         if(!(a.closest && a.closest('.woocommerce div.product'))) return;
         var href = a.getAttribute('href') || a.href || '';
-        if(!href) return;
-        if(href.indexOf('/wp-content/uploads/') !== -1){
+        if(href && href.indexOf('/wp-content/uploads/') !== -1){
           e.preventDefault();
           e.stopImmediatePropagation();
+          try{ a.removeAttribute('href'); }catch(e){}
           openOverlay(href);
         }
       }catch(err){}
     }
 
+    // Run early and on DOM changes
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', inertAnchors);
+    } else { inertAnchors(); }
+
     document.addEventListener('pointerdown', onPointer, true);
     document.addEventListener('touchstart', onPointer, true);
+
+    // Observe product area and keep anchors inert
+    try{
+      var prod = document.querySelector('.woocommerce div.product');
+      if(prod && window.MutationObserver){
+        var mo = new MutationObserver(function(){ inertAnchors(); });
+        mo.observe(prod, { childList:true, subtree:true, attributes:true });
+      }
+    }catch(e){}
   })();
   </script>
   <?php
