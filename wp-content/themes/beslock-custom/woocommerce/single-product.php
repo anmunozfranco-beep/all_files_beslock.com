@@ -87,4 +87,57 @@ if ( have_posts() ) :
   endwhile;
 endif;
 
+// Client-side fix: replace placeholder/magnifier image with product image if detected
+if ( isset( $product ) && $product ) {
+  $pid = intval( $product->get_id() );
+  $correct_url = wp_get_attachment_image_url( get_post_thumbnail_id( $pid ), 'large' );
+  if ( empty( $correct_url ) ) {
+    $gallery = get_post_meta( $pid, '_product_image_gallery', true );
+    if ( $gallery ) {
+      $gids = array_filter( array_map( 'intval', explode( ',', $gallery ) ) );
+      if ( ! empty( $gids ) ) {
+        $correct_url = wp_get_attachment_image_url( $gids[0], 'large' );
+      }
+    }
+  }
+  if ( empty( $correct_url ) ) {
+    $slug = isset( $post ) ? $post->post_name : '';
+    if ( $slug ) {
+      $correct_url = get_stylesheet_directory_uri() . '/assets/images/products/' . $slug . '.webp';
+    }
+  }
+
+  if ( ! empty( $correct_url ) ) {
+    ?>
+    <script>(function(){
+      function replaceIfPlaceholder(){
+        try{
+          var imgs = document.querySelectorAll('.woocommerce-product-gallery__image img.wp-post-image, .woocommerce-product-gallery__image img');
+          if (!imgs || imgs.length === 0) return;
+          var img = imgs[0];
+          var src = img.getAttribute('src') || '';
+          var isPlaceholder = /lupa|magnif|magnifier|magnifying|search|lens|placeholder/i.test(src);
+          function checkAndReplace(){
+            var w = img.naturalWidth || img.width || 0;
+            var h = img.naturalHeight || img.height || 0;
+            if ((w && h && (w/h > 5 || h/w > 5)) || isPlaceholder) {
+              img.src = '<?php echo esc_js( $correct_url ); ?>';
+              img.removeAttribute('srcset');
+              img.removeAttribute('sizes');
+            }
+          }
+          if (img.complete) {
+            checkAndReplace();
+          } else {
+            img.addEventListener('load', checkAndReplace);
+            setTimeout(checkAndReplace, 800);
+          }
+        }catch(e){console && console.error && console.error('replaceIfPlaceholder', e);}      
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', replaceIfPlaceholder); else replaceIfPlaceholder();
+    })();</script>
+    <?php
+  }
+}
+
 get_footer();
