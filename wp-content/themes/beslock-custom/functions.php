@@ -164,6 +164,16 @@ add_action( 'wp_enqueue_scripts', function() {
     wp_enqueue_script( 'beslock-product-qty-js', $theme_dir_uri . '/assets/js/product-quantity-controls.js', [ 'beslock-main-js' ], filemtime( $qty_js ), true );
   }
 
+  // Product badge injector: injects instal badge for specified product titles
+  $badge_js = $theme_dir_path . '/assets/js/product-badge-inject.js';
+  if ( file_exists( $badge_js ) ) {
+    wp_enqueue_script( 'beslock-product-badge-js', $theme_dir_uri . '/assets/js/product-badge-inject.js', [ 'beslock-main-js' ], filemtime( $badge_js ), true );
+    wp_localize_script( 'beslock-product-badge-js', 'beslock_badge_params', array(
+      'theme_uri' => $theme_dir_uri,
+      'targets'   => array( 'e-Orbit', 'e-Flex', 'e-Shield', 'e-Prime' ),
+    ) );
+  }
+
   // NOTE: Cross-fade system disabled.
   // We use the rotator implementation (product-rotator.css/js) with `.product-image-rotator` + `.product-frame`.
   // The previous cross-fade assets were targeting different class names and were causing layout drift.

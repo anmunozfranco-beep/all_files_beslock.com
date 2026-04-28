@@ -399,6 +399,35 @@ body {
   border: 2px solid var(--beslock-green-lite);
 }
 
+/* ========== PRODUCT CARD BADGE (INSTAL) ========== */
+/* Load the badge as a transparent image and avoid any transform so it
+   renders at its natural aspect ratio. No rotation/scale applied. */
+.product-card__badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: auto;
+  max-width: 100px;
+  height: auto;
+  z-index: 12; /* above overlays but below modals */
+  pointer-events: auto;
+  /* Scale the badge to 60% of its intrinsic size and keep origin top-right */
+  transform: scale(0.6) !important;
+  transform-origin: 100% 0% !important;
+  transition: transform 180ms cubic-bezier(.2,.9,.3,1), opacity 160ms ease, box-shadow 160ms ease;
+  will-change: opacity;
+  filter: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  mix-blend-mode: normal !important;
+  display: block;
+}
+@media (min-width: 600px) {
+  .product-card__badge { max-width: 130px; top: 10px; right: 10px; }
+}
+
+
 /* ========== HERO: BOTÓN CONTRASTE INVERTIDO ========== */
 .hero__cta {
   display: inline-block;
@@ -614,29 +643,26 @@ hero__title {
 /* Badge overlay shown on selected products */
 .product-card__badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 35%; /* show as 35% of card width */
-  max-width: 110px;
+  top: 8px;
+  right: 8px;
+  width: auto;
+  max-width: 100px;
   height: auto;
   z-index: 12;
-  pointer-events: auto; /* allow hover */
-  background: transparent;
-  transform-origin: top right;
-  transform: rotate(-6deg) scale(0.35); /* reduce to 35% of previous visual size */
-  transition: transform 200ms cubic-bezier(.22,.9,.41,1);
-  /* remove any drop shadow so only the stamp icon is visible */
-  box-shadow: none;
-  /* blend white background away so PNG with white bg appears transparent */
-  mix-blend-mode: multiply;
+  pointer-events: auto;
+  transform: scale(0.6) !important;
+  transform-origin: 100% 0% !important;
+  transition: transform 180ms cubic-bezier(.2,.9,.3,1), opacity 160ms ease, box-shadow 160ms ease;
+  will-change: transform, opacity;
+  filter: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  mix-blend-mode: normal !important;
+  display: block;
 }
 @media (max-width: 600px) {
-  .product-card__badge { width: 32%; top: 8px; right: 8px; transform-origin: top right; transform: rotate(-4deg) scale(0.4); max-width:72px; }
-}
-
-/* Hover: magnify badge to 50% of original size (from 35% -> 50%) */
-.product-card__badge:hover {
-  transform: rotate(-6deg) scale(0.5);
+  .product-card__badge { max-width: 62px; top: 8px; right: 8px; transform: scale(0.6) !important; }
 }
 .product-card__content {
   padding: 1rem 1.2rem 1.5rem;
