@@ -19,7 +19,36 @@ if ( have_posts() ) :
 <main class="product-page product-page--single" id="main" role="main">
   <div class="product-page__hero">
     <div class="product-page__media">
-      <!-- Images intentionally removed for now. -->
+      <?php
+        // Server-rendered custom reel: gather featured + gallery images from the product
+        $images = array();
+        $feat_id = get_post_thumbnail_id( $product->get_id() );
+        if ( $feat_id ) $images[] = intval( $feat_id );
+        $gallery_meta = get_post_meta( $product->get_id(), '_product_image_gallery', true );
+        if ( $gallery_meta ) {
+          $gids = array_filter( array_map( 'intval', explode( ',', $gallery_meta ) ) );
+          foreach ( $gids as $gid ) {
+            if ( $gid && $gid !== $feat_id ) $images[] = intval( $gid );
+          }
+        }
+
+        if ( ! empty( $images ) ) {
+          echo '<div class="beslock-gallery-reel" role="list">';
+          foreach ( $images as $aid ) {
+            $src = wp_get_attachment_image_url( $aid, 'large' );
+            $srcset = wp_get_attachment_image_srcset( $aid, 'large' );
+            $sizes = wp_get_attachment_image_sizes( $aid, 'large' );
+            $alt = get_post_meta( $aid, '_wp_attachment_image_alt', true );
+            if ( ! $alt ) $alt = get_the_title( $aid );
+            printf( '<div class="beslock-gallery-slide" role="listitem">' );
+            printf( '<img src="%s" srcset="%s" sizes="%s" alt="%s" loading="lazy">', esc_url( $src ), esc_attr( $srcset ), esc_attr( $sizes ), esc_attr( $alt ) );
+            echo '</div>';
+          }
+          echo '</div>';
+        } else {
+          // intentionally leave empty if no images
+        }
+      ?>
     </div>
 
     <div class="product-page__info">
