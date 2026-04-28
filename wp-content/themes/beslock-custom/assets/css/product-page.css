@@ -28,7 +28,7 @@
 .product-page__buy .quantity { display:flex; justify-content:center; }
 .beslock-qty { display:inline-flex; align-items:center; gap:8px; border-radius:8px; }
 .beslock-qty button { appearance:none; border:1px solid #e6e6e6; background:#fff; color:#333; padding:0 12px; font-size:calc(1rem + 3pt); cursor:pointer; border-radius:8px; height:44px; line-height:44px; }
-.beslock-qty input.qty { width:72px; box-sizing:border-box; text-align:center !important; font-size:calc(1rem + 3pt); padding:0; height:44px; line-height:44px; border:1px solid #e6e6e6; border-radius:8px; -moz-appearance: textfield; }
+.beslock-qty input.qty { width:72px; box-sizing:border-box; text-align:center !important; font-size:calc(1rem + 6pt); padding:0; height:44px; line-height:44px; border:1px solid #e6e6e6; border-radius:8px; -moz-appearance: textfield; }
 .beslock-qty button:active { transform:translateY(1px); }
 .beslock-qty button:focus { outline: none; box-shadow: 0 0 0 3px rgba(15,98,254,0.12); }
 
