@@ -33,6 +33,13 @@ add_action( 'wp_enqueue_scripts', function() {
     $ver_main_css
   );
 
+  // Inline fallback: force the header to be fixed when some environments
+  // (hosting / transforms / parent styles) prevent `position: sticky` from working.
+  // This inline rule is minimal and intentionally specific so it wins over
+  // common overrides without requiring !important in theme files.
+  $inline_header_fallback = "\n.header{position:fixed;top:0;left:0;right:0;z-index:var(--z-header);}\n";
+  wp_add_inline_style( 'beslock-main-style', $inline_header_fallback );
+
   /* -------------------------------
    * Bootstrap Icons (CDN) - GLOBAL
    * Cargado de forma global en frontend para uso en header/menu/modales
