@@ -163,15 +163,7 @@ add_action( 'wp_enqueue_scripts', function() {
     wp_enqueue_script( 'beslock-product-rotator-js', $theme_dir_uri . '/assets/js/product-rotator.js', [ 'beslock-main-js' ], filemtime( $product_rotator_js ), true );
   }
 
-  // New product gallery reel (mobile-first horizontal reel)
-  $reel_css = $theme_dir_path . '/assets/css/product-gallery-reel.css';
-  if ( file_exists( $reel_css ) ) {
-    wp_enqueue_style( 'beslock-product-gallery-reel', $theme_dir_uri . '/assets/css/product-gallery-reel.css', [ 'beslock-main-style' ], filemtime( $reel_css ) );
-  }
-  $reel_js = $theme_dir_path . '/assets/js/product-gallery-reel.js';
-  if ( file_exists( $reel_js ) ) {
-    wp_enqueue_script( 'beslock-product-gallery-reel-js', $theme_dir_uri . '/assets/js/product-gallery-reel.js', [ 'beslock-main-js' ], filemtime( $reel_js ), true );
-  }
+  // Product gallery reel removed (disabled) — server-side single-product template will not render images when required.
 
   /* -------------------------------
    * Header state script + CSS (BBC-like behavior)

@@ -19,15 +19,7 @@ if ( have_posts() ) :
 <main class="product-page product-page--single" id="main" role="main">
   <div class="product-page__hero">
     <div class="product-page__media">
-      <?php
-        /**
-         * Use core WooCommerce gallery rendering (keeps Photoswipe/zoom behavior)
-         * This outputs the .woocommerce-product-gallery markup.
-         */
-        if ( function_exists( 'woocommerce_show_product_images' ) ) {
-          woocommerce_show_product_images();
-        }
-      ?>
+      <!-- Images intentionally removed for now. -->
     </div>
 
     <div class="product-page__info">
