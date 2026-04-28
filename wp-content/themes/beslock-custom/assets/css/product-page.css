@@ -24,6 +24,25 @@
 .product-page__excerpt{ color: #444; margin-bottom: .75rem }
 .product-page__buy{ margin-bottom: .75rem }
 
+/* Increase add-to-cart area size by ~6pt and style quantity controls */
+.product-page__buy,
+.product-page__buy .single_add_to_cart_button,
+.product-page__buy .quantity input.qty {
+  font-size: calc(1rem + 6pt);
+}
+
+.product-quantity-wrap{ display:flex; align-items:center; gap:8px; }
+.product-quantity-wrap .qty-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:40px; height:40px; border-radius:8px; border:1px solid #e6e6e6;
+  background:#fff; color:#111; font-weight:600; font-size:18px; cursor:pointer;
+}
+.product-quantity-wrap input.qty{ width:56px; height:40px; text-align:center; border:1px solid #e6e6e6; border-radius:8px; }
+
+/* Ensure layout looks good on narrow screens */
+form.cart .product-quantity-wrap{ flex-wrap:nowrap }
+
+
 .product-page__section-title{ font-size:1rem; margin:0 0 .5rem; }
 
 /* Accessibility helper: keep logical reading order but visual two-column on >=768px */

@@ -158,6 +158,12 @@ add_action( 'wp_enqueue_scripts', function() {
     wp_enqueue_script( 'beslock-product-tabs-js', $theme_dir_uri . '/assets/js/product-tabs.js', [ 'beslock-main-js' ], filemtime( $product_tabs_js ), true );
   }
 
+  // Quantity controls enhancement (inject +/- buttons around WooCommerce quantity inputs)
+  $qty_js = $theme_dir_path . '/assets/js/product-quantity-controls.js';
+  if ( file_exists( $qty_js ) ) {
+    wp_enqueue_script( 'beslock-product-quantity-js', $theme_dir_uri . '/assets/js/product-quantity-controls.js', [ 'beslock-main-js' ], filemtime( $qty_js ), true );
+  }
+
   // NOTE: Cross-fade system disabled.
   // We use the rotator implementation (product-rotator.css/js) with `.product-image-rotator` + `.product-frame`.
   // The previous cross-fade assets were targeting different class names and were causing layout drift.
