@@ -33,8 +33,28 @@
         // Clicking a slide itself should jump to that slide (useful for thumbnails)
         s.style.cursor = 'pointer';
         s.addEventListener('click', function(e){
-          // prevent interfering with potential lightbox triggers if clicking main image
-          try{ if(i > 0) { scrollToSlide(i); e.preventDefault(); } }catch(ex){}
+          try{
+            if(i === 0) return; // main image: keep native behavior (e.g. lightbox)
+            // Swap image attributes between main image (index 0) and this thumbnail
+            var mainImg = slides[0].querySelector('img');
+            var thumbImg = s.querySelector('img');
+            if(mainImg && thumbImg){
+              // Collect attributes
+              var aAttrs = Array.prototype.slice.call(mainImg.attributes).map(function(a){ return {name:a.name, value:a.value}; });
+              var bAttrs = Array.prototype.slice.call(thumbImg.attributes).map(function(a){ return {name:a.name, value:a.value}; });
+              // Remove all attributes
+              Array.prototype.slice.call(mainImg.attributes).forEach(function(a){ mainImg.removeAttribute(a.name); });
+              Array.prototype.slice.call(thumbImg.attributes).forEach(function(a){ thumbImg.removeAttribute(a.name); });
+              // Apply swapped attributes
+              bAttrs.forEach(function(attr){ mainImg.setAttribute(attr.name, attr.value); });
+              aAttrs.forEach(function(attr){ thumbImg.setAttribute(attr.name, attr.value); });
+            }
+            // Mark this thumbnail as active and update counter/dots
+            setActive(i);
+            // keep main image in view (center first slide)
+            scrollToSlide(0);
+            e.preventDefault();
+          }catch(ex){ console.warn('thumb click swap error', ex); }
         });
       });
 
