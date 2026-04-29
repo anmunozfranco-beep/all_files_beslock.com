@@ -55,7 +55,20 @@ if ( have_posts() ) :
       <header class="product-page__header">
         <h1 class="product-page__title"><?php the_title(); ?></h1>
         <div class="product-page__meta">
-          <div class="product-page__price"><?php echo $product->get_price_html(); ?></div>
+            <div class="product-page__price"><?php echo $product->get_price_html(); ?></div>
+            <?php
+              // Stock microcopy / urgency
+              if ( $product->is_in_stock() ) {
+                if ( $product->managing_stock() ) {
+                  $qty = intval( $product->get_stock_quantity() );
+                  if ( $qty > 0 && $qty <= 5 ) {
+                    printf( '<div class="product-page__stock product-page__stock--low">Solo %d disponibles</div>', $qty );
+                  }
+                }
+              } else {
+                echo '<div class="product-page__stock product-page__stock--out">Agotado</div>';
+              }
+            ?>
         </div>
       </header>
 

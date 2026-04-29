@@ -1120,13 +1120,19 @@ function beslock_kadence_archive_hero_buffer_end() {
     if ( ! $product ) {
       return;
     }
-    // Only render trust badges if explicit product meta `beslock_trust_badges` exists.
+    // Prefer explicit product meta `beslock_trust_badges` if present.
     $pid = intval( $product->get_id() );
     $badges_meta = get_post_meta( $pid, 'beslock_trust_badges', true );
-    if ( empty( $badges_meta ) ) {
-      return;
+    $badges = array();
+    if ( ! empty( $badges_meta ) ) {
+      $badges = is_array( $badges_meta ) ? $badges_meta : array_map( 'trim', explode( ',', (string) $badges_meta ) );
     }
-    $badges = is_array( $badges_meta ) ? $badges_meta : array_map( 'trim', explode( ',', (string) $badges_meta ) );
+
+    // If no explicit badges configured, render a sensible default set.
+    if ( empty( $badges ) ) {
+      $badges = array( 'Pago seguro', 'Envío rápido', 'Soporte 24/7' );
+    }
+
     if ( empty( $badges ) ) return;
     echo '<div class="beslock-trust-badges">';
     foreach ( $badges as $b ) {
