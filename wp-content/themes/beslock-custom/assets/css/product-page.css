@@ -181,7 +181,8 @@ input.qty {
     border-radius:8px !important;
     display:block !important;
   }
-  body.single-product .product-page__media .beslock-gallery-slide.active img { outline: 3px solid var(--beslock-green) !important; }
+  /* Remove active outline on images per request */
+  body.single-product .product-page__media .beslock-gallery-slide.active img { outline: none !important; box-shadow: none !important; }
 
   /* Buy box styling: vertical flow, clear spacing */
   .product-page__info{ position:relative; display:flex; flex-direction:column; gap:16px; }
