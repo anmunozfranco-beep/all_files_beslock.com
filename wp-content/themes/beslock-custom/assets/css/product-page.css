@@ -186,9 +186,9 @@ input.qty {
   }
   body.single-product .product-page__media .beslock-gallery-slide {
     box-sizing: border-box !important;
-    /* cada slide ocupa el 60% del contenedor para cerrar aún más el visor */
-    flex: 0 0 60% !important;
-    min-width: 60% !important;
+    /* cada slide ocupa el 35% del contenedor (reducido) */
+    flex: 0 0 35% !important;
+    min-width: 35% !important;
     scroll-snap-align: center !important;
     display: flex !important;
     align-items: center !important;
