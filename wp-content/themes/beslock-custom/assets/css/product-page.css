@@ -174,32 +174,35 @@ input.qty {
     display: inline-block !important;
     vertical-align: top !important;
   }
+  body.single-product .product-page__media .beslock-gallery-reel {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 24px !important; /* separacion entre slides */
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    padding: 0 24px 0.5rem !important; /* padding para centrar la slide visible */
+    box-sizing: border-box !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-slide {
+    box-sizing: border-box !important;
+    /* each slide occupies the full visible width minus gutters so adjacent slides are off-screen */
+    flex: 0 0 calc(100% - 48px) !important;
+    min-width: calc(100% - 48px) !important;
+    scroll-snap-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
   body.single-product .product-page__media .beslock-gallery-slide img {
-    width:100% !important;
+    max-width:100% !important;
     height:auto !important;
     object-fit:contain !important;
     border-radius:8px !important;
     display:block !important;
+    margin: 0 auto !important; /* center image */
   }
-  /* Remove active outline on images per request */
   body.single-product .product-page__media .beslock-gallery-slide.active img { outline: none !important; box-shadow: none !important; }
-
-  /* Buy box styling: vertical flow, clear spacing */
-  .product-page__info{ position:relative; display:flex; flex-direction:column; gap:16px; }
-  .product-page__title{ font-size:1.9rem; margin:0; }
-  .product-page__price{ margin-top:4px; font-size:1.25rem }
-
-  /* Place buy controls inline in sidebar and make CTA prominent */
-  .product-page__buy { display:flex; flex-direction:column; align-items:stretch; gap:16px; }
-  .beslock-buy-controls { flex-direction:row; align-items:center; justify-content:flex-start; gap:12px; }
-  .beslock-buy-controls .beslock-qty { order:0; }
-  .beslock-buy-controls .single_add_to_cart_button { order:1; min-width:220px; align-self:flex-start; }
-
-  /* Below-the-fold content constrained and stacked */
-  .product-page__content{ margin-top:32px; display:block; grid-column: 1 / -1; max-width:100%; }
-  .product-page__content > * { margin-bottom:24px; }
-}
-
 /* Constrain gallery thumbnails and images within the media area */
 .product-page__media .woocommerce-product-gallery{ max-width:100%; }
 .product-page__media .woocommerce-product-gallery__image img{ width:100%; height:auto; object-fit:contain }
