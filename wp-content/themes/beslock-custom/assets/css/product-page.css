@@ -155,9 +155,33 @@ input.qty {
 
   /* Use horizontal reel on desktop like mobile: snap + swipe/scroll */
   .beslock-gallery-reel { display: flex; gap: 0.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; padding-bottom: 0.5rem; }
-  .beslock-gallery-slide { box-sizing: border-box; flex: 0 0 86%; min-width: 86%; scroll-snap-align: center; }
-  .beslock-gallery-slide img { width:100%; height:auto; object-fit:contain; border-radius:8px; display:block; }
-  .beslock-gallery-slide.active img { outline: 3px solid var(--beslock-green); }
+  /* stronger specificity to avoid overrides from other CSS */
+  body.single-product .product-page__media .beslock-gallery-reel {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    padding-bottom: 0.5rem !important;
+    white-space: nowrap !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-slide {
+    box-sizing: border-box !important;
+    flex: 0 0 86% !important;
+    min-width: 86% !important;
+    scroll-snap-align: center !important;
+    display: inline-block !important;
+    vertical-align: top !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-slide img {
+    width:100% !important;
+    height:auto !important;
+    object-fit:contain !important;
+    border-radius:8px !important;
+    display:block !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-slide.active img { outline: 3px solid var(--beslock-green) !important; }
 
   /* Buy box styling: vertical flow, clear spacing */
   .product-page__info{ position:relative; display:flex; flex-direction:column; gap:16px; }
