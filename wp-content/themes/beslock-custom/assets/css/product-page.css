@@ -140,6 +140,25 @@ input.qty {
   .product-page__title{ font-size:1.6rem }
 }
 
+/* Desktop refinements: wider media, sidebar info, horizontal buy controls */
+@media (min-width: 1024px){
+  .product-page__hero{ grid-template-columns: 1.2fr 420px; align-items:start; gap:2rem; }
+  .product-page__media{ max-width:100%; }
+  .product-page__media .beslock-gallery-reel, .product-page__media .woocommerce-product-gallery__wrapper { display:block !important; overflow:visible !important; }
+  .beslock-gallery-reel { display:flex; gap:1rem; flex-wrap:wrap; }
+  .beslock-gallery-slide { flex: 0 0 48%; max-width:48%; }
+  .product-page__info{ position:relative; }
+
+  /* Place buy controls inline in sidebar */
+  .product-page__buy { display:flex; flex-direction:column; align-items:stretch; gap:12px; }
+  .beslock-buy-controls { flex-direction:row; align-items:center; justify-content:flex-start; gap:12px; }
+  .beslock-buy-controls .beslock-qty { order:0; }
+  .beslock-buy-controls .single_add_to_cart_button { order:1; min-width:160px; }
+
+  /* Slightly larger title on desktop */
+  .product-page__title{ font-size:1.9rem }
+}
+
 /* Constrain gallery thumbnails and images within the media area */
 .product-page__media .woocommerce-product-gallery{ max-width:100%; }
 .product-page__media .woocommerce-product-gallery__image img{ width:100%; height:auto; object-fit:contain }
