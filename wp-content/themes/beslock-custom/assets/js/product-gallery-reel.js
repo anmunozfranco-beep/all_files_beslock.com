@@ -65,6 +65,21 @@
         else if(e.key === 'ArrowLeft'){ e.preventDefault(); goToRelative(-1); }
       });
 
+      // Prevent native lightbox or anchor navigation on desktop while keeping slide click handlers.
+      // We only prevent the default action (navigation/lightbox trigger) for anchors inside the reel
+      // on desktop widths so clicking still runs our slide handlers.
+      reel.addEventListener('click', function(e){
+        try{
+          if(window.matchMedia && window.matchMedia('(min-width: 1024px)').matches){
+            var a = e.target.closest && e.target.closest('a');
+            if(a && reel.contains(a)){
+              e.preventDefault();
+              // do not stopPropagation so our slide click handlers still run
+            }
+          }
+        }catch(ignore){}
+      });
+
       // no button handlers (controls removed)
 
       // track active index
