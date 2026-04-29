@@ -146,7 +146,13 @@ input.qty {
   .product-page__media{ max-width:100%; }
   .product-page__media .beslock-gallery-reel, .product-page__media .woocommerce-product-gallery__wrapper { display:block !important; overflow:visible !important; }
   .beslock-gallery-reel { display:flex; gap:1rem; flex-wrap:wrap; }
-  .beslock-gallery-slide { flex: 0 0 48%; max-width:48%; }
+  /* Layout: first slide = main image, remaining slides = vertical thumbnails */
+  .beslock-gallery-slide { box-sizing: border-box; }
+  .beslock-gallery-slide:first-child { flex: 1 1 auto; max-width: calc(100% - 140px); }
+  .beslock-gallery-slide:nth-child(n+2) { flex: 0 0 120px; max-width: 120px; }
+  .beslock-gallery-slide:nth-child(n+2) img { width: 100%; height: 80px; object-fit: cover; border-radius:8px; cursor:pointer; }
+  .beslock-gallery-slide:first-child img { width:100%; height:auto; object-fit:contain; border-radius:8px; }
+  .beslock-gallery-slide:nth-child(n+2).active img { outline: 3px solid var(--beslock-green); }
   .product-page__info{ position:relative; }
 
   /* Place buy controls inline in sidebar */

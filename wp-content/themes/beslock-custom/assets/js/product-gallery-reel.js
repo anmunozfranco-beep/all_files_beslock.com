@@ -30,6 +30,12 @@
         if(i===0) d.className = 'active';
         d.addEventListener('click', function(){ scrollToSlide(i); });
         dots.appendChild(d);
+        // Clicking a slide itself should jump to that slide (useful for thumbnails)
+        s.style.cursor = 'pointer';
+        s.addEventListener('click', function(e){
+          // prevent interfering with potential lightbox triggers if clicking main image
+          try{ if(i > 0) { scrollToSlide(i); e.preventDefault(); } }catch(ex){}
+        });
       });
 
       // keyboard
