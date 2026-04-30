@@ -177,18 +177,18 @@ input.qty {
   body.single-product .product-page__media .beslock-gallery-reel {
     display: flex !important;
     flex-direction: row !important;
-    gap: 48px !important; /* más separación entre slides */
+    gap: 48px !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
     scroll-snap-type: x mandatory !important;
-    padding: 0 48px 0.5rem !important; /* padding lateral mayor para centrar la slide visible */
+    padding: 0 !important; /* remove lateral padding so slides fill the reel */
     box-sizing: border-box !important;
   }
   body.single-product .product-page__media .beslock-gallery-slide {
     box-sizing: border-box !important;
-    /* cada slide ocupa el 35% del contenedor (reducido) */
-    flex: 0 0 35% !important;
-    min-width: 35% !important;
+    /* each slide occupies the full reel width so only one is visible */
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
     scroll-snap-align: center !important;
     display: flex !important;
     align-items: center !important;
