@@ -206,8 +206,8 @@ input.qty {
     display: block !important;
   }
 
-/* Authoritative override: ensure same reel width/position and square slides on all larger viewports */
-@media (min-width: 1024px) {
+/* Authoritative override: ensure same reel width/position and square slides on intermediate and larger viewports */
+@media (min-width: 768px) {
   body.single-product .product-page__media .beslock-gallery-reel {
     width: 31.5vw !important;
     max-width: 31.5vw !important;
