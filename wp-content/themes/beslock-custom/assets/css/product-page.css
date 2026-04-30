@@ -205,6 +205,30 @@ input.qty {
     object-fit: cover !important;
     display: block !important;
   }
+
+/* Authoritative override: ensure same reel width/position and square slides on all larger viewports */
+@media (min-width: 1024px) {
+  body.single-product .product-page__media .beslock-gallery-reel {
+    width: 31.5vw !important;
+    max-width: 31.5vw !important;
+    position: relative !important;
+    left: 10vw !important;
+  }
+
+  body.single-product .product-page__media .beslock-gallery-slide {
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  body.single-product .product-page__media .beslock-gallery-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+}
   body.single-product .product-page__media .beslock-gallery-slide {
     box-sizing: border-box !important;
     /* each slide occupies the full reel width so only one is visible */
