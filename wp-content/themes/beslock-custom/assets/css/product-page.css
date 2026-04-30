@@ -212,7 +212,16 @@ input.qty {
     width: 31.5vw !important;
     max-width: 31.5vw !important;
     position: relative !important;
-    left: 10vw !important;
+    margin-left: 10vw !important; /* use margin to keep flow and avoid positioning quirks */
+    padding-bottom: 0 !important;
+    -ms-overflow-style: none !important; /* IE 10+ */
+    scrollbar-width: none !important; /* Firefox */
+  }
+
+  /* Hide WebKit scrollbar while preserving scroll functionality */
+  body.single-product .product-page__media .beslock-gallery-reel::-webkit-scrollbar {
+    height: 0; /* hide horizontal scrollbar */
+    display: none;
   }
 
   body.single-product .product-page__media .beslock-gallery-slide {
