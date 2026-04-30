@@ -182,12 +182,28 @@ input.qty {
     -webkit-overflow-scrolling: touch !important;
     scroll-snap-type: x mandatory !important;
     padding: 0 !important; /* remove lateral padding so slides fill the reel */
-    /* Make the reel occupy 35% of the viewport width and shift it 10% from the left */
-    width: 35vw !important;
-    max-width: 35vw !important;
+    /* Make the reel occupy 35% of the viewport width (reduced by 10% -> 31.5vw) and shift it 10% from the left */
+    width: 31.5vw !important;
+    max-width: 31.5vw !important;
     position: relative !important;
     left: 10vw !important;
     box-sizing: border-box !important;
+  }
+
+  /* Ensure each slide keeps a 1:1 aspect ratio (square) and fills the reel */
+  body.single-product .product-page__media .beslock-gallery-slide {
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  body.single-product .product-page__media .beslock-gallery-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
   }
   body.single-product .product-page__media .beslock-gallery-slide {
     box-sizing: border-box !important;
