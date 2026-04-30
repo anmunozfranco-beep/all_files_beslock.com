@@ -12,6 +12,7 @@ beslock-product-tabs => http://localhost:8000/wp-content/themes/beslock-custom/a
 beslock-product-rotator => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/product-rotator.css
 beslock-product-gallery-reel => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/product-gallery-reel.css
 beslock-header-state-css => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/header-state.css
+kad-splide => http://localhost:8000/wp-content/themes/kadence/assets/css/kadence-splide.min.css
 beslock-wc-scope-fix => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/wc-scope-fix.css
 
 === REGISTERED (selected) ===

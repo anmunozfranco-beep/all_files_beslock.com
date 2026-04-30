@@ -69,31 +69,6 @@
   justify-content:center;
   margin-top:10px;
 }
-
-/* Thumbnails row under the reel */
-.beslock-gallery-dots .beslock-gallery-thumb{
-  border: none;
-  padding: 0;
-  background: transparent;
-  cursor: pointer;
-}
-.beslock-gallery-dots .beslock-gallery-thumb img{
-  width:64px;
-  height:64px;
-  object-fit:cover;
-  display:block;
-  border-radius:6px;
-  border:2px solid transparent;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-}
-.beslock-gallery-dots .beslock-gallery-thumb.active img,
-.beslock-gallery-dots .beslock-gallery-thumb:focus img{
-  border-color: var(--accent, #00a86b);
-  opacity:1;
-}
-.beslock-gallery-dots .beslock-gallery-thumb img[loading="lazy"]{
-  opacity:0.95;
-}
 .beslock-gallery-dots button{
   width:10px;
   height:10px;
@@ -129,5 +104,25 @@
   color: #444;
   margin-top: 8px;
 }
+
+/* Improve drag/slide reliability across devices */
+.beslock-gallery-reel {
+  touch-action: pan-x;
+  -ms-touch-action: pan-x;
+  -webkit-tap-highlight-color: transparent;
+  cursor: grab;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.beslock-gallery-reel:active { cursor: grabbing; }
+.beslock-gallery-slide img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Ensure inner slides don't capture touch gestures that should pan the reel */
+.beslock-gallery-slide { touch-action: none; }
 
 

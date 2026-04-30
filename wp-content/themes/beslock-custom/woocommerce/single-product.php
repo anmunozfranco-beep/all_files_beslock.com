@@ -17,6 +17,7 @@ if ( have_posts() ) :
 ?>
 
 <main class="product-page product-page--single" id="main" role="main">
+  <div class="u-container">
   <div class="product-page__hero">
     <div class="product-page__media">
       <?php
@@ -55,20 +56,7 @@ if ( have_posts() ) :
       <header class="product-page__header">
         <h1 class="product-page__title"><?php the_title(); ?></h1>
         <div class="product-page__meta">
-            <div class="product-page__price"><?php echo $product->get_price_html(); ?></div>
-            <?php
-              // Stock microcopy / urgency
-              if ( $product->is_in_stock() ) {
-                if ( $product->managing_stock() ) {
-                  $qty = intval( $product->get_stock_quantity() );
-                  if ( $qty > 0 && $qty <= 5 ) {
-                    printf( '<div class="product-page__stock product-page__stock--low">Solo %d disponibles</div>', $qty );
-                  }
-                }
-              } else {
-                echo '<div class="product-page__stock product-page__stock--out">Agotado</div>';
-              }
-            ?>
+          <div class="product-page__price"><?php echo $product->get_price_html(); ?></div>
         </div>
       </header>
 
@@ -89,7 +77,8 @@ if ( have_posts() ) :
         <?php do_action( 'beslock_product_trust_badges' ); ?>
       </div>
     </div>
-  </div>
+  </div><!-- .product-page__hero -->
+  </div><!-- .u-container -->
 
   <div class="product-page__content">
 
