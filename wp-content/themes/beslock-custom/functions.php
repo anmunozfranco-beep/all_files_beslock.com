@@ -153,6 +153,12 @@ add_action( 'wp_enqueue_scripts', function() {
   $product_page_css = $theme_dir_path . '/assets/css/product-page.css';
   if ( file_exists( $product_page_css ) ) {
     wp_enqueue_style( 'beslock-product-page', $theme_dir_uri . '/assets/css/product-page.css', [ 'beslock-main-style' ], filemtime( $product_page_css ) );
+    // Add small inline overrides to ensure key layout rules win the cascade on product pages
+    $inline_product_css = "\nbody.single-product .product-page { margin-top: 0 !important; }\n" .
+      "body.single-product .product-page__media .beslock-gallery-reel { width: 80% !important; max-width: 80% !important; margin-left: auto !important; margin-right: auto !important; box-sizing: border-box !important; }\n" .
+      "body.single-product .product-page__media .beslock-gallery-slide { aspect-ratio: 1 / 1 !important; flex: 0 0 100% !important; min-width: 100% !important; }\n" .
+      "body.single-product .product-page__info { position: relative !important; z-index: 100 !important; }\n";
+    wp_add_inline_style( 'beslock-product-page', $inline_product_css );
   }
 
   // Product tabs (Especificaciones / Reviews) - mobile-first
@@ -200,6 +206,12 @@ add_action( 'wp_enqueue_scripts', function() {
   $reel_css = $theme_dir_path . '/assets/css/product-gallery-reel.css';
   if ( file_exists( $reel_css ) ) {
     wp_enqueue_style( 'beslock-product-gallery-reel', $theme_dir_uri . '/assets/css/product-gallery-reel.css', [ 'beslock-main-style' ], filemtime( $reel_css ) );
+    // repeat key overrides after reel stylesheet to ensure they win the cascade in all environments
+    $inline_after_reel = "\nbody.single-product .product-page { margin-top: 0 !important; }\n" .
+      "body.single-product .product-page__media .beslock-gallery-reel { width: 80% !important; max-width: 80% !important; margin-left: auto !important; margin-right: auto !important; box-sizing: border-box !important; }\n" .
+      "body.single-product .product-page__media .beslock-gallery-slide { aspect-ratio: 1 / 1 !important; flex: 0 0 100% !important; min-width: 100% !important; }\n" .
+      "body.single-product .product-page__info { position: relative !important; z-index: 100 !important; }\n";
+    wp_add_inline_style( 'beslock-product-gallery-reel', $inline_after_reel );
   }
   $reel_js = $theme_dir_path . '/assets/js/product-gallery-reel.js';
   if ( file_exists( $reel_js ) ) {
@@ -372,6 +384,31 @@ add_action( 'wp_head', function(){
   <?php
 }, 1 );
 
+
+
+// Ensure single-product hero sits 5px below the fixed header by measuring header height
+add_action( 'wp_footer', function() {
+  if ( function_exists( 'is_product' ) && is_product() ) {
+    ?>
+    <script>
+    (function(){
+      function setHeroOffset(){
+        try{
+          var header = document.querySelector('.header');
+          var hero = document.querySelector('.product-page');
+          if(!header || !hero) return;
+          var h = header.offsetHeight || 0;
+          hero.style.marginTop = h + 'px';
+        }catch(e){}
+      }
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setHeroOffset); else setHeroOffset();
+      window.addEventListener('resize', function(){ setTimeout(setHeroOffset, 80); });
+    })();
+    </script>
+    <?php
+  }
+}, 20 );
+
 /**
  * Declare WooCommerce support for the child theme if not already present.
  * Using after_setup_theme with priority > 10 helps run after the parent theme
@@ -419,6 +456,38 @@ add_action( 'after_setup_theme', function() {
     // return 0 to indicate no special shop page; redirect handles UX
     return 0;
   } );
+
+// Final inline CSS at end of body to absolutely ensure product page layout overrides
+add_action( 'wp_footer', function() {
+  if ( function_exists( 'is_product' ) && is_product() ) {
+    ?>
+    <style>
+      /* Last-resort overrides to ensure layout wins the cascade */
+      body.single-product .product-page { margin-top: 0 !important; }
+      body.single-product .product-page__media .beslock-gallery-reel {
+        width: 80% !important;
+        max-width: 80% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-sizing: border-box !important;
+        overflow-x: auto !important;
+      }
+      body.single-product .product-page__media .beslock-gallery-slide {
+        aspect-ratio: 1 / 1 !important;
+        flex: 0 0 100% !important;
+        min-width: 100% !important;
+      }
+      body.single-product .product-page__info {
+        position: relative !important;
+        z-index: 100 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+      }
+    </style>
+    <?php
+  }
+}, 999 );
 
   /**
    * Admin Tools page: Import portfolio images into Media Library.
