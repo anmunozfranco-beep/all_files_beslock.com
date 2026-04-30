@@ -28,8 +28,17 @@
       slides.forEach(function(s, i){
         var d = document.createElement('button'); d.type = 'button'; d.setAttribute('data-index', i);
         if(i===0) d.className = 'active';
+        // Build thumbnail image inside the dot button (use slide img src)
+        try{
+          var slideImg = s.querySelector && s.querySelector('img');
+          var src = slideImg ? (slideImg.getAttribute('data-thumb') || slideImg.src) : '';
+          d.innerHTML = src ? '<img src="'+ src +'" alt="thumbnail '+ (i+1) +'"/>' : '';
+          d.classList.add('beslock-gallery-thumb');
+          d.setAttribute('aria-label', 'Ir a imagen ' + (i+1));
+        }catch(e){}
         d.addEventListener('click', function(){ scrollToSlide(i); });
         dots.appendChild(d);
+
         // Clicking a slide itself should jump to that slide (useful for thumbnails)
         s.style.cursor = 'pointer';
         s.addEventListener('click', function(e){
@@ -39,19 +48,14 @@
             var mainImg = slides[0].querySelector('img');
             var thumbImg = s.querySelector('img');
             if(mainImg && thumbImg){
-              // Collect attributes
               var aAttrs = Array.prototype.slice.call(mainImg.attributes).map(function(a){ return {name:a.name, value:a.value}; });
               var bAttrs = Array.prototype.slice.call(thumbImg.attributes).map(function(a){ return {name:a.name, value:a.value}; });
-              // Remove all attributes
               Array.prototype.slice.call(mainImg.attributes).forEach(function(a){ mainImg.removeAttribute(a.name); });
               Array.prototype.slice.call(thumbImg.attributes).forEach(function(a){ thumbImg.removeAttribute(a.name); });
-              // Apply swapped attributes
               bAttrs.forEach(function(attr){ mainImg.setAttribute(attr.name, attr.value); });
               aAttrs.forEach(function(attr){ thumbImg.setAttribute(attr.name, attr.value); });
             }
-            // Mark this thumbnail as active and update counter/dots
             setActive(i);
-            // keep main image in view (center first slide)
             scrollToSlide(0);
             e.preventDefault();
           }catch(ex){ console.warn('thumb click swap error', ex); }
