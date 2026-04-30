@@ -182,6 +182,10 @@ input.qty {
     -webkit-overflow-scrolling: touch !important;
     scroll-snap-type: x mandatory !important;
     padding: 0 !important; /* remove lateral padding so slides fill the reel */
+    /* Make the reel occupy 40% of the viewport width and center it */
+    width: 40vw !important;
+    max-width: 40vw !important;
+    margin: 0 auto !important;
     box-sizing: border-box !important;
   }
   body.single-product .product-page__media .beslock-gallery-slide {
