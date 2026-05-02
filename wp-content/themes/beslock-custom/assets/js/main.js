@@ -167,42 +167,37 @@
     console.log('main.js: lazy images init');
   }
 
-  // ===== GSAP reveals =====
-  function initGsapReveals() {
-    if (window.gsap && window.ScrollTrigger) {
-      try {
-            gsap.registerPlugin(ScrollTrigger);
-            // Batch product-card reveals so whole rows appear together instead of
-            // individual cards triggering at slightly different offsets.
-            var productCards = gsap.utils.toArray('.products-portfolio__grid .product-card.reveal');
-            if (productCards.length) {
-              ScrollTrigger.batch(productCards, {
-                interval: 0.12,      // time window to batch callbacks (s)
-                batchMax: 20,        // maximum items per batch
-                start: 'top 85%',
-                onEnter: function(batch) {
-                  gsap.fromTo(batch, { opacity: 0, y: 50 }, {
-                    opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-                    stagger: { each: 0.06, from: 'center' }
-                  });
-                }
-              });
-            }
-            // Initialize reveals for other isolated .reveal elements
-            gsap.utils.toArray('.reveal:not(.products-portfolio__grid .product-card)').forEach(function (el) {
-              gsap.fromTo(el, { opacity: 0, y: 50 }, {
-                opacity: 1, y: 0, duration: 1, ease: "power3.out",
-                scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }
-              });
-            });
-        console.log('main.js: GSAP reveals initialized');
+  // ===== Section reveal (unified, hero-based) =====
+  function initSectionReveals() {
+    try {
+      // Respect reduced motion preference
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.section-reveal').forEach(function (el) { el.classList.add('is-active'); });
         return;
-      } catch (e) {
-        console.warn('main.js: GSAP failed, falling back', e);
       }
-    }
-    $$('.reveal').forEach(function (el) { el.style.opacity = 1; });
-    console.log('main.js: GSAP not available, reveal fallback applied');
+
+      var elements = Array.prototype.slice.call(document.querySelectorAll('.section-reveal'));
+      if (!elements.length) return;
+
+      // Apply a gentle per-element stagger order so reveals feel premium
+      elements.forEach(function (el, i) {
+        if (!el.style.getPropertyValue('--delay')) el.style.setProperty('--delay', (i * 70) + 'ms');
+        // also set a small inline transitionDelay for CSS transition timing
+        el.style.transitionDelay = el.style.transitionDelay || (el.style.getPropertyValue('--delay') || '0ms');
+      });
+
+      var observer = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            try { entry.target.classList.add('is-active'); } catch (e) {}
+            try { observer.unobserve(entry.target); } catch (e) {}
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+      elements.forEach(function (el) { observer.observe(el); });
+      console.log('main.js: section reveals initialized (hero-based)');
+    } catch (e) { console.warn('initSectionReveals error', e); }
   }
 
   // ===== Mobile menu (idempotent) =====
@@ -444,11 +439,13 @@
 
   // ===== Init sequence =====
   function initAll() {
-    try { initGsapReveals(); } catch (e) { console.warn(e); }
+    try { initSectionReveals(); } catch (e) { console.warn(e); }
     if ('requestIdleCallback' in window) requestIdleCallback(initLazyImages, { timeout: 1000 }); else setTimeout(initLazyImages, 300);
     try { headerBehaviorsInit(); } catch (e) { console.warn('header behaviors error', e); }
     try { mobileMenuInit(); } catch (e) { console.warn('mobile menu error', e); }
     try { productsPanelInit(); } catch (e) { console.warn('products panel error', e); }
+    try { logoTmInit(); } catch (e) { console.warn('logo TM init error', e); }
+    // legacy reveal observer removed; initSectionReveals covers site-wide reveals
     console.log('main.js: all modules initialized');
   }
 
@@ -457,6 +454,19 @@
   } else {
     setTimeout(initAll, 60);
   }
+
+  /* Logo TM subtle animation initializer */
+  function logoTmInit() {
+    try {
+      var logo = document.querySelector('.logo-wrapper');
+      if (!logo) return;
+      // Run once after a short delay so layout settles and images load
+      setTimeout(function () { logo.classList.add('loaded'); }, 120);
+    } catch (e) { console.warn('logoTmInit', e); }
+  }
+
+  /* Legacy reveal observer removed — unified site reveals use initSectionReveals */
+  function revealObserverInit() { /* noop for compatibility */ }
 
 })();
 

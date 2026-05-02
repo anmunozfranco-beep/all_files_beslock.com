@@ -3,15 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
-// Use global $product and fail silently if it's not available or invalid.
 global $product;
 
-// Do not return early — keep rendering the card. Badge logic must be
-// non-blocking: only enable badge when we have a valid product instance.
-$show_description = $args['show_description'] ?? false;
+$context = get_query_var('beslock_context', []);
+$show_description = $context['show_description'] ?? false;
 ?>
 
-<div class="product-card pc-card">
+<div class="product-card pc-card section-reveal">
 
   <div class="product-card__image">
     <?php echo $product->get_image( 'medium' ); ?>
@@ -42,16 +40,10 @@ $show_description = $args['show_description'] ?? false;
 
   <p class="product-card__price"><?php echo $product->get_price_html(); ?></p>
 
-  <?php if ( ! empty( $show_description ) ) : ?>
-
-    <?php $desc = $product->get_short_description(); ?>
-
-    <?php if ( ! empty( $desc ) ) : ?>
-      <p class="product-card__description"><?php echo wp_kses_post( $desc ); ?></p>
-    <?php else : ?>
-      <p class="product-card__description"><?php echo esc_html__( 'Descripción no disponible', 'beslock' ); ?></p>
-    <?php endif; ?>
-
+  <?php if ( $show_description ) : ?>
+    <p class="product-card__description">
+      <?php echo wp_kses_post( $product->get_short_description() ); ?>
+    </p>
   <?php endif; ?>
 
   <div class="pc-actions">

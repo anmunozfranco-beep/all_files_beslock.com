@@ -517,37 +517,7 @@ body {
   animation: tmFadeIn 420ms ease-out 120ms forwards;
 }
 
-/* ==========================
-   Generic reveal helper (IntersectionObserver)
-   Adds .is-visible when element enters viewport — runs once
-   Reusable: apply `reveal` class to any element
-========================== */
-
-/* Reveal: improved/flicker-safe initial state */
-.reveal {
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 320ms ease-out, transform 320ms ease-out;
-  will-change: opacity;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Optional stagger when JS sets --delay */
-.reveal[data-delay] {
-  /* kept for compatibility — actual delay uses CSS var --delay */
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-}
+/* Legacy .reveal system removed. Use .section-reveal instead. */
 
 /* Prevent flicker on images: DO NOT apply transform hacks; restore natural state */
 .product-card img {
@@ -1592,20 +1562,21 @@ body.single-product a.single_add_to_cart_button .bi,
   }
 }
 
-/* ========== ANIMACIÓN REVEAL (consolidated, flicker-safe) ========== */
-.reveal {
+/* ========== GLOBAL SECTION REVEAL (based on hero slide behavior) ========== */
+.section-reveal {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 400ms ease, transform 400ms ease;
-  transition-delay: var(--delay, 0ms);
+  transform: translateY(20px);
   will-change: opacity, transform;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
 }
 
-.reveal.is-visible {
+.section-reveal.is-active {
   opacity: 1;
   transform: translateY(0);
+  transition: opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
 /* ========== FOOTER ESPECÍFICO (site-footer) ========== */
