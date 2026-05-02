@@ -445,6 +445,7 @@
     try { mobileMenuInit(); } catch (e) { console.warn('mobile menu error', e); }
     try { productsPanelInit(); } catch (e) { console.warn('products panel error', e); }
     try { logoTmInit(); } catch (e) { console.warn('logo TM init error', e); }
+    try { initHeroFallback(); } catch (e) { console.warn('hero fallback init error', e); }
     // legacy reveal observer removed; initSectionReveals covers site-wide reveals
     console.log('main.js: all modules initialized');
   }
@@ -463,6 +464,53 @@
       // Run once after a short delay so layout settles and images load
       setTimeout(function () { logo.classList.add('loaded'); }, 120);
     } catch (e) { console.warn('logoTmInit', e); }
+  }
+
+  /* ========== Hero branded fallback initializer ========== */
+  function initHeroFallback() {
+    try {
+      var hero = document.querySelector('.hero');
+      if (!hero) return;
+      var video = hero.querySelector('.hero__video');
+      var logo = hero.querySelector('.hero__logo');
+      var fallback = hero.querySelector('.hero__fallback');
+
+      var triggered = false;
+      function showVideo() {
+        if (triggered) return; triggered = true;
+        try { hero.classList.add('is-ready'); } catch (e) {}
+        // hide fallback from accessibility after short micro-zoom completes
+        setTimeout(function(){ if (fallback) { fallback.style.display = 'none'; fallback.setAttribute('aria-hidden','true'); } }, 700);
+      }
+
+      if (video) {
+        // If video can play through, trigger transition
+        video.addEventListener('canplaythrough', function onCP() { try{ video.removeEventListener('canplaythrough', onCP); }catch(e){} showVideo(); }, { once: true });
+        // Also listen for enough data to play (safer for some browsers)
+        video.addEventListener('loadeddata', function onLD(){ try{ video.removeEventListener('loadeddata', onLD); }catch(e){} /* no-op */ }, { once: true });
+      }
+
+      // Failsafe: ensure transition even on slow networks
+      setTimeout(showVideo, 2500);
+
+      // Slight micro-zoom on logo before reveal to feel cinematic
+      if (logo && fallback) {
+        // add a small class that scales the logo slightly, CSS handles transform on .hero.is-ready
+        // ensure fallback visible initially
+        fallback.style.visibility = fallback.style.visibility || 'visible';
+      }
+
+      // Accessibility: if user requests reduced motion, skip video and keep fallback
+      try {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          if (video) { video.style.display = 'none'; }
+          if (fallback) { fallback.style.opacity = '1'; }
+          return;
+        }
+      } catch (e) {}
+
+      console.log('main.js: hero fallback initialized');
+    } catch (e) { console.warn('initHeroFallback error', e); }
   }
 
   /* Legacy reveal observer removed — unified site reveals use initSectionReveals */
