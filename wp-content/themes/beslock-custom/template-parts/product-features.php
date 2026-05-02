@@ -13,8 +13,7 @@ switch ( $section ) {
     echo '<div class="beslock-trust-badges">';
     foreach ( $badges as $b ) {
       $slug = sanitize_title( $b );
-      $src = get_stylesheet_directory_uri() . '/assets/images/instal.png';
-      printf( '<span class="beslock-badge beslock-badge--%s"><img src="%s" alt="%s"/></span>', esc_attr( $slug ), esc_url( $src ), esc_attr( $b ) );
+      printf( '<span class="beslock-badge beslock-badge--%s">%s</span>', esc_attr( $slug ), esc_html( $b ) );
     }
     echo '</div>';
     break;

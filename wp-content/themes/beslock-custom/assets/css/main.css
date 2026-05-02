@@ -474,26 +474,25 @@ body {
 }
 
 /* ==========================
-   Product card badge (pc-badge)
+   Product card badge (product-card__badge) — controlled, single-source
 ========================== */
-.pc-card { position: relative; }
-.pc-badge {
+.product-card__image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.product-card__badge {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  z-index: 3;
-  transform: rotate(10deg);
-  transform-origin: top right;
-}
-.pc-badge img {
-  display: block;
-  transform: scale(0.75);
-  transform-origin: top right;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-}
-.pc-card:hover .pc-badge {
-  transform: rotate(10deg) scale(1.05);
-  transition: transform 0.2s ease;
+  top: 8px;
+  right: 8px;
+
+  width: 90px;
+  height: auto;
+
+  transform: rotate(12deg);
+
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* ==========================
@@ -991,30 +990,27 @@ body {
 }
 
 /* ========== PRODUCT CARD BADGE (INSTAL) ========== */
-/* Strongly scoped override for the classic `product-card__badge` class.
-   Ensures sticker-like placement on top-right of the product image. */
-.product-card__image { position: relative; }
+.product-card__image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
 .product-card__badge {
-    position: absolute !important;
+  position: absolute;
+  top: 8px;
+  right: 8px;
 
-    top: 6px !important;
-    right: 6px !important;
+  width: 90px;
+  height: auto;
 
-    width: 90px !important; /* control size directly */
-    height: auto !important;
+  transform: rotate(12deg);
 
-    transform: rotate(12deg) scale(0.75) !important;
-    transform-origin: top right;
-
-    z-index: 5;
-
-    pointer-events: none;
-
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+  pointer-events: none;
+  z-index: 2;
 }
 
 @media (max-width: 600px) {
-  .product-card__badge { width: 70px !important; top: 6px !important; right: 6px !important; transform: rotate(10deg) scale(0.7) !important; }
+  .product-card__badge { width: 70px; top: 6px; right: 6px; transform: rotate(10deg); }
 }
 
 

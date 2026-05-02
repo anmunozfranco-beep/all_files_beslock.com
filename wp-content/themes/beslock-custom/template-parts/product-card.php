@@ -20,24 +20,26 @@ if ( $show_badge === '' ) {
 }
 
 // Resolve badge image path and URL; only render if file exists
-$theme_dir = get_stylesheet_directory();
-$badge_file = $theme_dir . '/assets/images/instal.png';
-$badge_url = '';
-if ( file_exists( $badge_file ) ) {
-    $badge_url = get_stylesheet_directory_uri() . '/assets/images/instal.png?v=' . filemtime( $badge_file );
-}
+// badge resolution will use theme template directory when rendering inside image container
 
 ?>
 
 <div class="product-card__image">
     <?php echo $product->get_image('medium'); ?>
-</div>
 
-<?php if ( ! empty( $badge_url ) && $show_badge === 'yes' ) : ?>
-    <div class="pc-badge">
-        <img src="<?php echo esc_url( $badge_url ); ?>" alt="<?php echo esc_attr_x( 'Instalación incluida', 'badge alt', 'beslock' ); ?>">
-    </div>
-<?php endif; ?>
+    <?php
+    // Render badge image inside the image container so it is absolutely positioned
+    $theme_tpl_dir = get_template_directory();
+    $badge_file_tpl = $theme_tpl_dir . '/assets/images/instal.png';
+    if ( file_exists( $badge_file_tpl ) && $show_badge === 'yes' ) : ?>
+        <img
+            class="product-card__badge"
+            src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/instal.png' ); ?>"
+            alt="<?php echo esc_attr_x( 'Instalación incluida', 'badge alt', 'beslock' ); ?>"
+            aria-hidden="true"
+        />
+    <?php endif; ?>
+</div>
 
 <h3 class="product-card__title">
     <?php echo esc_html($product->get_name()); ?>

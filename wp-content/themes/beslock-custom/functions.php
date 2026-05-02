@@ -840,8 +840,7 @@ function beslock_kadence_archive_hero_buffer_end() {
     echo '<div class="beslock-trust-badges">';
     foreach ( $badges as $b ) {
       $slug = sanitize_title( $b );
-      $src = get_stylesheet_directory_uri() . '/assets/images/instal.png';
-      echo '<span class="beslock-badge beslock-badge--' . esc_attr( $slug ) . '"><img src="' . esc_url( $src ) . '" alt="' . esc_attr( $b ) . '"/></span>';
+      echo '<span class="beslock-badge beslock-badge--' . esc_attr( $slug ) . '">' . esc_html( $b ) . '</span>';
     }
     echo '</div>';
   }, 10 );
