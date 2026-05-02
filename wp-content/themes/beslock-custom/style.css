@@ -374,6 +374,59 @@ body { padding-top: var(--header-height); }
 /* .product-card__actions { outline: 2px solid red !important; } */
 
 /* ==========================
+	 Final: unify actions into a single centered flex group
+	 Ensures btn-primary no longer centers independently and btn-cart stays in flow
+========================== */
+.product-card__actions {
+	width: 75% !important;
+	margin: 0 auto !important;
+
+	display: flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+
+	gap: 8px !important;
+}
+
+.product-card__actions .btn-primary {
+	margin: 0 !important; /* avoid auto margins that center it alone */
+	display: flex !important;
+
+	flex: 0 0 85% !important;   /* fixed proportion */
+	max-width: none !important; /* remove theme max-width */
+	width: 85% !important;
+
+	height: 48px !important;
+	border-radius: 12px !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.product-card__actions .btn-cart {
+	margin: 0 !important;
+
+	flex: 0 0 15% !important;
+	width: 15% !important;
+
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+
+	height: 48px !important;
+}
+
+.product-card__actions a {
+	float: none !important;
+	position: relative !important;
+	text-decoration: none !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+/* Debug helper (commented) */
+/* .product-card__actions { outline: 2px solid red !important; } */
+
+/* ==========================
 	 Centered 75% actions block with 85/15 split
 ========================== */
 .product-card__actions {
