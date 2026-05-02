@@ -404,36 +404,52 @@ body {
 /* Product card image + badge — unified, non-intrusive overlay */
 .product-card__image {
   position: relative;
-  overflow: hidden; /* ensure badge doesn't affect layout */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate; /* prevents stacking conflicts */
+  overflow: hidden; /* safety */
 }
+
 .product-card__image img:not(.product-card__badge) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
   position: relative;
-  z-index: 1; /* keep product image under badge */
+  z-index: 1;
+
+  transform: none !important; /* prevent animation conflicts */
   display: block;
 }
+
 .product-card__badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 0;
+  right: 0;
 
-  display: block;
-  width: 64px; /* desktop default */
+  transform: translate(25%, -25%) rotate(12deg);
+
+  width: 64px;
   height: auto;
 
+  display: block;
+  pointer-events: none;
+
+  flex: none !important;
   max-width: none !important;
   min-width: 0 !important;
 
-  transform: rotate(10deg);
-  transform-origin: top right;
+  z-index: 100; /* ensure overlay above everything */
 
-  pointer-events: none;
-  z-index: 100; /* sit above images and overlays */
-
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.18));
 }
 
 @media (max-width: 768px) {
-  .product-card__badge { width: 52px; }
+  .product-card__badge {
+    width: 52px;
+    transform: translate(20%, -20%) rotate(10deg);
+  }
 }
 
 /* Brand and trademark styling (small superscript ®) */
