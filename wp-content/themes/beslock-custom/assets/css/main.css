@@ -8,6 +8,10 @@
   --beslock-green:      #034526;
   --beslock-green-lite: #046739;
 
+  /* Cart icon system variables */
+  --cart-icon-size: 34px;
+  --cart-icon-color: #2f6b4f;
+
   /* Nota: No definimos aquí --site-logo-height porque lo atamos al header (ver más abajo).
      Si prefieres, puedes establecer un valor global aquí, por ejemplo:
      --site-logo-height: 38px;
@@ -189,21 +193,42 @@ body {
     align-items: center;
     justify-content: center;
   }
+  .btn-cart i { line-height: 1; }
 
-  .btn-cart i { font-size: 22px !important; color: #1f3d2b !important; line-height: 1; }
+  /* ICON / CONTAINER: Standardize cart icon across header and product cards */
 
-  /* ensure header icon and cart icon share line-height */
-  .header__icon i,
-  .btn-cart i {
-    font-size: 1.54rem !important;
-    color: #1f3d2b !important;
-    line-height: 1;
+  .header__icon,
+  .header__icon--cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
   }
 
-  /* ensure no bootstrap/third-party override */
-  .bi {
-    font-style: normal;
-    color: inherit;
+  .header__icon--cart i,
+  .header__icon--cart svg,
+  .header__icon i,
+  .product-card__cart-btn i,
+  .product-card__cart-btn svg,
+  .btn-cart i,
+  .btn-cart svg {
+    font-size: var(--cart-icon-size);
+    width: var(--cart-icon-size);
+    height: var(--cart-icon-size);
+    line-height: 1;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cart-icon-color);
+  }
+
+  .product-card__cart-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    min-height: 52px;
   }
 
 }
@@ -230,6 +255,36 @@ body {
 /* Keep price text readable on small images: limit width and center */
 .product-card__price-overlay * { display: inline; }
   }
+}
+
+/* (Legacy cart-scale block removed — consolidated above to ensure single source of truth) */
+
+/* =========================
+   HEADER OFFSET (prevent header overlapping content)
+========================= */
+:root {
+  --header-height: 70px;
+}
+
+body {
+  padding-top: var(--header-height);
+}
+
+/* Final overrides to ensure cart icon variables win over legacy/third-party rules */
+.header__icon--cart i,
+.product-card__cart-btn i,
+.header__icon--cart svg,
+.product-card__cart-btn svg,
+.btn-cart i,
+.btn-cart svg {
+  font-size: var(--cart-icon-size) !important;
+  width: var(--cart-icon-size) !important;
+  height: var(--cart-icon-size) !important;
+  color: var(--cart-icon-color) !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 /* Product-card vertical rhythm removed here; final single definition placed
@@ -464,6 +519,82 @@ body {
   z-index: 8 !important;
   pointer-events: none !important;
 }
+
+/* ===== CLEAN UP CART ICON (header) ===== */
+.header__icon--cart,
+.header__icon--cart i {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.header__icon--cart::after,
+.header__icon--cart::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Vertical alignment improvements (real centering) */
+.header__bar { display: flex; align-items: center; }
+.header__logo img { display: block; }
+.header__icon--cart { display: flex; align-items: center; justify-content: center; height: 100%; }
+
+.header__icon--cart i {
+  display: block;
+  font-size: var(--cart-icon-size);
+  line-height: 1;
+  transform: translateY(1px);
+  color: var(--cart-icon-color) !important;
+}
+
+/* ===== CLEAN UP CART ICON (product card) ===== */
+.product-card__cart-btn,
+.product-card__cart-btn i {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.product-card__cart-btn i {
+  font-size: var(--cart-icon-size);
+  color: var(--cart-icon-color) !important;
+}
+
+/* Remove decorative underlines/outlines that might affect icon elements inside theme */
+.header__icon--cart a,
+.header__icon--cart button,
+.product-card__cart-btn a,
+.product-card__cart-btn button {
+  text-decoration: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* ========== Remove underline only for product-card cart button ========= */
+.product-card__actions .btn-cart,
+.product-card__actions .btn-cart:link,
+.product-card__actions .btn-cart:visited,
+.product-card__actions .btn-cart:hover,
+.product-card__actions .btn-cart:active,
+.product-card__actions .btn-cart:focus {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.product-card__actions .btn-cart::before,
+.product-card__actions .btn-cart::after {
+  content: none !important;
+  display: none !important;
+}
+
+.product-card__actions .btn-cart i {
+  text-decoration: none !important;
+  border: none !important;
+}
+
+.product-card__actions .btn-cart { display: flex; align-items: center; justify-content: center; }
 
 @media (min-width: 768px) {
   .header__cart-count { width: 20px; height: 20px; font-size: 0.75rem; top: 6px; right: 6px; }

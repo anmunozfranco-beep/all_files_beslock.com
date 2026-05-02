@@ -95,30 +95,163 @@ Template: kadence
 	justify-content: center;
 }
 
-/* ICON FIX (CRITICAL — REMOVE BLUE COLOR) */
-.btn-cart {
+/* ICON / CONTAINER: Standardize cart icon across header and product cards */
+
+/* Header container alignment */
+.header__icon,
+.header__icon--cart {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	height: 44px;
 }
 
-.btn-cart i {
-  font-size: 1.54rem !important;
-  color: #1f3d2b !important;
-  line-height: 1;
-}
-
-/* ensure header icon and cart icon share line-height */
+/* Icon sizing and alignment (exact values) */
+.header__icon--cart i,
+.header__icon--cart svg,
 .header__icon i,
-.btn-cart i {
-  font-size: 1.54rem !important;
-  color: #1f3d2b !important;
-  line-height: 1;
+.product-card__cart-btn i,
+.product-card__cart-btn svg,
+.btn-cart i,
+.btn-cart svg {
+	font-size: var(--cart-icon-size);
+	width: var(--cart-icon-size);
+	height: var(--cart-icon-size);
+	line-height: 1;
+	vertical-align: middle;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: inherit;
 }
 
-/* ensure no bootstrap/third-party override */
-.bi {
-	font-style: normal;
-	color: inherit;
+/* Product card cart button container */
+.product-card__cart-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 52px;
+	min-height: 52px;
+}
+
+/* Header layout normalization */
+.header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ===== CLEAN UP CART ICON (header) ===== */
+.header__icon--cart,
+.header__icon--cart i {
+	text-decoration: none !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+.header__icon--cart::after,
+.header__icon--cart::before {
+	display: none !important;
+	content: none !important;
+}
+
+.header__bar { display: flex; align-items: center; }
+.header__logo img { display: block; }
+.header__icon--cart { display: flex; align-items: center; justify-content: center; height: 100%; }
+
+.header__icon--cart i {
+	display: block;
+	font-size: var(--cart-icon-size);
+	line-height: 1;
+	transform: translateY(1px);
+	color: var(--cart-icon-color) !important;
+}
+
+/* PRODUCT CARD BUTTON CLEANUP */
+.product-card__cart-btn,
+.product-card__cart-btn i {
+	text-decoration: none !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+.product-card__cart-btn i {
+	font-size: var(--cart-icon-size);
+	color: var(--cart-icon-color) !important;
+}
+
+.header__icon--cart a,
+.header__icon--cart button,
+.product-card__cart-btn a,
+.product-card__cart-btn button {
+	text-decoration: none !important;
+	border: none !important;
+	outline: none !important;
+}
+
+/* ========== Remove underline only for product-card cart button ========= */
+.product-card__actions .btn-cart,
+.product-card__actions .btn-cart:link,
+.product-card__actions .btn-cart:visited,
+.product-card__actions .btn-cart:hover,
+.product-card__actions .btn-cart:active,
+.product-card__actions .btn-cart:focus {
+	text-decoration: none !important;
+	border: none !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.product-card__actions .btn-cart::before,
+.product-card__actions .btn-cart::after {
+	content: none !important;
+	display: none !important;
+}
+
+.product-card__actions .btn-cart i {
+	text-decoration: none !important;
+	border: none !important;
+}
+
+.product-card__actions .btn-cart { display: flex; align-items: center; justify-content: center; }
+
+.header__logo,
+.header__icon {
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+	.header__icon--cart i,
+	.header__icon i {
+		font-size: 34px; /* keep same absolute 34px on desktop to maintain exactness */
+	}
+}
+
+/* ensure no third-party resets override icon color/line-height */
+.bi { font-style: normal; color: inherit; }
+
+/* Header offset */
+:root {
+		--header-height: 70px;
+		--cart-icon-size: 34px;
+		--cart-icon-color: #2f6b4f;
+}
+
+body { padding-top: var(--header-height); }
+
+/* Final overrides to prevent third-party/legacy rules from breaking the cart icon system */
+.header__icon--cart i,
+.product-card__cart-btn i,
+.header__icon--cart svg,
+.product-card__cart-btn svg {
+	font-size: var(--cart-icon-size) !important;
+	width: var(--cart-icon-size) !important;
+	height: var(--cart-icon-size) !important;
+	color: var(--cart-icon-color) !important;
+	line-height: 1 !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
 }
 
