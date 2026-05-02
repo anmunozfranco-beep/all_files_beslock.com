@@ -589,6 +589,31 @@ body {
   backface-visibility: visible !important;
 }
 
+/* ========================
+   Single product safe resets
+   Ensure WooCommerce single product pages are not affected by global card rules
+   ======================== */
+.single-product img,
+.single-product .wp-post-image {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* Gallery container sizing and centering on single product */
+.single-product .woocommerce-product-gallery {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.single-product .woocommerce-product-gallery__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Ensure product images reserve space to avoid layout shift during load.
    Use aspect-ratio and object-fit so images don't change layout when swapped. */
 .product-card__image {
