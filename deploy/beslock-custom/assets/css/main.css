@@ -1,0 +1,2134 @@
+:root {
+  --beslock-black:      #070505;
+  --beslock-white:      #FFFFFF;
+  --beslock-text-main:  #070505;
+  --beslock-text-sec:   #444444;
+  --beslock-bg-1:       #F2F2F2;
+  --beslock-bg-2:       #C9CACA;
+  --beslock-green:      #034526;
+  --beslock-green-lite: #046739;
+
+  /* Nota: No definimos aquí --site-logo-height porque lo atamos al header (ver más abajo).
+     Si prefieres, puedes establecer un valor global aquí, por ejemplo:
+     --site-logo-height: 38px;
+  */
+  /* Desktop offset for hero features block. Adjust this to move the features vertically on desktop. */
+  --hero-features-offset: 105px; /* default: calc(20px * 1.5 + 75px) => 105px */
+  /* Z-index layering variables */
+  --z-drawer-container: 1200;
+  --z-drawer-backdrop: 1220;
+  --z-drawer-panel: 1301;
+  --z-drawer-products-panel: 1310;
+  --z-drawer-header: 1320;
+  --z-header: 1100;
+  --z-logo: 1102;
+}
+
+/* ========== RESET Y BASE ========== */
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: var(--beslock-bg-1);
+  color: var(--beslock-text-main);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* ========== BASE BUTTON SYSTEM ========== */
+/* Provide a lightweight, theme-controlled button base so components using
+   the `.btn` utility render consistently even if parent theme styles are
+   not present. Keep this minimal and reusable across the site. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Primary style for product-card links; leverages theme variable for brand color. */
+.product-card__btn--link {
+  background: var(--beslock-green);
+  color: #fff;
+  text-decoration: none;
+  border: 2px solid red; /* debug: confirm selector applies */
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  opacity: 0.95;
+  box-shadow: 0 6px 18px rgba(3,69,38,0.08);
+}
+.product-card__btn--link:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+  box-shadow: 0 10px 28px rgba(3,69,38,0.12);
+}
+.product-card__btn--link:active { transform: translateY(0); }
+
+
+/* ========== CONTENEDOR UNIVERSAL ========== */
+.u-container {
+  width: 100%;
+  max-width: 540px;
+  padding: 0 1.25rem;
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .u-container {
+    max-width: 860px;
+    padding: 0 2rem;
+  }
+
+  /* ========== PRODUCT CARD FIXES (front-page) ========== */
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    gap: 12px;
+  }
+
+  /* IMAGE */
+  .product-card__image {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .product-card__image img {
+    max-width: 180px;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* TITLE */
+  .product-card__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f3d2b;
+    margin: 0;
+  }
+
+  /* PRICE */
+  .product-card__price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+    text-align: center;
+  }
+
+  /* DESCRIPTION */
+  .product-card__description {
+    font-size: 14.7px;
+    color: #555;
+    max-width: 260px;
+    margin: 0 auto;
+    line-height: 1.45;
+  }
+
+  /* ACTIONS */
+  .product-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  /* PRIMARY BUTTON */
+  .btn-primary {
+    flex: 1;
+    max-width: 220px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #6f8f7c;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* CART BUTTON */
+  .btn-cart {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #e5e5e5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ICON FIX (MATCH HEADER SIZE) */
+  .btn-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-cart i { font-size: 22px !important; color: #1f3d2b !important; line-height: 1; }
+
+  /* ensure header icon and cart icon share line-height */
+  .header__icon i,
+  .btn-cart i {
+    font-size: 1.54rem !important;
+    color: #1f3d2b !important;
+    line-height: 1;
+  }
+
+  /* ensure no bootstrap/third-party override */
+  .bi {
+    font-style: normal;
+    color: inherit;
+  }
+
+}
+@media (min-width: 1200px) {
+  .u-container {
+    max-width: 1180px;
+    padding: 0 2.5rem;
+
+/* Product card price overlay positioning: keep existing visual styles from
+   WooCommerce price HTML and only center the overlay horizontally above
+   the card content (over the image). */
+.product-card { position: relative; }
+.product-card__image { position: relative; }
+.product-card__price-overlay {
+  position: absolute;
+  bottom: -1.2rem; /* sit between image and title (overlapping slightly) */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none; /* keep overlay non-interactive by default */
+  display: inline-block;
+}
+
+/* Keep price text readable on small images: limit width and center */
+.product-card__price-overlay * { display: inline; }
+  }
+}
+
+/* Product-card vertical rhythm removed here; final single definition placed
+   at the end of this file to avoid duplicate/conflicting rules. */
+/* .product-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* vertical spacing between title, price, and actions */
+} */
+/* @media (min-width: 768px) {
+  .product-card__content { gap: 14px; }
+} */
+/* Optional fine-tuning: uncomment if extra offset is needed in specific contexts
+  .product-card__price { margin-top: 4px; }
+  .product-card__actions { margin-top: 8px; }
+} */
+
+/* ========== SECCIÓN BASE ========== */
+.section {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+.section--lined {
+  position: relative;
+}
+
+/* Ensure price overlay is horizontally centered on all viewports
+   and keeps same vertical offset used by the theme. This provides a
+   consistent look on small screens where the media-query rule
+   previously only applied for large desktop sizes. */
+.product-card { position: relative; }
+.product-card__image { position: relative; }
+.product-card__price-overlay {
+  position: absolute;
+  bottom: -1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+  display: inline-block;
+  text-align: center;
+}
+.product-card__price-overlay * { display: inline; }
+.section--lined::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2rem;
+  bottom: 2rem;
+  width: 3px;
+  background: var(--beslock-bg-2);
+  border-radius: 3px;
+  z-index: 1;
+  display: none;
+}
+@media (min-width: 600px) {
+  .section--lined::before {
+    display: block;
+    padding-left: 2rem;
+  }
+}
+
+/* When JS moves `.features-wrapper` out of `.slide-content` and makes it a
+   direct child of `.hero-slide` (desktop), position it relative to the slide
+   so it anchors under the slide title without depending on `.slide-content`. */
+@media (min-width: 600px) {
+  .hero-slide { position: relative; }
+
+  .hero-slide > .features-wrapper {
+    position: absolute;
+    top: var(--hero-features-offset, 105px);
+    left: 40vw;
+    transform: translateX(-50%);
+    width: auto;
+    z-index: 4;
+    padding-top: 0;
+    background: transparent;
+  }
+
+  .hero-slide > .features-wrapper .features-list {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    justify-content: center;
+    align-items: flex-start;
+  }
+}
+
+/* ========== HEADER & FOOTER ========== */
+
+/* For viewports >= 600px: make the overlay span the full hero width (0% -> 100%)
+   but ensure its visual content is anchored to the right so the overlay's
+   rightmost pixels coincide with the video's right edge. The image keeps its
+   aspect ratio via object-fit:contain and scales to the available height. */
+@media (min-width: 600px) {
+  .slide-overlay {
+    left: 0 !important;   /* left edge at 0% of viewport */
+    right: 0 !important;  /* right edge aligned to hero/video right (100%) */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    /* occupy full horizontal span; image content will be positioned to the right */
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: right center !important; /* anchor image content to the right */
+    max-width: none !important;
+    max-height: 100% !important;
+    transition: opacity 260ms ease, transform 260ms cubic-bezier(.22,.9,.41,1);
+    pointer-events: none;
+  }
+  .slide-overlay.overlay--visible { opacity: 0.8; }
+}
+/* Nota: tu regla original aplicaba position: sticky tanto a header como a .footer.
+   Dejamos esa regla, pero creamos una clase .site-footer que *anula* lo sticky
+   y aplica el diseño concreto del footer que ahora queremos usar. */
+.header,
+.footer {
+  background: var(--beslock-bg-2);
+  color: var(--beslock-black);
+  transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  opacity: 1;
+}
+.header.header--scrolled {
+  opacity: 0.25; /* preserve existing opacity animation */
+}
+.header *,
+.header.header--scrolled * {
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+.logo, .header__logo {
+  color: var(--beslock-green);
+  font-size: 1.9rem;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  margin: 0;
+  padding: 1.4rem 0 1.1rem 0;
+  text-align: left;
+}
+.header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 0.4rem 0;
+  gap: 0.5rem;
+}
+
+/* Scale header content proportionally on scroll without deforming elements.
+   We scale the inner bar so the header background remains full-width while the
+   visible content reduces to 75% (25% smaller). Transform origin at top keeps
+   the shrink visually anchored. */
+.header__bar {
+  transition: padding 0.35s cubic-bezier(0.4,0,0.2,1), gap 0.35s cubic-bezier(0.4,0,0.2,1);
+  will-change: padding, gap;
+}
+
+/* When header is scrolled reduce vertical space and element sizes by 25%.
+   We reduce padding, logo height and icon sizes rather than using transform
+   to avoid horizontal movement; elements will re-flow vertically into the
+   reduced header space while preserving proportions. */
+.header.header--scrolled .header__bar {
+  padding: calc(0.4rem * 0.75) 0 !important; /* mobile */
+  gap: calc(0.5rem * 0.75) !important;
+}
+
+/* Mobile: scale down logo and icons proportionally */
+.header.header--scrolled .header__logo img {
+  height: calc(var(--site-logo-height, 32px) * 0.75) !important;
+}
+.header.header--scrolled .header__icon {
+  font-size: calc(2rem * 0.75) !important;
+  min-width: calc(40px * 0.75) !important;
+  min-height: calc(40px * 0.75) !important;
+}
+
+/* Desktop breakpoint adjustments */
+@media (min-width: 600px) {
+  .header.header--scrolled .header__bar {
+    padding: calc(0.7rem * 0.75) 0 !important; /* desktop */
+  }
+  .header.header--scrolled .header__logo img {
+    height: calc(var(--site-logo-height, 38px) * 0.75) !important;
+  }
+  .header.header--scrolled .header__icon {
+    font-size: calc(2.25rem * 0.75) !important;
+    min-width: calc(44px * 0.75) !important;
+    min-height: calc(44px * 0.75) !important;
+  }
+}
+.header__icon {
+  background: none;
+  border: none;
+  color: var(--beslock-green);
+  font-size: 2rem;
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.18s;
+}
+.header__icon--menu {}
+.header__icon--cart {}
+
+/* Cart count badge: small green circle positioned inside cart icon */
+.header__icon--cart { position: relative; }
+.header__cart-count {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  transform: translate(0, 0) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(3,69,38,0.6) !important; /* beslock green at 60% opacity */
+  color: #fff !important; /* force white text */
+  font-size: 11px !important; /* ensure number fits */
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  box-shadow: 0 2px 6px rgba(3,69,38,0.12) !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  z-index: 8 !important;
+  pointer-events: none !important;
+}
+
+@media (min-width: 768px) {
+  .header__cart-count { width: 20px; height: 20px; font-size: 0.75rem; top: 6px; right: 6px; }
+}
+
+/* Extra specificity fallback to override plugin styles */
+.header__icon--cart .header__cart-count,
+.header__icon.header__icon--cart > .header__cart-count {
+  background: rgba(3,69,38,0.6) !important;
+  color: #fff !important;
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 11px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.header__logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+/* ---------- Aquí enlazamos la variable --site-logo-height al header ---------- */
+/* Definimos la variable en el elemento que controla el tamaño del logo del header.
+   Si el header cambia, actualiza estos valores (32px / 38px). */
+.header__logo img {
+  height: 32px;
+  display: block;
+  /* variable usada por el footer (fallback: 32px) */
+  --site-logo-height: 32px;
+  height: var(--site-logo-height);
+}
+.header__logo img.invert {
+  filter: invert(1) brightness(2);
+}
+@media (min-width: 600px) {
+  .header__bar {
+    padding: 0.7rem 0;
+  }
+  /* en pantallas >=600px actualizamos la variable al nuevo tamaño */
+  .header__logo img {
+    --site-logo-height: 38px;
+      font-size: calc(1.2rem + 2px); /* increased 2px on desktop */
+  }
+}
+
+/* ========== BOTONES PRINCIPALES ========== */
+.btn, .beslock-btn, .discover__btn {
+  display: inline-block;
+      font-size: calc(1.2rem + 2px); /* title increased 2px */
+  color: var(--beslock-green);
+  border-radius: 24px;
+  border: 2px solid var(--beslock-bg-2);
+  padding: 0.92em 2em;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  font-size: 1.09rem;
+      font-size: calc(0.96rem + 2px); /* subtitle increased 2px */
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Product card action buttons: remove underline from 'Ver Producto' and
+  place a compact add-to-cart button next to it. Matches screenshot: large
+  pill primary button + small square cart button. */
+/* Scoped reset for product-card anchors: neutralize browser default link
+   styles (blue/underline) while allowing the component's own rules to
+   restore the intended design. Kept narrowly scoped to avoid global resets. */
+.product-card__btn,
+.product-card__btn--link {
+  text-decoration: none;
+  color: inherit;
+}
+.product-card__actions { position: absolute; left: 1.2rem; right: 1.2rem; bottom: 1rem; display: flex; gap: 0.5rem; align-items: center; justify-content: center; z-index: 6; }
+.product-card__btn--link { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.1rem; border-radius: 10px; background: var(--beslock-green); color: #fff; border: none; font-weight: 700; opacity: 0.65; transition: opacity 280ms cubic-bezier(.16,.84,.29,1), transform 360ms cubic-bezier(.16,.84,.29,1), box-shadow 360ms cubic-bezier(.16,.84,.29,1); will-change: transform, opacity, box-shadow; backface-visibility: hidden; }
+.product-card__btn--link:hover { opacity: 1; transform: translateY(-2px) scale(1.01); box-shadow: 0 8px 24px rgba(3,69,38,0.10); }
+.product-card__btn--link:active { transform: translateY(0) scale(0.995); box-shadow: 0 4px 10px rgba(3,69,38,0.06); }
+.product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14); }
+.product-card__add-to-cart { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:10px; background:var(--beslock-bg-2); color:#fff; text-decoration:none; transition: transform 360ms cubic-bezier(.16,.84,.29,1), background 240ms cubic-bezier(.16,.84,.29,1), box-shadow 360ms cubic-bezier(.16,.84,.29,1); will-change: transform, background, box-shadow; backface-visibility: hidden; }
+.product-card__add-to-cart .bi {
+  color: var(--beslock-green);
+  font-size: 2rem; /* match .header__icon */
+  line-height: 1;
+  font-weight: 400; /* remove bold visual weight */
+  text-shadow: none;
+  transition: color 180ms ease;
+}
+.product-card__add-to-cart:hover { background: var(--beslock-green); transform: translateY(-2px) scale(1.02); box-shadow: 0 7px 20px rgba(3,69,38,0.09); }
+.product-card__add-to-cart:active { transform: translateY(0) scale(0.995); box-shadow: 0 3px 8px rgba(3,69,38,0.06); }
+.product-card__add-to-cart:hover .bi { color: var(--beslock-bg-2); text-shadow: none; }
+.product-card__add-to-cart:focus { outline: 3px solid rgba(3,69,38,0.14); }
+.btn:hover,
+.beslock-btn:hover,
+.beslock-btn:active,
+.discover__btn:active,
+.btn:focus,
+.beslock-btn:focus,
+.discover__btn:focus {
+  background: var(--beslock-bg-2);
+  color: var(--beslock-green-lite);
+  border: 2px solid var(--beslock-green-lite);
+}
+
+/* ========== PRODUCT CARD BADGE (INSTAL) ========== */
+/* Load the badge as a transparent image and avoid any transform so it
+   renders at its natural aspect ratio. No rotation/scale applied. */
+.product-card__badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: auto;
+  max-width: 100px;
+  height: auto;
+  z-index: 12; /* above overlays but below modals */
+  pointer-events: auto;
+  /* Scale the badge to 60% of its intrinsic size and keep origin top-right */
+  transform: scale(0.6) !important;
+  transform-origin: 100% 0% !important;
+  transition: transform 180ms cubic-bezier(.2,.9,.3,1), opacity 160ms ease, box-shadow 160ms ease;
+  will-change: opacity;
+  filter: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  mix-blend-mode: normal !important;
+  display: block;
+}
+@media (min-width: 600px) {
+  .product-card__badge { max-width: 130px; top: 10px; right: 10px; }
+}
+
+
+/* ========== HERO: BOTÓN CONTRASTE INVERTIDO ========== */
+.hero__cta {
+  display: inline-block;
+  background: var(--beslock-white);
+  color: var(--beslock-green);
+  border: 2px solid var(--beslock-green);
+  border-radius: 24px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  font-size: 1.09rem;
+  padding: 0.92em 2em;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  box-shadow: 0 4px 16px rgba(7,5,5,0.08);
+  cursor: pointer;
+  outline: none;
+}
+.hero__cta:hover,
+.hero__cta:active,
+.hero__cta:focus {
+  background: var(--beslock-bg-2);
+  color: var(--beslock-green-lite);
+  border: 2px solid var(--beslock-green-lite);
+}
+
+/* ========== HERO ========== */
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 74vh;
+  background: var(--beslock-bg-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  color: var(--beslock-black);
+  overflow: hidden;
+}
+.hero__video {
+  position: absolute;
+  z-index: 0;
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.77;
+  pointer-events: none;
+}
+.hero__overlay {
+  position: absolute;
+  z-index: 1;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+.hero__overlay::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 40%;
+  background: linear-gradient(
+    to top,
+    rgba(201,202,202,0.94) 0%,
+    rgba(201,202,202,0.55) 40%,
+    rgba(201,202,202,0.0) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+.hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 3rem auto;
+  padding: 0 1rem;
+}
+hero__title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: normal;
+  color: var(--beslock-green);
+  margin-bottom: 0.7rem;
+}
+.hero__subtitle {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--beslock-black);
+  margin-bottom: 1.8rem;
+  text-align: center;
+}
+
+/* ===== Ajustes para resoluciones mayores a 600px: centrar el bloque de texto
+   de la hero en el 30% del viewport y aumentar fuente al 200% ===== */
+@media (min-width: 600px) {
+  .hero__content {
+    position: absolute;
+    left: 40vw; /* el punto central del bloque quedará en 40% del viewport */
+    transform: translateX(-50%); /* centra el bloque respecto al punto 40vw */
+    bottom: 3rem; /* conservar separación inferior similar al diseño móvil */
+    max-width: 680px; /* permitir mayor anchura en desktop */
+    width: auto;
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  /* Duplicar el tamaño actual (200%) según valores definidos arriba */
+  .hero__title {
+    font-size: 4rem; /* 2rem * 2 */
+    line-height: 1.03;
+  }
+  .hero__subtitle {
+    font-size: 2.1rem; /* 1.05rem * 2 */
+  }
+}
+
+/* ========== DISCOVER ========== */
+.discover {
+  background: var(--beslock-white);
+  color: var(--beslock-text-main);
+}
+.discover__block {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: stretch;
+}
+.discover__text {
+  text-align: left;
+}
+.discover__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--beslock-text-main);
+  margin-bottom: 1rem;
+}
+.discover__title span {
+  color: var(--beslock-green);
+}
+.discover__desc {
+  color: var(--beslock-text-sec);
+  margin-bottom: 1.35rem;
+  font-size: 1rem;
+  text-align: justify;
+}
+.discover__image {
+  text-align: center;
+  width: 100%;
+}
+.discover__image img {
+  width: 100%;
+  max-width: 370px;
+  border-radius: 16px;
+  box-shadow: 0 6px 26px rgba(0,0,0,0.10);
+}
+@media (min-width: 768px) {
+  .discover__block {
+    flex-direction: row;
+    gap: 3.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .discover__text {
+    flex: 1 1 330px;
+  }
+  .discover__image {
+    flex: 1 1 330px;
+  }
+}
+
+/* ========== PRODUCT PORTFOLIO CARDS ========== */
+.products-portfolio__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+@media (min-width: 600px) {
+  .products-portfolio__grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .product-card {
+    flex: 1 1 270px;
+    max-width: 300px;
+  }
+}
+.product-card {
+  background: var(--beslock-white);
+  border-radius: 20px;
+  box-shadow: 0 2px 18px rgba(7,5,5,0.09);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  transition: box-shadow 360ms cubic-bezier(.16,.84,.29,1), transform 360ms cubic-bezier(.16,.84,.29,1);
+  will-change: transform, box-shadow;
+}
+.product-card:hover {
+  box-shadow: 0 14px 40px rgba(7,5,5,0.14);
+  transform: translateY(-6px) !important;
+}
+.product-card__image {
+  padding-top: 34px;    /* 85% del padding vertical (antes solo abajo) */
+  padding-bottom: 6px;  /* 15% del padding vertical (antes solo abajo) */
+  /* Ajusta estos valores si el padding total debe ser mayor o menor */
+}
+.product-card__image img {
+  width: 100%;
+  max-width: 220px;
+  border-radius: 16px 16px 0 0;
+  display: block;
+}
+/* Badge overlay shown on selected products */
+.product-card__badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: auto;
+  max-width: 100px;
+  height: auto;
+  z-index: 12;
+  pointer-events: auto;
+  transform: scale(0.6) !important;
+  transform-origin: 100% 0% !important;
+  transition: transform 180ms cubic-bezier(.2,.9,.3,1), opacity 160ms ease, box-shadow 160ms ease;
+  will-change: transform, opacity;
+  filter: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  mix-blend-mode: normal !important;
+  display: block;
+}
+@media (max-width: 600px) {
+  .product-card__badge { max-width: 62px; top: 8px; right: 8px; transform: scale(0.6) !important; }
+}
+.product-card__title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--beslock-green);
+}
+/* removed small margin-top rules to avoid conflicts; final spacing at file end */
+.product-card__desc {
+  color: var(--beslock-text-sec);
+  font-size: 0.96rem;
+  min-height: 50px;
+  margin-bottom: 1rem;
+}
+.product-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+/* ========== FORCE BESLOCK ADD-TO-CART STYLES (HIGH SPECIFICITY FALLBACK) ==========
+   These rules override theme/plugin styles in production environments where
+   Kadence or block styles may take precedence. We use highly-specific
+   selectors and `!important` for background/color to guarantee the visual.
+*/
+body.single-product .product-card__add-to-cart,
+body.single-product a.single_add_to_cart_button,
+body.single-product button.single_add_to_cart_button,
+.product-card .product-card__add-to-cart,
+.wc-block-grid__product .wc-block-grid__product-add-to-cart .wp-block-button__link,
+.wc-block-grid__product .wc-block-grid__product-add-to-cart a.wp-block-button__link {
+  background: var(--beslock-green) !important;
+  color: #ffffff !important;
+  border: 2px solid rgba(255,255,255,0.06) !important;
+  opacity: 0.95 !important;
+  box-shadow: 0 8px 20px rgba(3,69,38,0.09) !important;
+  padding: 0.6rem 1rem !important;
+  border-radius: 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  font-weight: 700 !important;
+  transition: transform 220ms cubic-bezier(.16,.84,.29,1), box-shadow 220ms ease !important;
+}
+
+body.single-product .product-card__add-to-cart:hover,
+body.single-product a.single_add_to_cart_button:hover,
+.product-card .product-card__add-to-cart:hover,
+.wc-block-grid__product .wc-block-grid__product-add-to-cart .wp-block-button__link:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 14px 36px rgba(3,69,38,0.12) !important;
+}
+
+/* Ensure icon color inside btn follows text color */
+body.single-product .product-card__add-to-cart .bi,
+body.single-product a.single_add_to_cart_button .bi,
+.product-card .product-card__add-to-cart .bi {
+  color: #ffffff !important;
+}
+
+/* Specific product-card variant: default gray button with green cart icon;
+   on hover invert to green button and gray cart icon. Higher specificity
+   + !important ensures this wins in production where other styles override. */
+.product-card .product-card__add-to-cart {
+  background: var(--beslock-bg-2) !important;
+  color: var(--beslock-green) !important;
+  border: 2px solid rgba(0,0,0,0.06) !important;
+  padding: 0.5rem 0.75rem !important;
+  width: 48px !important;
+  height: 48px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 14px rgba(3,69,38,0.04) !important;
+  transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease !important;
+}
+.product-card .product-card__add-to-cart .bi {
+  color: var(--beslock-green) !important;
+  transition: color 160ms ease !important;
+}
+.product-card .product-card__add-to-cart:hover {
+  background: var(--beslock-green) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 12px 30px rgba(3,69,38,0.12) !important;
+}
+.product-card .product-card__add-to-cart:hover .bi {
+  color: var(--beslock-bg-2) !important;
+}
+
+/* ========== DETALLE VISUAL SUAVE EN SECCIONES GRANDES ========== */
+@media (min-width: 510px) {
+  .hero__content,
+  .discover__text,
+  .product-card__content {
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(0.5px);
+  }
+}
+
+/* ========== ANIMACIÓN REVEAL ========== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+/* ========== FOOTER ESPECÍFICO (site-footer) ========== */
+/* .footer (global) se mantiene por compatibilidad, pero .site-footer
+   anula lo que haga falta para el footer real que usamos en footer.php */
+.site-footer {
+  background: transparent; /* deja el fondo del tema */
+  color: var(--beslock-text-main);
+  padding: 2rem 0;
+  text-align: center;
+  position: static; /* importante: anulamos sticky si heredó */
+  top: auto;
+  z-index: auto;
+}
+
+/* Footer logo: tamaño = 40% del logo del header (usamos --site-logo-height) */
+/* Aquí usamos la variable definida en .header__logo img (fallback 32px) */
+.footer-logo {
+  display: inline-block;
+  height: calc(var(--site-logo-height, 32px) * 0.85);
+  width: auto;
+  max-width: 40vw; /* protección en pantallas muy pequeñas */
+  vertical-align: middle;
+  -webkit-user-drag: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+/* Si necesitas una variante que use width (en lugar de height), descomenta y ajusta:
+.footer-logo { width: calc(var(--site-logo-width, 128px) * 0.4); height: auto; }
+*/
+
+/* Ajustes adicionales visuales */
+.site-footer .u-container {
+  padding: 2rem 0;
+}
+
+/* ==========================
+   HERO BESLOCK STYLES (appended)
+   ========================== */
+.beslock-hero { position: relative; width:100%; height:85vh; max-height:100vh; overflow:hidden; background:#000; color:#fff; isolation:isolate; }
+.beslock-loader { --beslock-loader-offset: 0px; position: fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; background:#ffffff; z-index:9999; transition:opacity 1.2s ease, visibility 1.2s linear; }
+.beslock-loader[aria-hidden="true"]{ opacity:0; visibility:hidden; pointer-events:none; }
+.beslock-loader__wrap{ --loader-logo-size: clamp(140px, 30vw, 416px); display:flex; align-items:center; justify-content:center; /* responsive size via variable */ width: var(--loader-logo-size); height: var(--loader-logo-size); position:relative; margin-bottom:0.5rem; min-height:var(--loader-logo-size); }
+
+/* Compact logo container: apply 10px sizing/margins when compact modifier is set */
+/* Compact mode via BEM modifier class */
+.beslock-loader--compact .beslock-loader__wrap,
+.beslock-loader__wrap--compact,
+.beslock-loader.compact .beslock-loader__wrap {
+  --loader-logo-size: 10px !important;
+  width: 10px !important;
+  height: 10px !important;
+  min-height: 10px !important;
+  margin: 10px !important;
+  padding: 10px !important;
+}
+.beslock-loader__img{ width:100%; height:100%; display:block; object-fit:contain; /* no decorative background; show logo natural */
+  opacity: 0; transform: scale(.92); animation: loader-reveal 1.2s cubic-bezier(.22,.9,.41,1) forwards; }
+/* remove decorative pseudo-element and pulse: keep only the logo image */
+.beslock-loader__wrap::before{ display:none; }
+.beslock-loader__pulse{ display:none; }
+  /* Loader caption placed under logo: 25% of logo size */
+  .beslock-loader .beslock-loader__text{
+  margin-top: 0.4rem;
+  color: var(--beslock-green) !important;
+  font-weight: 400;
+  line-height: 1;
+  font-family: inherit;
+  font-size: 4rem !important;
+  text-align: center;
+  display: block;
+  letter-spacing: 0.02em;
+  transform: translateY(var(--beslock-loader-offset, 0px)) !important;
+}
+
+/* Mobile override: ensure text sits below the logo, smaller and positioned 25% below center */
+@media (max-width: 599px) {
+  .beslock-loader { align-items: center; justify-content: center; }
+  .beslock-loader .beslock-loader__text{
+    /* mobile: override offset to 0 so text sits under logo */
+    --beslock-loader-offset: 0px;
+    transform: translateY(var(--beslock-loader-offset)) !important;
+    margin-top: 6px !important; /* small gap below the logo on mobile */
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important; /* remove any padding on mobile */
+    font-size: 1.35rem !important; /* mobile requested size */
+    position: relative !important;
+    top: auto !important;
+  }
+}
+
+/* Desktop override: match slide secondary text size on larger viewports
+   (use same clamp as .slide-subtitle at >=768px) */
+@media (min-width: 768px) {
+  .beslock-loader .beslock-loader__text {
+    font-size: 2.5rem !important;
+  }
+}
+/* Desktop (>=600px): small vertical offset from centered baseline */
+@media (min-width: 600px) {
+  .beslock-loader { align-items: center; justify-content: center; }
+  /* Center loader caption vertically on desktop */
+  .beslock-loader { --beslock-loader-offset: 0px; --beslock-text-top: 60vh; }
+  /* Logo remains centered via flex; text positioned absolutely at 60vh */
+  .beslock-loader { position: fixed; }
+  .beslock-loader .beslock-loader__text {
+    position: absolute;
+    left: 50%;
+    top: var(--beslock-text-top, 60vh);
+    transform: translateX(-50%) translateY(var(--beslock-loader-offset)) !important;
+    margin-top: 0; /* reset flow margin */
+    padding-inline: 0.25rem; /* avoid text touching edges */
+    z-index: 10000;
+    pointer-events: none;
+  }
+}
+@keyframes loader-pulse{0%{transform:scale(.95);opacity:.9}50%{transform:scale(1.08);opacity:1}100%{transform:scale(.95);opacity:.9}}
+
+@keyframes loader-reveal {
+  0% { transform: scale(.92); opacity: 0; }
+  60% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes loader-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.hero-viewport{ position:relative; width:100%; height:100%; opacity:0; transition:opacity 420ms ease; }
+.beslock-hero.ready .hero-viewport{ opacity:1; }
+.hero-slides{ position:absolute; inset:0; width:100%; height:100%; overflow:hidden; }
+.hero-slide{ position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 1000ms cubic-bezier(.22,.9,.41,1); pointer-events:none; will-change:opacity; display:flex; align-items:center; justify-content:center; }
+.hero-slide.is-active{ opacity:1; pointer-events:auto; z-index:2; }
+.slide-inner{ position:relative; width:100%; height:100%; touch-action:pan-y; overflow:hidden; display:flex; align-items:stretch; justify-content:center; }
+.slide-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; background:#000; display:block; z-index:0 }
+.slide-overlay{
+  position:absolute;
+  right:0;
+  left:auto;
+  top:50%;
+  /* Align overlay to the right edge of the hero clip and preserve aspect ratio */
+  height:100%;
+  width:auto;
+  max-width:60%;
+  max-height:100%;
+  object-fit:contain;
+  object-position:right center;
+  transform:translateY(-50%) scale(1);
+  opacity:0;
+  z-index:2; /* overlay images should sit above the dim layer */
+  pointer-events:none;
+  transition:opacity 700ms cubic-bezier(.22,.9,.41,1), transform 900ms ease-out;
+}
+.slide-overlay.overlay--visible{
+  opacity:0.8;
+  transform:translateY(-50%) scale(1.02);
+}
+
+/* Dim layer placed over the video but beneath overlay images and content
+   Improves contrast for white text without altering overlay artwork. */
+.slide-dim {
+  position: absolute;
+  inset: 0; /* cover the video area */
+  background: rgba(0,0,0,0.28); /* increased opacity to improve white text contrast */
+  z-index: 1; /* sit above video (z=0) and below .slide-overlay (z=2) */
+  pointer-events: none;
+  transition: background 260ms ease, opacity 260ms ease;
+}
+/* --------------------------------------------------------------------------
+   OVERLAY-ONLY RULES (IMPORTANT)
+   - REGLA: Los vídeos (`.slide-video`) están perfectamente posicionados y
+     escalados en todas las resoluciones. NO MODIFICAR NINGUNA REGLA DE VIDEO.
+   - ESTE BLOQUE solo afecta a las overlays (.slide-overlay) y sus breakpoints.
+   - Ajusta `max-width` y `opacity` aquí si necesitas cambios visuales.
+   -------------------------------------------------------------------------- */
+
+/* Mobile-first: base (no media query). Keep overlays visible but constrained */
+.slide-overlay {
+  /* don't touch video sizing: operate only on overlay container */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 260ms ease, transform 260ms cubic-bezier(.22,.9,.41,1);
+  will-change: opacity, transform;
+  max-width: 80%;
+}
+.slide-overlay.overlay--visible {
+  opacity: 0.8;
+}
+
+/* Small phones / landscape: slightly narrower overlays */
+@media (min-width: 480px) {
+  .slide-overlay { max-width: 68%; }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  .slide-overlay { max-width: 52%; }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .slide-overlay { max-width: 44%; }
+}
+
+/* Wide desktop: keep overlays from growing excessively */
+@media (min-width: 1440px) {
+  .slide-overlay { max-width: 36%; }
+}
+
+/* Utility: immediate hide (no transition) — useful if JS needs to swap instantly) */
+.slide-overlay.overlay--hidden-instant { transition: none !important; opacity: 0 !important; transform: translateY(-50%) scale(1) !important; }
+.slide-content{ position:absolute; left:calc(3rem + 100px); transform:none; bottom:12vh; text-align:left; z-index:3; padding:0 1.25rem; width:min(92%,900px); pointer-events:none; }
+.hero__title{ margin:0; color:#fff; font-weight:700; line-height:1.02; font-size:clamp(3.5rem,8.2vw,5rem); text-shadow:0 6px 22px rgba(0,0,0,0.65); will-change:transform,opacity; }
+.hero__subtitle{ margin:.5rem 0 0; color:rgba(255,255,255,0.92); font-weight:400; font-size:clamp(1.26rem,5.04vw,1.54rem); text-shadow:0 4px 16px rgba(0,0,0,0.55); will-change:opacity,transform; }
+.hero-dots{ position:absolute; left:50%; transform:translateX(-50%); bottom:6vh; display:flex; gap:12px; z-index:5; align-items:center; justify-content:center }
+.hero-dot{ appearance:none; width:8px; height:8px; border-radius:999px; background:rgba(255,255,255,0.18); border:none; transition:transform 260ms cubic-bezier(.22,.9,.41,1), background 260ms, box-shadow 260ms, opacity 260ms; opacity:.8; cursor:pointer }
+.hero-dot:hover,.hero-dot:active{ transform:scale(1.4); }
+.hero-dot.is-active{ transform:scale(1.5); background:rgba(255,255,255,1); box-shadow:0 0 14px rgba(255,255,255,0.18); opacity:1 }
+.hero-dot:focus-visible{ outline:2px solid rgba(255,255,255,0.9); outline-offset:4px }
+@media(min-width:768px){ .hero__title{ font-size:clamp(3.5rem,8.2vw,5rem); } .hero__subtitle{ font-size:clamp(1.4rem,2.94vw,1.82rem); } }
+
+/* Elegant entrance animations for slide title/subtitle when slide becomes active */
+.hero-slide .hero__title, .hero-slide .hero__subtitle{ opacity:0; transform:translateY(12px) scale(.98); }
+.hero-slide.is-active .hero__title{ animation: slide-title-in 820ms cubic-bezier(.22,.9,.41,1) forwards; }
+.hero-slide.is-active .hero__subtitle{ animation: slide-subtitle-in 920ms cubic-bezier(.22,.9,.41,1) 120ms forwards; }
+
+@keyframes slide-title-in{
+  0%{ opacity:0; transform:translateY(14px) scale(.98); filter: blur(2px); }
+  60%{ opacity:1; transform:translateY(-4px) scale(1.02); filter: blur(0); }
+  100%{ opacity:1; transform:translateY(0) scale(1); filter: none; }
+}
+@keyframes slide-subtitle-in{
+  0%{ opacity:0; transform:translateY(10px); }
+  100%{ opacity:1; transform:translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE-FIRST: Center H1 up to 900px
+   - REGLA: Para resoluciones hasta 900px, el H1 (slide-title) debe estar
+     totalmente centrado. No tocar reglas de vídeo (.slide-video).
+   - Este bloque asegura centrado del título y la caja de contenido hasta 900px.
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .slide-content {
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+    padding: 0 1rem !important;
+    text-align: center !important;
+    bottom: 12vh !important;
+  }
+  .hero__title, .hero__subtitle {
+    text-align: center !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* end hero styles */
+/* ===== Ajuste específico: para resoluciones >600px posicionar el H1/slide-title
+   con su centro en 40vw y aumentar el tamaño al 200% (aplica al título sobre
+   cada clip) ===== */
+@media (min-width: 600px) {
+  .slide-content {
+    position: absolute !important;
+    left: 40vw !important; /* punto central del bloque en 40% del viewport */
+    transform: translateX(-50%) !important; /* centra el bloque en 40vw */
+    bottom: 12vh !important; /* mantener separación vertical similar */
+    width: min(76%, 760px) !important;
+    padding: 0 1rem !important;
+    text-align: center !important;
+  }
+
+  /* Duplica visualmente los tamaños del título y subtítulo sobre cada clip */
+  .hero__title {
+    font-size: clamp(3.5rem,8.2vw,5rem) !important;
+    line-height: 1.02 !important;
+  }
+  .hero__subtitle {
+    font-size: clamp(2.1rem, 8.5vw, 2.7rem) !important; /* ajustado: ligeramente más pequeño */
+  }
+}
+
+/* Aumentar especificidad para el H1 que se genera sobre cada clip (slide-title) */
+@media (min-width: 600px) {
+  .hero-slide .slide-content { left: 40vw !important; transform: translateX(-50%) !important; }
+  .hero-slide .hero__title {
+    font-size: clamp(3.5rem,8.2vw,5rem) !important;
+    line-height: 1.02 !important;
+    text-align: center !important;
+  }
+  .hero-slide .hero__subtitle {
+    font-size: clamp(2.1rem, 8.5vw, 2.7rem) !important;
+    text-align: center !important;
+  }
+  /* (desktop) no vertical override here - mobile will receive the padding-top to avoid header overlap */
+}
+
+/* Mobile <=600px: ensure slide-content sits lower to avoid header overlap
+   This block replaces the earlier inline rule and is placed after the
+   900px centering block so it takes precedence for narrow viewports. */
+@media (max-width: 600px) {
+  .slide-content {
+    left: 1rem !important;
+    right: 1rem !important;
+    width: auto !important;
+    padding: 0 1rem !important;
+     /* Move the visible slide content down to avoid header overlap.
+       Using transform preserves layout (no top/height change) and
+       won't affect absolute positioning anchored by bottom. */
+     transform: translateY(68px) !important;
+     will-change: transform;
+  }
+}
+
+.site-footer .footer-copy {
+  margin-top: 0.6rem;
+  color: var(--beslock-text-sec);
+  font-size: 0.95rem;
+}
+
+/* Slide crossfade base rules: ensure slides overlap and crossfade smoothly
+   without using display:none so there is never a black frame between slides. */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  will-change: opacity;
+  z-index: 0;
+}
+.hero-slide {
+  /* Force GPU compositing to avoid painting flashes on some browsers/devices */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.hero-slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+.hero-slide.is-exiting {
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ========= PRODUCT CARD: ENFORCE VERTICAL LAYOUT & MARGINS ==========
+   Ensure `.product-card__content` uses flex column layout and explicit
+   margins to guarantee visible spacing between title → price → actions.
+   This block is appended at the end to take precedence over earlier rules.
+*/
+.product-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 1.2rem 1.5rem;
+  padding-bottom: 3.6rem; /* reserve space for absolute-positioned actions */
+}
+
+/* Ensure children occupy full width so vertical margins separate blocks */
+.product-card__content > * { width: 100%; }
+
+/* Strong, visible spacing */
+.product-card__title { margin: 0 0 16px 0; }
+.product-card__price { margin: 0 0 18px 0; }
+.product-card__actions { margin-top: 12px; display:flex; justify-content:center; gap:10px; }
+
+/* Defensive: clear any browser-set block margins on h3 */
+.product-card__content h3 { margin-block-start: 0; margin-block-end: 0; }
+
+/* =========================
+   CART-ONLY: Empty cart product-card spacing overrides
+   Scope: .beslock-cart--empty — DO NOT modify global product-card rules
+   Placed at file end to ensure cascade priority for cart page only.
+   ========================= */
+.beslock-cart--empty .product-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px; /* cart-only breathing room */
+}
+.beslock-cart--empty .product-card__title {
+  margin-bottom: 14px;
+}
+.beslock-cart--empty .product-card__price {
+  margin-bottom: 16px;
+}
+.beslock-cart--empty .product-card__actions {
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+/* =========================
+   CART-ONLY: Premium UI tweaks for empty cart
+   Scope: .beslock-cart--empty — do NOT touch global product-card rules
+   ========================= */
+.beslock-cart--empty .product-card__price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.beslock-cart--empty .product-card__actions {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+.beslock-cart--empty .product-card__btn--link {
+  flex: 1;
+  max-width: 220px;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 10px 14px;
+  transition: all 0.25s ease;
+}
+
+.beslock-cart--empty .product-card__btn--link:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+.beslock-cart--empty .product-card__btn--link:active {
+  transform: scale(0.98);
+}
+
+.beslock-cart--empty .product-card__actions a:last-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
+.beslock-cart--empty .product-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.beslock-cart--empty .product-card:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   FRONT-PAGE: products-portfolio scoped improvements
+   Scoped to `.products-portfolio` so only homepage/product grid is affected.
+   Keeps visual parity with cart styles while not touching global rules.
+   ========================= */
+.products-portfolio {
+  margin-top: 24px;
+}
+
+.products-portfolio .product-card__title {
+  margin-bottom: 8px;
+}
+
+.products-portfolio .product-card__price {
+  margin-bottom: 12px;
+}
+
+.products-portfolio .product-card__desc {
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.products-portfolio .product-card__actions {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.products-portfolio .product-card__btn--link,
+.products-portfolio .product-card__actions a:last-child {
+  height: 44px;
+}
+
+.products-portfolio .product-card__btn--link {
+  padding: 0 16px;
+}
+
+.products-portfolio .product-card__actions a:last-child {
+  width: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.products-portfolio .product-card__btn,
+.products-portfolio .product-card__btn--link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   UNIFY: global price style and button sizing/alignment
+   These are conservative global rules to keep visual consistency across
+   front page and cart while cart-specific overrides remain more specific.
+*/
+.product-card__price {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.product-card__btn--link,
+.product-card__actions a:last-child {
+  height: 44px;
+}
+.product-card__btn--link { padding: 0 16px; }
+.product-card__actions a:last-child { width: 44px; min-width: 44px; }
+
+.product-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.product-card__btn,
+.product-card__btn--link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-card__title { margin-bottom: 6px; }
+.product-card__price { margin-bottom: 10px; }
+
+/* =========================
+   STRONG: product-card consistency overrides
+   High-specificity overrides scoped to `.product-card` to standardize
+   buttons, spacing and typography across front page and cart.
+   These are intentionally specific and use !important where necessary
+   to overcome third-party or theme rules. Place at file end.
+*/
+.product-card .product-card__btn--link,
+.product-card .product-card__actions a:last-child {
+  height: 44px !important;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.product-card .product-card__actions a:last-child {
+  width: 44px !important;
+  min-width: 44px !important;
+}
+
+.product-card .product-card__actions {
+  display: flex !important;
+  gap: 10px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-top: 12px !important;
+}
+
+.product-card .product-card__desc {
+  max-width: 260px !important;
+  margin: 0 auto !important;
+  line-height: 1.5 !important;
+}
+
+.product-card .product-card__price {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  margin-top: 6px !important;
+  margin-bottom: 12px !important;
+  letter-spacing: 0.2px !important;
+}
+
+.product-card .product-card__content {
+  padding-bottom: 1.5rem !important;
+}
+
+/* =========================
+   GLOBAL: unify product-card visuals to match cart (premium)
+   Applied to `.product-card` selectors. Kept conservative but specific
+   and appended at file end so it's the final authority.
+*/
+.product-card .product-card__price {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  margin-top: 6px;
+  margin-bottom: 14px;
+  letter-spacing: 0.3px;
+}
+
+.product-card .product-card__title {
+  margin-bottom: 6px;
+}
+
+.product-card .product-card__desc {
+  max-width: 260px;
+  margin: 0 auto 18px auto;
+  line-height: 1.55;
+}
+
+.product-card .product-card__btn--link {
+  height: 46px !important;
+  padding: 0 18px !important;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.product-card .product-card__actions a:last-child {
+  height: 46px !important;
+  width: 46px !important;
+  min-width: 46px;
+}
+
+.product-card .product-card__actions {
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.product-card .product-card__content {
+  padding-bottom: 1.8rem !important;
+}
+
+/* =========================
+   HIGH-SPECIFICITY FRONT-PAGE OVERRIDES
+   Force rules to win against later-loaded/theme styles for .products-portfolio
+   Only targets product cards in the front-page products grid.
+*/
+body .products-portfolio .product-card .product-card__title {
+  margin-bottom: 6px !important;
+}
+
+body .products-portfolio .product-card .product-card__price {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 14px !important;
+  letter-spacing: 0.3px !important;
+}
+
+body .products-portfolio .product-card .product-card__desc {
+  max-width: 260px !important;
+  margin: 0 auto 18px auto !important;
+  line-height: 1.55 !important;
+}
+
+body .products-portfolio .product-card .product-card__btn--link {
+  height: 46px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+body .products-portfolio .product-card .product-card__actions a:last-child {
+  height: 46px !important;
+  width: 46px !important;
+  min-width: 46px !important;
+}
+
+body .products-portfolio .product-card .product-card__actions {
+  margin-top: 10px !important;
+  gap: 10px !important;
+}
+
+body .products-portfolio .product-card .product-card__content {
+  padding-bottom: 1.8rem !important;
+}
+/* =========================
+   PRODUCT-CARD: prevent description ↔ buttons overlap
+   Scoped to `.product-card` and appended at file end. Uses conservative
+   !important only where necessary to overcome legacy/plugin rules.
+*/
+.product-card .product-card__desc {
+  margin-bottom: 16px !important;
+  position: relative;
+  z-index: 1;
+}
+.product-card .product-card__price,
+.product-card .product-card__title {
+  position: relative;
+  z-index: 1;
+}
+.product-card .product-card__content {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.product-card .product-card__actions {
+  position: relative;
+  margin-top: 12px !important;
+  z-index: 2;
+}
+
+/* CART-ONLY: fix overlapping buttons and enforce clean vertical flow
+   Scoped to `.beslock-cart--empty` so homepage/global `.product-card` remains untouched. */
+.beslock-cart--empty .product-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.beslock-cart--empty .product-card__title,
+.beslock-cart--empty .product-card__price,
+.beslock-cart--empty .product-card__actions {
+  width: 100%;
+}
+
+.beslock-cart--empty .product-card__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  position: static; /* ensure not absolute */
+}
+
+.beslock-cart--empty .product-card__btn,
+.beslock-cart--empty .product-card__btn--link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Prevent absolute/float rules from collapsing buttons inside cart */
+.beslock-cart--empty .product-card__actions * {
+  position: static !important;
+  float: none !important;
+}
+
+/* ===================== Features module styles ===================== */
+.features-wrapper { position: relative; margin-top: 0.8rem; }
+.features-list { display: flex; gap: 1rem; align-items: flex-start; justify-content: flex-start; flex-wrap: nowrap; }
+.features-list .feature { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; max-width: 120px; }
+.features-list .feature img { width: 100%; height: 100%; object-fit: contain; opacity: 0.92; }
+/* Icon wrapper: use flexbox to center the SVG glyph inside its fixed box.
+  This helps when SVG viewBoxes include internal whitespace—the visible
+  glyph will be horizontally and vertically centered relative to the text. */
+.feature__icon { display: inline-flex; align-items: center; justify-content: center; width: 6rem; height: 6rem; flex: 0 0 auto; }
+.feature__icon img { max-width: 86%; max-height: 86%; width: auto; height: auto; display: block; object-fit: contain; object-position: center center; filter: brightness(0) invert(1); }
+.feature__text { font-size: 0.95rem; color: rgba(7,5,5,0.9); text-align: center; line-height: 1.15; margin: 0; }
+
+/* Hidden by default (visibility controlled by JS via .feature--visible) */
+.feature { opacity: 0; transform: translateY(8px); transition: opacity 400ms cubic-bezier(.22,.9,.41,1), transform 400ms cubic-bezier(.22,.9,.41,1); }
+.feature--visible { opacity: 1 !important; transform: translateY(0) !important; }
+
+/* Fade-out state for all features (no vertical movement on exit) */
+.features--fading .feature { transition: opacity 700ms ease; opacity: 0 !important; transform: translateY(0) !important; }
+
+/* Responsive: MOBILE behaviour (<=600px)
+   - H1/H2 should be at top (we position .slide-content accordingly)
+   - features aligned left, below H2; all 5 visible stacking horizontally if space allows
+   - ensure no internal scroll and items remain visible
+*/
+@media (max-width: 600px) {
+  /* Mobile: place titles at top of hero, centered, and features vertically left-aligned
+     Use higher-specificity selectors to override desktop/legacy rules. */
+  .hero-slide .slide-content {
+    position: absolute !important;
+    top: 1.2rem !important;
+    left: 50% !important;
+    /* preserve horizontal centering and add vertical offset to avoid header overlap */
+    transform: translateX(-50%) translateY(68px) !important;
+    width: calc(100% - 2rem) !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 0 1rem !important;
+  }
+
+  /* Features block sits 30px below the subtitle (H2) */
+  .hero-slide .features-wrapper {
+    position: relative;
+    margin-top: 30px; /* moved down 20px from previous 10px */
+    width: 100%;
+  }
+
+  .hero-slide .features-wrapper .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* increased 10px */
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: visible;
+    width: 100%;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 100%;
+    gap: 6px;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 3px;
+    opacity: 0.98;
+    transform: translateY(-3px); /* subir el icono 3px */
+  }
+  .hero-slide .features-wrapper .feature__icon { width:50px; height:50px; }
+  .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1); }
+
+  .hero-slide .features-wrapper .feature__text {
+    font-size: 0.96rem;
+    color: #ffffff; /* match H1/H2 white */
+    line-height: 1.18;
+    margin: 0;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    align-items: flex-start; /* asegurar alineación a la izquierda */
+    text-align: left;
+  }
+
+  .hero-slide .features-wrapper .feature__title {
+    font-weight: 800;
+    color: #ffffff;
+    display: block;
+    font-size: 1.35rem;
+  }
+  .hero-slide .features-wrapper .feature__subtitle {
+    color: rgba(255,255,255,0.92);
+    font-weight: 500;
+    display: block;
+    font-size: 1.2rem;
+  }
+  .hero-slide .features-wrapper .feature__text { opacity: 0.92; }
+}
+
+/* Desktop: make feature texts white and match drawer sizes */
+@media (min-width: 600px) {
+  .hero-slide .features-wrapper .feature__text {
+    color: #ffffff;
+    font-size: 1.8rem;
+    line-height: 1.18;
+    text-align: left;
+  }
+
+  .hero-slide .features-wrapper .feature__title {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+    text-align: left;
+  }
+
+  .hero-slide .features-wrapper .feature__subtitle {
+    color: rgba(255,255,255,0.92);
+    font-size: 1.45rem;
+    font-weight: 500;
+    display: block;
+    text-align: left;
+  }
+
+  /* keep icons white and sized correctly on desktop */
+  .hero-slide .features-wrapper .feature__icon { width: 6rem; height: 6rem; }
+  .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1); }
+}
+
+/* Desktop: center texts under the icon (vertical stack), keep mobile untouched */
+@media (min-width: 600px) {
+  .hero-slide .features-wrapper .features-list .feature {
+    align-items: center; /* center icon + text horizontally */
+    text-align: center;
+  }
+
+  .hero-slide .features-wrapper .feature__text {
+    color: #ffffff;
+    line-height: 1.18;
+    text-align: left;
+  }
+}
+
+/* Ensure ALL desktop (>=600px) devices use the desktop feature rules - stronger override
+   This covers cases where other breakpoints may override visual behaviour. */
+@media (min-width: 600px) {
+  .hero-slide .features-wrapper,
+  .hero-slide .features-wrapper .features-list,
+  .hero-slide .features-wrapper .features-list .feature,
+  .hero-slide .features-wrapper .feature__icon,
+  .hero-slide .features-wrapper .feature__icon img,
+  .hero-slide .features-wrapper .feature__text,
+  .hero-slide .features-wrapper .feature__title {
+    color: #ffffff;
+    /* keep default text sizing for features on desktop */
+    text-align: left;
+  }
+    gap: 7rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature {
+    max-width: 220px; /* increased so title can stay on a single line on desktop */
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-slide .features-wrapper .feature__icon { width: 6rem; height: 6rem; }
+  .hero-slide .features-wrapper .feature__icon img { filter: brightness(0) invert(1); }
+
+  .hero-slide .features-wrapper .feature__text { font-size: 1.8rem; line-height: 1.18; }
+  .hero-slide .features-wrapper .feature__title { font-size: 1.8rem; font-weight:700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hero-slide .features-wrapper .feature__subtitle { font-size: 1.45rem; font-weight:500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* Desktop behaviour: position features absolute and center using the same horizontal
+   reference as H1 (left:40vw; translateX(-50%)) and display horizontally */
+@media (min-width: 600px) {
+  /* Position the features block at the top of each slide (centered)
+     so it visually sits inside the hero's top area. */
+    /* Center features horizontally relative to the H1 anchor (40vw) on desktop.
+      Increase vertical offset and block internal spacing by 1.5x so the block
+      appears lower and slightly taller (desktop only). */
+    /* Keep features in normal flow on desktop so they sit beneath slide text.
+       This avoids placing the block into the adjacent 'black box' area. */
+    .hero-slide .features-wrapper { position: relative; top: auto; left: auto; transform: translateY(60px); width: 100%; z-index:4; padding-top: calc(0.8rem * 1.0); }
+    /* Desktop features vertical offset controlled by `--hero-features-offset` (default 105px) */
+  .hero-slide .features-list { justify-content: center; gap: 7rem; }
+  .hero-slide .features-list .feature { max-width: 220px; }
+  .hero-slide .features-list .feature__text { color: #ffffff; text-align: center; }
+  .hero-slide .features-list .feature__title { color: #ffffff; font-weight:700; display:block; width:100%; }
+  .hero-slide .features-list .feature__subtitle { color: rgba(255,255,255,0.92); font-weight:500; display:block; width:100%; }
+}
+
+/* Responsive: si quieres cambiar el ratio en pantallas grandes */
+@media (min-width: 900px) {
+  .footer-logo {
+    /* ejemplo: en desktop el footer usa 40% pero del header mayor */
+    height: calc(var(--site-logo-height, 32px) * 0.4);
+  }
+}
+
+/* Final enforcement: ensure desktop features are centered and icons are 50px
+   placed at end to guarantee precedence without using !important */
+@media (min-width: 600px) {
+  .hero-slide.hero-slide .features-wrapper.features-wrapper .features-list.features-list .feature.feature {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-slide.hero-slide .features-wrapper.features-wrapper .feature__text.feature__text,
+  .hero-slide.hero-slide .features-wrapper.features-wrapper .feature__title.feature__title,
+  .hero-slide.hero-slide .features-wrapper.features-wrapper .feature__subtitle.feature__subtitle {
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .hero-slide.hero-slide .features-wrapper.features-wrapper .feature__icon.feature__icon {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .hero-slide.hero-slide .features-wrapper.features-wrapper .features-list.features-list .feature.feature img {
+    width: 6rem;
+    height: 6rem;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Consolidated feature overrides
+   - Mobile (<=600px): left-aligned vertical list, 36px icons
+   - Desktop (>=600px): horizontal list, centered texts, 50px icons
+   This replaces the previous duplicated high-specificity block with
+   a minimal, clear, and ordered set of rules to avoid conflicts.
+ ------------------------------------------------------------------ */
+
+@media (max-width: 600px) {
+  .hero-slide .features-wrapper .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* increased 10px */
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 100%;
+    gap: 6px;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature img,
+  .hero-slide .features-wrapper .feature__icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .hero-slide .features-wrapper .feature__text {
+    font-size: 0.96rem;
+    line-height: 1.18;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    text-align: left;
+    opacity: 0.92;
+    color: #ffffff;
+  }
+}
+
+@media (min-width: 600px) {
+  .hero-slide .features-wrapper .features-list {
+    display: flex;
+    flex-direction: row;
+    gap: 7rem;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .hero-slide .features-wrapper .features-list .feature {
+    max-width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+  }
+
+  .hero-slide .features-wrapper .feature__icon,
+  .hero-slide .features-wrapper .features-list .feature img {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .hero-slide .features-wrapper .feature__text,
+  .hero-slide .features-wrapper .feature__title,
+  .hero-slide .features-wrapper .feature__subtitle {
+    text-align: center;
+    color: #ffffff;
+  }
+}
+
+/* Clean positioning for desktop features block
+   Placed at file end so it wins over earlier conflicting rules without
+   using `!important`. Ensures the JS relocation (`relocateFeaturesForBreakpoint`) 
+   can make the block a direct child of `.hero-slide` and this selector will apply.
+*/
+@media (min-width: 600px) {
+  .hero-slide > .features-wrapper {
+    position: absolute;
+    top: calc(var(--hero-features-offset, 105px) + 60px);
+    left: 40vw;
+    transform: translateX(-50%);
+    width: auto;
+    z-index: 4;
+    padding-top: 0;
+  }
+}
+
+/* Scale hero content to 75% for intermediate widths (600px - 1023px)
+   Keep elements at the same relative positions as desktop but scaled so
+   text, icons and overlays visually match at 75% size. Adjust top offsets
+   accordingly to preserve alignment with the hero title anchor. */
+@media (min-width: 600px) and (max-width: 1023px) {
+  /* Scale slide content (title, subtitle, CTA) */
+  .hero-slide > .slide-inner > .slide-content {
+    transform: scale(0.75);
+    transform-origin: center top;
+    /* keep centered under viewport */
+    left: 50%;
+    transform: translateX(-50%) scale(0.75);
+    width: calc(100% - 2rem);
+  }
+
+  /* Scale the features block and nudge its vertical offset proportionally.
+     When the features-wrapper lives *inside* the .slide-content (which it
+     does for widths <1024px) we center it via margin auto and apply only
+     a scale transform so its visual center remains aligned with the text. */
+  .slide-content .features-wrapper,
+  .hero-slide .slide-content .features-wrapper {
+    transform: translateY(-15px) scale(0.75);
+    transform-origin: center top;
+    margin: 0 auto;
+    width: auto;
+    padding-top: 0;
+    top: auto; /* ensure no absolute offset leaks */
+    left: auto;
+  }
+
+  /* If for any reason the features-wrapper is a direct child of .hero-slide
+     (edge cases), keep a fallback that keeps it centered using translateX. */
+  .hero-slide > .features-wrapper {
+    transform: translateX(-50%) translateY(-15px) scale(0.75);
+    transform-origin: center top;
+    left: 50%;
+    top: calc((var(--hero-features-offset, 105px) + 60px) * 0.75);
+    width: auto;
+    padding-top: 0;
+  }
+
+  /* Reduce icon and text sizes proportionally to avoid subpixel layout issues */
+  .hero-slide .features-wrapper .feature__icon,
+  .hero-slide .features-wrapper .features-list .feature img {
+    width: calc(6rem * 0.75);
+    height: calc(6rem * 0.75);
+  }
+
+  .hero-slide .features-wrapper .feature__text,
+  .hero-slide .features-wrapper .feature__title,
+  .hero-slide .features-wrapper .feature__subtitle {
+    font-size: calc(1.8rem * 0.75);
+    line-height: 1.18;
+  }
+
+  /* Increase the feature subtitle by 4pt at this breakpoint per request. */
+  .hero-slide .features-wrapper .feature__subtitle {
+    font-size: calc(1.8rem * 0.75 + 4pt);
+  }
+
+  /* Increase the feature title by 4pt at this breakpoint per request. */
+  .hero-slide .features-wrapper .feature__title {
+    font-size: calc(1.8rem * 0.75 + 4pt);
+    font-weight: 700;
+  }
+
+  /* Increase only the feature descriptive text by 3pt at this breakpoint
+     to match the designer request. We add the 3pt using `calc()` so the
+     relative scaling remains intact. */
+  .hero-slide .features-wrapper .feature__text {
+    font-size: calc(1.8rem * 0.75 + 3pt);
+  }
+
+  /* Keep features horizontally centered like desktop */
+  .hero-slide .features-wrapper .features-list {
+    gap: calc(7rem * 0.75);
+    justify-content: center;
+  }
+
+  /* Slight vertical adjustment so scaled content doesn't overlap header */
+  .hero-viewport { padding-top: calc(1rem * 0.75); }
+
+  /* Reduce hero subtitle by 4pt at this breakpoint per design request. We
+     subtract 4pt from the same clamp used for larger viewports so sizing
+     remains proportional while honoring the requested reduction. */
+  .hero__subtitle,
+  .hero-slide .hero__subtitle {
+    font-size: calc(clamp(2.1rem, 8.5vw, 2.7rem) - 4pt) !important;
+    line-height: 1.02;
+  }
+}
+
+/* Mobile overrides placed at EOF so they take precedence for <=600px
+   without using !important. Keeps mobile-only adjustments isolated. */
+@media (max-width: 600px) {
+  .hero-slide .features-wrapper .feature__title {
+    font-size: 1.35rem;
+  }
+
+/* Temporary safety: ensure loader never blocks UI if JS fails */
+.beslock-loader {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+    font-weight: 800;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  .hero-slide .features-wrapper .feature__subtitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}

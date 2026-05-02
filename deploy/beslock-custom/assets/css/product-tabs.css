@@ -1,0 +1,48 @@
+/* Mobile-first product tabs: Especificaciones | Reviews */
+.product-tabs {
+  margin-top: 16px;
+}
+.product-tabs__nav {
+  display: flex;
+  padding: 0 12px;
+  border-bottom: 1px solid #e6e6e6;
+  gap: 8px;
+  align-items: center;
+}
+.product-tabs__tab {
+  padding: 12px 8px;
+  font-size: 15px;
+  line-height: 1;
+  background: transparent;
+  border: 0;
+  color: #6b6b6b;
+  border-bottom: 3px solid transparent;
+}
+.product-tabs__tab:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(15,98,254,0.12);
+}
+.product-tabs__tab--active {
+  color: #0f62fe;
+  border-bottom-color: #0f62fe;
+  font-weight: 600;
+}
+.product-tabs__panel {
+  padding: 14px 12px 20px;
+  background: #fff;
+  margin-top: 0;
+}
+.product-tabs__panel[hidden] { display: none; }
+
+/* small utilities */
+.product-specs-list { padding-left: 18px; margin: 0; }
+.product-specs-list li { margin-bottom: 8px; }
+.product-reviews-placeholder p { margin: 0 0 12px 0; color: #333333; }
+
+/* Visually hidden helper for headings */
+.visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+
+@media (min-width: 768px) {
+  .product-tabs__nav { max-width: 720px; margin: 0 auto; }
+  .product-tabs__panel { max-width: 720px; margin: 0 auto; }
+}
