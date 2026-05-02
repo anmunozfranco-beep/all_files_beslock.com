@@ -42,6 +42,46 @@ body {
   font-size: 1rem;
 }
 
+/* ========== BASE BUTTON SYSTEM ========== */
+/* Provide a lightweight, theme-controlled button base so components using
+   the `.btn` utility render consistently even if parent theme styles are
+   not present. Keep this minimal and reusable across the site. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Primary style for product-card links; leverages theme variable for brand color. */
+.product-card__btn--link {
+  background: var(--beslock-green);
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  opacity: 0.95;
+  box-shadow: 0 6px 18px rgba(3,69,38,0.08);
+}
+.product-card__btn--link:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+  box-shadow: 0 10px 28px rgba(3,69,38,0.12);
+}
+.product-card__btn--link:active { transform: translateY(0); }
+
+
 /* ========== CONTENEDOR UNIVERSAL ========== */
 .u-container {
   width: 100%;

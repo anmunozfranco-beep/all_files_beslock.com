@@ -41,6 +41,23 @@ add_action( 'wp_enqueue_scripts', function() {
   wp_add_inline_style( 'beslock-main-style', $inline_header_fallback );
 
   /* -------------------------------
+   * CSS: Beslock cart empty (mobile-first)
+   * Load only on the WooCommerce cart page to avoid unnecessary payload.
+   * Depends on `beslock-main-style` and uses filemtime for cache-busting.
+   * ------------------------------- */
+  $cart_css_path = $theme_dir_path . '/assets/css/beslock-cart-empty.css';
+  if ( file_exists( $cart_css_path ) ) {
+    if ( function_exists( 'is_cart' ) && is_cart() ) {
+      wp_enqueue_style(
+        'beslock-cart-empty',
+        $theme_dir_uri . '/assets/css/beslock-cart-empty.css',
+        array( 'beslock-main-style' ),
+        filemtime( $cart_css_path )
+      );
+    }
+  }
+
+  /* -------------------------------
    * Bootstrap Icons (CDN) - GLOBAL
    * Cargado de forma global en frontend para uso en header/menu/modales
    * Versión: 1.13.1 (sin SRI por flujo de desarrollo)
