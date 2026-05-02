@@ -213,6 +213,25 @@ add_action( 'wp_enqueue_scripts', function() {
     wp_enqueue_script( 'beslock-product-rotator-js', $theme_dir_uri . '/assets/js/product-rotator.js', [ 'beslock-main-js' ], filemtime( $product_rotator_js ), true );
   }
 
+  /* -------------------------------
+   * Ensure product-card related styles used on the homepage are available
+   * on the cart page so product cards render identically. We DO NOT copy
+   * or recreate styles — we enqueue the existing files when viewing the cart.
+   * ------------------------------- */
+  $product_card_alt = $theme_dir_path . '/assets/css/product-card-alt.css';
+  if ( file_exists( $product_card_alt ) ) {
+    if ( function_exists( 'is_cart' ) && is_cart() ) {
+      wp_enqueue_style( 'beslock-product-card-alt', $theme_dir_uri . '/assets/css/product-card-alt.css', array( 'beslock-main-style', 'beslock-product-rotator' ), filemtime( $product_card_alt ) );
+    }
+  }
+
+  $product_card_fade = $theme_dir_path . '/assets/css/product-card-fade.css';
+  if ( file_exists( $product_card_fade ) ) {
+    if ( function_exists( 'is_cart' ) && is_cart() ) {
+      wp_enqueue_style( 'beslock-product-card-fade', $theme_dir_uri . '/assets/css/product-card-fade.css', array( 'beslock-main-style' ), filemtime( $product_card_fade ) );
+    }
+  }
+
   // Product gallery reel (server-rendered): enqueue CSS and JS
   $reel_css = $theme_dir_path . '/assets/css/product-gallery-reel.css';
   if ( file_exists( $reel_css ) ) {
