@@ -118,9 +118,11 @@ body {
   }
 
   .product-card__image img {
-    max-width: 180px;
+    max-width: 260px;
     width: 100%;
     height: auto;
+    object-fit: contain;
+    margin: 0 auto;
     display: block;
   }
 
@@ -171,6 +173,7 @@ body {
     color: white;
     text-decoration: none;
     font-weight: 600;
+    font-size: 0.95rem;
     text-align: center;
     display: inline-flex;
     align-items: center;
@@ -398,12 +401,210 @@ body {
   height: 48px !important;
 }
 
+/* Badge safe positioning for product-card images */
+.product-card__image {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.product-card__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 80px;
+  height: auto;
+
+  transform: rotate(12deg);
+  transform-origin: top right;
+
+  opacity: 0.95;
+
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Brand and trademark styling (small superscript ®) */
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.brand__tm {
+  font-size: 0.55em;
+  vertical-align: super;
+  margin-left: 2px;
+  line-height: 1;
+}
+
+/* Optional precise control — uncomment if needed */
+.brand__tm--precise {
+  position: relative;
+  top: -0.4em;
+}
+
+/* Logo wrapper and TM positioning (header) */
+.logo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-wrapper img {
+  display: block;
+  height: auto;
+}
+
+/* Remove underline for header logo links */
+.header__logo,
+.header__logo:link,
+.header__logo:visited,
+.header__logo:hover,
+.header__logo:active {
+  text-decoration: none !important;
+}
+
+.logo__tm {
+  position: absolute;
+
+  /* Dynamic alignment based on the logo height variable. If
+     --site-logo-height is not defined, fall back to 38px. */
+  top: calc(var(--site-logo-height, 38px) * 0.05);
+  right: calc(var(--site-logo-height, 38px) * -0.35);
+
+  /* Dynamic size proportional to logo height */
+  font-size: calc(var(--site-logo-height, 38px) * 0.25);
+
+  font-weight: 600;
+  line-height: 1;
+
+  color: inherit;
+
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  pointer-events: none;
+}
+
+/* Manual fine-tuning overrides (uncomment to adjust visually):
+.logo__tm { right: -16px; }
+.logo__tm { right: -18px; }
+.logo__tm { top: 2px; }
+*/
+
+/* Subtle premium animation for TM: fade + micro lift, runs once */
+.logo__tm {
+  opacity: 0;
+  transform: translateY(2px) scale(0.96);
+}
+
+@keyframes tmFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(2px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+
+.logo-wrapper.loaded .logo__tm {
+  animation: tmFadeIn 420ms ease-out 120ms forwards;
+}
+
+/* ==========================
+   Generic reveal helper (IntersectionObserver)
+   Adds .is-visible when element enters viewport — runs once
+   Reusable: apply `reveal` class to any element
+========================== */
+
+/* Reveal: improved/flicker-safe initial state */
+.reveal {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 320ms ease-out, transform 320ms ease-out;
+  will-change: opacity;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optional stagger when JS sets --delay */
+.reveal[data-delay] {
+  /* kept for compatibility — actual delay uses CSS var --delay */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Prevent flicker on images: DO NOT apply transform hacks; restore natural state */
+.product-card img {
+  transform: none !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+}
+
+/* Ensure product images reserve space to avoid layout shift during load.
+   Use aspect-ratio and object-fit so images don't change layout when swapped. */
+.product-card__image {
+  position: relative;
+  width: 100%;
+
+  /* Keep reserved space */
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.product-card__image img {
+  width: 100%;
+  height: 100%;
+
+  /* IMPORTANT: keep product aspect and avoid cropping distortion */
+  object-fit: contain;
+
+  display: block;
+  max-width: none !important;
+  transform: scale(var(--pc-image-scale, 1));
+  transform-origin: center center;
+}
+
 .product-card__actions a {
   float: none !important;
   position: relative !important;
   text-decoration: none !important;
   border: none !important;
   box-shadow: none !important;
+}
+
+/* Product card sizing + grid */
+.product-card {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.products-portfolio__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  justify-items: center;
 }
 
 /* Debug helper (commented) */
@@ -486,13 +687,35 @@ body {
   top: 8px;
   right: 8px;
 
-  width: 90px;
+  width: 80px;
   height: auto;
 
   transform: rotate(12deg);
+  transform-origin: top right;
+
+  opacity: 0.95;
 
   pointer-events: none;
   z-index: 2;
+}
+
+/* Enforce button typography inside product cards */
+.product-card .btn-primary {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+}
+
+/* Ensure WooCommerce-rendered product-cards match front-page sizing (cart, blocks) */
+.woocommerce .product-card {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.woocommerce .products-portfolio__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  justify-items: center;
 }
 
 /* ==========================
@@ -1235,6 +1458,29 @@ hero__title {
   right: 10px;
 
   width: 85px;
+
+/* ---------- Section spacing: products -> discover ---------- */
+/* Adds clean vertical rhythm between product grids and the discover block.
+   Avoids spacer elements and keeps spacing responsive. */
+.products-portfolio,
+.products-portfolio__grid {
+  margin-bottom: 48px;
+}
+
+.discover {
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .products-portfolio,
+  .products-portfolio__grid {
+    margin-bottom: 36px;
+  }
+
+  .discover {
+    margin-top: 16px;
+  }
+}
   height: auto;
 
   transform: rotate(10deg);
@@ -1346,11 +1592,20 @@ body.single-product a.single_add_to_cart_button .bi,
   }
 }
 
-/* ========== ANIMACIÓN REVEAL ========== */
+/* ========== ANIMACIÓN REVEAL (consolidated, flicker-safe) ========== */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.4s, transform 0.4s;
+  transform: translateY(16px);
+  transition: opacity 400ms ease, transform 400ms ease;
+  transition-delay: var(--delay, 0ms);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ========== FOOTER ESPECÍFICO (site-footer) ========== */
