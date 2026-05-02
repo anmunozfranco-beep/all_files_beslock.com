@@ -64,35 +64,36 @@ Template: kadence
 /* ACTIONS */
 .product-card__actions {
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 12px;
-	width: 100%;
-	margin-top: 10px;
+ 	align-items: center;
+ 	justify-content: center;
+ 	gap: 10px;
+ 	width: 100%;
+ 	margin-top: 10px;
 }
 
 /* PRIMARY BUTTON */
 .btn-primary {
-	flex: 1;
-	max-width: 220px;
-	padding: 12px;
-	border-radius: 12px;
-	background: #6f8f7c;
-	color: white;
-	text-decoration: none;
-	font-weight: 600;
-	text-align: center;
+ 	flex: 1 1 auto;
+ 	max-width: 260px;
+ 	height: 48px;
+ 	padding: 12px 16px;
+ 	border-radius: 12px;
+ 	background: #6f8f7c;
+ 	color: white;
+ 	text-decoration: none;
+ 	font-weight: 600;
+ 	text-align: center;
 }
 
 /* CART BUTTON */
 .btn-cart {
-	width: 48px;
-	height: 48px;
-	border-radius: 12px;
-	background: #e5e5e5;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+ 	flex: 0 0 52px;
+ 	height: 48px;
+ 	border-radius: 12px;
+ 	background: #e5e5e5;
+ 	display: flex;
+ 	align-items: center;
+ 	justify-content: center;
 }
 
 /* ICON / CONTAINER: Standardize cart icon across header and product cards */
@@ -226,6 +227,23 @@ Template: kadence
 	.header__icon i {
 		font-size: 34px; /* keep same absolute 34px on desktop to maintain exactness */
 	}
+}
+
+/* Ensure icon in actions matches header exactly */
+.product-card__actions .btn-cart i,
+.product-card__actions .btn-cart svg,
+.header__icon--cart i,
+.header__icon--cart svg {
+	font-size: var(--cart-icon-size) !important;
+	line-height: 1;
+	color: var(--cart-icon-color) !important;
+}
+
+/* Mobile tweaks */
+@media (max-width: 480px) {
+	.product-card__actions { gap: 8px; }
+	.product-card__actions .btn-primary { flex: 1; max-width: 75%; }
+	.product-card__actions .btn-cart { flex: 0 0 48px; }
 }
 
 /* ensure no third-party resets override icon color/line-height */
