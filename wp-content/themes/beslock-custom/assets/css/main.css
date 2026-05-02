@@ -1224,17 +1224,27 @@ hero__title {
   position: relative; /* ensure badge overlays the image */
 }
 .product-card__image img {
-  width: 100%;
-  max-width: 220px;
-  border-radius: 16px 16px 0 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   display: block;
 }
-/* (Replaced above) */
-.product-card__title {
-  font-weight: 700;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 85px;
+  height: auto;
+
+  transform: rotate(10deg);
+
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.95;
   font-size: 1.15rem;
   color: var(--beslock-green);
-}
+  .product-card__badge { width: 70px; top: 8px; right: 8px; }
 /* removed small margin-top rules to avoid conflicts; final spacing at file end */
 .product-card__desc {
   color: var(--beslock-text-sec);

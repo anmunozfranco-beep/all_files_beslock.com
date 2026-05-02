@@ -1654,3 +1654,59 @@ Stack trace:
 [02-May-2026 16:39:06 UTC] Loaded OK: inc/woocommerce/cart.php
 [02-May-2026 16:39:06 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
 [02-May-2026 16:39:06 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:41:49 UTC] Loaded OK: inc/core/enqueue.php
+[02-May-2026 16:41:49 UTC] Loaded OK: inc/woocommerce/setup.php
+[02-May-2026 16:41:49 UTC] Loaded OK: inc/woocommerce/product-features.php
+[02-May-2026 16:41:49 UTC] Loaded OK: inc/woocommerce/product-hooks.php
+[02-May-2026 16:41:49 UTC] Loaded OK: inc/woocommerce/cart.php
+[02-May-2026 16:41:49 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:41:50 UTC] PHP Parse error:  syntax error, unexpected token "<" in /var/www/html/wp-content/themes/beslock-custom/template-parts/product-card.php on line 4
+[02-May-2026 16:41:58 UTC] Loaded OK: inc/core/enqueue.php
+[02-May-2026 16:41:58 UTC] Loaded OK: inc/woocommerce/setup.php
+[02-May-2026 16:41:58 UTC] Loaded OK: inc/woocommerce/product-features.php
+[02-May-2026 16:41:58 UTC] Loaded OK: inc/woocommerce/product-hooks.php
+[02-May-2026 16:41:58 UTC] Loaded OK: inc/woocommerce/cart.php
+[02-May-2026 16:41:58 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:41:59 UTC] PHP Parse error:  syntax error, unexpected token "<" in /var/www/html/wp-content/themes/beslock-custom/template-parts/product-card.php on line 4
+[02-May-2026 16:42:43 UTC] Loaded OK: inc/core/enqueue.php
+[02-May-2026 16:42:43 UTC] Loaded OK: inc/woocommerce/setup.php
+[02-May-2026 16:42:43 UTC] Loaded OK: inc/woocommerce/product-features.php
+[02-May-2026 16:42:43 UTC] Loaded OK: inc/woocommerce/product-hooks.php
+[02-May-2026 16:42:43 UTC] Loaded OK: inc/woocommerce/cart.php
+[02-May-2026 16:42:43 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:42:43 UTC] PHP Parse error:  syntax error, unexpected token "<" in /var/www/html/wp-content/themes/beslock-custom/template-parts/product-card.php on line 4
+[02-May-2026 16:43:03 UTC] Loaded OK: inc/core/enqueue.php
+[02-May-2026 16:43:03 UTC] Loaded OK: inc/woocommerce/setup.php
+[02-May-2026 16:43:03 UTC] Loaded OK: inc/woocommerce/product-features.php
+[02-May-2026 16:43:03 UTC] Loaded OK: inc/woocommerce/product-hooks.php
+[02-May-2026 16:43:03 UTC] Loaded OK: inc/woocommerce/cart.php
+[02-May-2026 16:43:03 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:43:04 UTC] PHP Parse error:  syntax error, unexpected token "<" in /var/www/html/wp-content/themes/beslock-custom/template-parts/product-card.php on line 4
+[02-May-2026 16:43:17 UTC] Loaded OK: inc/core/enqueue.php
+[02-May-2026 16:43:17 UTC] Loaded OK: inc/woocommerce/setup.php
+[02-May-2026 16:43:17 UTC] Loaded OK: inc/woocommerce/product-features.php
+[02-May-2026 16:43:17 UTC] Loaded OK: inc/woocommerce/product-hooks.php
+[02-May-2026 16:43:17 UTC] Loaded OK: inc/woocommerce/cart.php
+[02-May-2026 16:43:17 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:43:17 UTC] PHP Parse error:  syntax error, unexpected token "<" in /var/www/html/wp-content/themes/beslock-custom/template-parts/product-card.php on line 4
+[02-May-2026 16:43:26 UTC] Loaded OK: inc/core/enqueue.php
+[02-May-2026 16:43:26 UTC] Loaded OK: inc/woocommerce/setup.php
+[02-May-2026 16:43:26 UTC] Loaded OK: inc/woocommerce/product-features.php
+[02-May-2026 16:43:26 UTC] Loaded OK: inc/woocommerce/product-hooks.php
+[02-May-2026 16:43:26 UTC] Loaded OK: inc/woocommerce/cart.php
+[02-May-2026 16:43:26 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:43:26 UTC] PHP Parse error:  syntax error, unexpected token "<" in /var/www/html/wp-content/themes/beslock-custom/template-parts/product-card.php on line 4
+[02-May-2026 16:43:28 UTC] Loaded OK: inc/core/enqueue.php
+[02-May-2026 16:43:28 UTC] Loaded OK: inc/woocommerce/setup.php
+[02-May-2026 16:43:28 UTC] Loaded OK: inc/woocommerce/product-features.php
+[02-May-2026 16:43:28 UTC] Loaded OK: inc/woocommerce/product-hooks.php
+[02-May-2026 16:43:28 UTC] Loaded OK: inc/woocommerce/cart.php
+[02-May-2026 16:43:28 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:43:28 UTC] PHP Parse error:  syntax error, unexpected token "<" in /var/www/html/wp-content/themes/beslock-custom/template-parts/product-card.php on line 4
+[02-May-2026 16:43:33 UTC] Loaded OK: inc/core/enqueue.php
+[02-May-2026 16:43:33 UTC] Loaded OK: inc/woocommerce/setup.php
+[02-May-2026 16:43:33 UTC] Loaded OK: inc/woocommerce/product-features.php
+[02-May-2026 16:43:33 UTC] Loaded OK: inc/woocommerce/product-hooks.php
+[02-May-2026 16:43:33 UTC] Loaded OK: inc/woocommerce/cart.php
+[02-May-2026 16:43:33 UTC] Loaded OK: inc/woocommerce/enqueue-assets.php
+[02-May-2026 16:43:33 UTC] PHP Parse error:  syntax error, unexpected token "<" in /var/www/html/wp-content/themes/beslock-custom/template-parts/product-card.php on line 4
