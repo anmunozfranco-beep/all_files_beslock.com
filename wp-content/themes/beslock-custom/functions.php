@@ -232,6 +232,14 @@ add_action( 'wp_enqueue_scripts', function() {
     }
   }
 
+  // Enqueue the self-contained product-card component stylesheet so buttons
+  // and actions render identically across homepage and cart.
+  $product_card_css = $theme_dir_path . '/assets/css/product-card.css';
+  if ( file_exists( $product_card_css ) ) {
+    // load globally so both homepage and cart show identical component styles
+    wp_enqueue_style( 'beslock-product-card', $theme_dir_uri . '/assets/css/product-card.css', array( 'beslock-main-style' ), filemtime( $product_card_css ) );
+  }
+
   // Product gallery reel (server-rendered): enqueue CSS and JS
   $reel_css = $theme_dir_path . '/assets/css/product-gallery-reel.css';
   if ( file_exists( $reel_css ) ) {

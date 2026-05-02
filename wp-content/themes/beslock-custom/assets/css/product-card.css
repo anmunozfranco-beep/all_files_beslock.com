@@ -1,0 +1,88 @@
+/* Product card component styles (scoped)
+   - Self-contained: includes button styles for product-card only
+   - Keeps visual parity with .product-card__add-to-cart
+*/
+
+.product-card {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.product-card__image { position: relative; }
+
+.product-card__price-overlay {
+  position: absolute;
+  bottom: -1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.product-card__content { padding: 0.8rem 0 1.2rem; }
+
+.product-card__title { margin: 0 0 0.4rem; font-size: 1.05rem; font-weight: 600; }
+.product-card__desc { margin: 0 0 0.6rem; color: var(--beslock-text-sec); }
+
+.product-card__actions {
+  position: absolute;
+  left: 1.2rem;
+  right: 1.2rem;
+  bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+}
+
+/* Base button inside product-card (self-contained, do not rely on global .btn) */
+.product-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+  line-height: 1;
+  min-height: 44px;
+}
+
+/* Primary link button styling for "Ver Producto" */
+.product-card__btn--link {
+  background: var(--beslock-green);
+  color: #ffffff;
+  border: 2px solid rgba(255,255,255,0.06);
+  opacity: 0.95;
+  box-shadow: 0 8px 20px rgba(3,69,38,0.09);
+  transition: transform 220ms cubic-bezier(.16,.84,.29,1), box-shadow 220ms ease, opacity 180ms ease;
+}
+.product-card__btn--link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(3,69,38,0.12);
+  opacity: 1;
+}
+.product-card__btn--link:active { transform: translateY(0); }
+.product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14); }
+
+/* Ensure add-to-cart and link feel part of the same system */
+.product-card__add-to-cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: var(--beslock-bg-2);
+  color: #fff;
+  text-decoration: none;
+  transition: transform 360ms cubic-bezier(.16,.84,.29,1), background 240ms cubic-bezier(.16,.84,.29,1), box-shadow 360ms cubic-bezier(.16,.84,.29,1);
+}
+
+/* Preserve icon styling inside add-to-cart */
+.product-card__add-to-cart .bi { color: var(--beslock-green); font-size: 2rem; line-height: 1; }

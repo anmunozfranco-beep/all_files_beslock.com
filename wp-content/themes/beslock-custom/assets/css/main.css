@@ -406,27 +406,8 @@ body {
   outline: none;
 }
 
-/* Product card action buttons: remove underline from 'Ver Producto' and
-  place a compact add-to-cart button next to it. Matches screenshot: large
-  pill primary button + small square cart button. */
-.product-card__actions { position: absolute; left: 1.2rem; right: 1.2rem; bottom: 1rem; display: flex; gap: 0.5rem; align-items: center; justify-content: center; z-index: 6; }
-.product-card__btn--link { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.1rem; border-radius: 10px; background: var(--beslock-green); color: #fff; border: none; font-weight: 700; opacity: 0.65; transition: opacity 280ms cubic-bezier(.16,.84,.29,1), transform 360ms cubic-bezier(.16,.84,.29,1), box-shadow 360ms cubic-bezier(.16,.84,.29,1); will-change: transform, opacity, box-shadow; backface-visibility: hidden; }
-.product-card__btn--link:hover { opacity: 1; transform: translateY(-2px) scale(1.01); box-shadow: 0 8px 24px rgba(3,69,38,0.10); }
-.product-card__btn--link:active { transform: translateY(0) scale(0.995); box-shadow: 0 4px 10px rgba(3,69,38,0.06); }
-.product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14); }
-.product-card__add-to-cart { display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:10px; background:var(--beslock-bg-2); color:#fff; text-decoration:none; transition: transform 360ms cubic-bezier(.16,.84,.29,1), background 240ms cubic-bezier(.16,.84,.29,1), box-shadow 360ms cubic-bezier(.16,.84,.29,1); will-change: transform, background, box-shadow; backface-visibility: hidden; }
-.product-card__add-to-cart .bi {
-  color: var(--beslock-green);
-  font-size: 2rem; /* match .header__icon */
-  line-height: 1;
-  font-weight: 400; /* remove bold visual weight */
-  text-shadow: none;
-  transition: color 180ms ease;
-}
-.product-card__add-to-cart:hover { background: var(--beslock-green); transform: translateY(-2px) scale(1.02); box-shadow: 0 7px 20px rgba(3,69,38,0.09); }
-.product-card__add-to-cart:active { transform: translateY(0) scale(0.995); box-shadow: 0 3px 8px rgba(3,69,38,0.06); }
-.product-card__add-to-cart:hover .bi { color: var(--beslock-bg-2); text-shadow: none; }
-.product-card__add-to-cart:focus { outline: 3px solid rgba(3,69,38,0.14); }
+/* Product-card styles moved to assets/css/product-card.css (component-scoped)
+   to keep the component self-contained and ensure consistency across pages. */
 .btn:hover,
 .beslock-btn:hover,
 .beslock-btn:active,
