@@ -64,7 +64,7 @@ body {
   background: var(--beslock-green);
   color: #fff;
   text-decoration: none;
-  border: none;
+  border: 2px solid red; /* debug: confirm selector applies */
   padding: 10px 16px;
   border-radius: 8px;
   display: inline-flex;
