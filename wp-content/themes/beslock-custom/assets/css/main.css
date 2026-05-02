@@ -474,6 +474,29 @@ body {
 }
 
 /* ==========================
+   Product card badge (pc-badge)
+========================== */
+.pc-card { position: relative; }
+.pc-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  transform: rotate(10deg);
+  transform-origin: top right;
+}
+.pc-badge img {
+  display: block;
+  transform: scale(0.75);
+  transform-origin: top right;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+}
+.pc-card:hover .pc-badge {
+  transform: rotate(10deg) scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+/* ==========================
    Centered 75% actions block with 85/15 split
 ========================== */
 .product-card__actions {

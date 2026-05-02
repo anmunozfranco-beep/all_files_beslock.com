@@ -385,6 +385,12 @@ body { padding-top: var(--header-height); }
 .pc-btn-cart i, .pc-btn-cart svg { font-size: 34px; color: #2f6b4f; line-height: 1; }
 @media (max-width: 480px) { .pc-actions { width: 85%; } }
 
+/* Product card badge (pc-badge) */
+.pc-card { position: relative; }
+.pc-badge { position: absolute; top: 6px; right: 6px; z-index: 3; transform: rotate(10deg); transform-origin: top right; }
+.pc-badge img { display: block; transform: scale(0.75); transform-origin: top right; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+.pc-card:hover .pc-badge { transform: rotate(10deg) scale(1.05); transition: transform 0.2s ease; }
+
 /* ==========================
 	 Final: unify actions into a single centered flex group
 	 Ensures btn-primary no longer centers independently and btn-cart stays in flow

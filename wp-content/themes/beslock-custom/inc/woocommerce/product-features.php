@@ -78,3 +78,20 @@ add_action( 'beslock_product_cta', function() {
   if ( ! $product ) return;
   get_template_part( 'template-parts/product-features', null, array( 'section' => 'cta', 'product_id' => intval( $product->get_id() ) ) );
 } );
+
+/**
+ * Admin product checkbox: toggle 'beslock_badge' per product
+ */
+add_action( 'woocommerce_product_options_general_product_data', function() {
+  woocommerce_wp_checkbox( array(
+    'id' => 'beslock_badge',
+    'label' => __( 'Mostrar badge de instalación', 'beslock' ),
+    'desc_tip' => true,
+    'description' => __( 'Activa el badge "Instalación incluida" en este producto.', 'beslock' ),
+  ) );
+} );
+
+add_action( 'woocommerce_process_product_meta', function( $post_id ) {
+  $value = isset( $_POST['beslock_badge'] ) && $_POST['beslock_badge'] ? 'yes' : 'no';
+  update_post_meta( $post_id, 'beslock_badge', $value );
+} );
