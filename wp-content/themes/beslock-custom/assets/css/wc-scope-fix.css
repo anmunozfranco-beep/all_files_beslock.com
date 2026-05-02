@@ -192,20 +192,7 @@ body.tax-product_tag .header__logo img {
   }
 }
 
-/* ------------------------------------------------------------------
- * Allow product-card component elements to retain their theme styles
- * by reverting the broad `all: unset` rule for product-card descendants
- * on WooCommerce pages. This isolates the reset and avoids redefining
- * product-card styles while restoring visual parity with the homepage.
- * ------------------------------------------------------------------ */
-body.woocommerce .product-card .btn,
-body.woocommerce .product-card .product-card__btn,
-body.woocommerce .product-card .product-card__btn--link,
-body.woocommerce-page .product-card .btn,
-body.woocommerce-page .product-card .product-card__btn,
-body.woocommerce-page .product-card .product-card__btn--link {
-  all: revert !important;
-}
+
 
 
 /* ===================================================================
