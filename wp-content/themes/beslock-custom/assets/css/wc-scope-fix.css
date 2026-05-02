@@ -11,15 +11,18 @@ body.woocommerce, body.woocommerce-page {
   line-height: unset !important;
 }
 
-/* Neutralize child button utilities so WooCommerce buttons keep their own styles */
-body.woocommerce .btn,
-body.woocommerce .beslock-btn,
-body.woocommerce .discover__btn,
-body.woocommerce .hero__cta,
-body.woocommerce-page .btn,
-body.woocommerce-page .beslock-btn,
-body.woocommerce-page .discover__btn,
-body.woocommerce-page .hero__cta {
+/* Neutralize child button utilities so WooCommerce buttons keep their own styles.
+   Scope the reset to avoid touching buttons that live inside the product-card
+   component (which has its own styling). We use :not(.product-card) so
+   descendant buttons within .product-card are not matched. */
+body.woocommerce :not(.product-card) .btn,
+body.woocommerce :not(.product-card) .beslock-btn,
+body.woocommerce :not(.product-card) .discover__btn,
+body.woocommerce :not(.product-card) .hero__cta,
+body.woocommerce-page :not(.product-card) .btn,
+body.woocommerce-page :not(.product-card) .beslock-btn,
+body.woocommerce-page :not(.product-card) .discover__btn,
+body.woocommerce-page :not(.product-card) .hero__cta {
   all: unset !important;
   display: revert !important;
 }
