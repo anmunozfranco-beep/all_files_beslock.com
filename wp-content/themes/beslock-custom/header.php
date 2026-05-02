@@ -32,7 +32,7 @@
     // Use WooCommerce cart URL when available; fallback to /cart
     $cart_url = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/cart' );
     $cart_count = 0;
-    if ( function_exists( 'WC' ) && WC()->cart ) {
+    if ( class_exists( 'WooCommerce' ) && WC()->cart ) {
       $cart_count = (int) WC()->cart->get_cart_contents_count();
     }
     ?>

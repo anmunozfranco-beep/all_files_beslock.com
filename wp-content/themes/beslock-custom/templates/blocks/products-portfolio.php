@@ -78,6 +78,16 @@ echo '<section id="productos" class="products-portfolio section reveal"><div cla
     $product['name'] = $pobj->post_title;
     $product['link'] = get_permalink( $pobj->ID );
     $product['product_id'] = $pobj->ID;
+    // If rendering within the cart context, provide a formatted price HTML
+    // and hide the description so the product-card shows the price instead
+    // of the description (cart-specific behaviour).
+    if ( function_exists( 'is_cart' ) && is_cart() ) {
+      if ( function_exists( 'wc_get_product' ) && ! empty( $product['product_id'] ) ) {
+        $wc_tmp = wc_get_product( intval( $product['product_id'] ) );
+        $product['price'] = $wc_tmp ? $wc_tmp->get_price_html() : '';
+      }
+      $product['show_desc'] = false;
+    }
   }
 
   set_query_var('product', $product);

@@ -54,127 +54,41 @@ foreach ( $images as $img ) {
 $images = array_values( array_unique( $normalized ) );
 ?>
 
-<div class="product-card reveal">
-  <div class="product-card__image" aria-hidden="false">
-    <?php if ( ! empty( $images ) ) : ?>
-      <div class="product-card__image-rotator product-image-rotator">
-        <?php foreach ( $images as $i => $src ) :
-          $bem = 'product-card__frame' . ( $i === 0 ? ' product-card__frame--active' : '' );
-          $legacy = 'product-frame' . ( $i === 0 ? ' is-active' : '' );
-          $class = trim( $bem . ' ' . $legacy );
-        ?>
-          <img class="<?php echo esc_attr( $class ); ?>" src="<?php echo esc_url( $src ); ?>" alt="<?php echo esc_attr( $product['name'] ?? '' ); ?>" />
-        <?php endforeach; ?>
-      </div>
-    <?php else : ?>
-      <div style="width:100%;height:0;padding-bottom:100%;background:#f3f3f3;border-radius:12px;"></div>
-    <?php endif; ?>
+<?php
+/**
+ * Wrapper that adapts an array-based $product used by the portfolio block
+ * into a canonical WC_Product object and delegates rendering to the
+ * template-parts/product-card component to avoid duplicate markup.
+ */
 
-    <?php
-      // Price overlay: prefer WC price HTML, fallback to _regular_price meta
-      $price_html = '';
-      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
-        $wc_tmp = wc_get_product( intval( $product['product_id'] ) );
-        if ( $wc_tmp ) $price_html = $wc_tmp->get_price_html();
-      }
-      if ( empty( $price_html ) && ! empty( $product['product_id'] ) ) {
-        $reg = get_post_meta( intval( $product['product_id'] ), '_regular_price', true );
-        if ( $reg ) $price_html = function_exists( 'wc_price' ) ? wc_price( $reg ) : esc_html( $reg );
-      }
-    ?>
-    <?php if ( $price_html ) : ?>
-      <div class="product-card__price-overlay"><?php echo wp_kses_post( $price_html ); ?></div>
-    <?php endif; ?>
-    <?php
-      // Determine display name (prefer WC product name when mapped)
-      $display_name = '';
-      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
-        $wc_tmp2 = wc_get_product( intval( $product['product_id'] ) );
-        if ( $wc_tmp2 && method_exists( $wc_tmp2, 'get_name' ) ) {
-          $display_name = $wc_tmp2->get_name() ?: ( $product['name'] ?? '' );
-        }
-      }
-      if ( empty( $display_name ) ) {
-        $display_name = isset( $product['name'] ) ? (string) $product['name'] : '';
-      }
+// Accept product from set_query_var('product') or local $product variable
+$p = isset( $product ) ? $product : ( get_query_var( 'product', null ) );
 
-      // Badge overlay: only render if explicit post meta `beslock_badge` exists (comma-separated names)
-      $badge_meta = '';
-      if ( ! empty( $product['product_id'] ) ) {
-        $badge_meta = get_post_meta( intval( $product['product_id'] ), 'beslock_badge', true );
-      }
-      if ( $badge_meta ) :
-        $badge_names = is_array( $badge_meta ) ? $badge_meta : array_map( 'trim', explode( ',', (string) $badge_meta ) );
-        // use first badge label as alt text
-        $badge_label = reset( $badge_names );
-        $png = get_stylesheet_directory() . '/assets/images/instal.png';
-        $badge_src = file_exists( $png ) ? get_stylesheet_directory_uri() . '/assets/images/instal.png' : get_stylesheet_directory_uri() . '/assets/images/instal.jpg';
-    ?>
-      <img class="product-card__badge" src="<?php echo esc_url( $badge_src ); ?>" alt="<?php echo esc_attr( $badge_label ); ?>" aria-hidden="true" />
-    <?php endif; ?>
-  </div>
+// Determine show_desc flag when provided as array
+$show_desc = true;
+if ( is_array( $p ) && isset( $p['show_desc'] ) ) {
+  $show_desc = (bool) $p['show_desc'];
+}
 
-  <div class="product-card__content">
-    <?php
-      // Title: prefer WC product name when mapped
-      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
-        $wc_tmp2 = wc_get_product( intval( $product['product_id'] ) );
-        if ( $wc_tmp2 && method_exists( $wc_tmp2, 'get_name' ) ) {
-          $product['name'] = $wc_tmp2->get_name() ?: ( $product['name'] ?? '' );
-        }
-      }
-    ?>
-    <h3 class="product-card__title"><?php echo esc_html( $product['name'] ?? '' ); ?></h3>
+// If array with product_id, pass that id to the component for normalization
+$arg_product = null;
+if ( is_array( $p ) && ! empty( $p['product_id'] ) ) {
+  if ( function_exists( 'wc_get_product' ) ) {
+    $arg_product = wc_get_product( intval( $p['product_id'] ) );
+  }
+} elseif ( is_object( $p ) ) {
+  // If it's already a WC_Product object, use it; otherwise attempt to map by ID
+  if ( is_a( $p, 'WC_Product' ) ) {
+    $arg_product = $p;
+  } elseif ( isset( $p->ID ) && function_exists( 'wc_get_product' ) ) {
+    $arg_product = wc_get_product( intval( $p->ID ) );
+  }
+}
 
-    <?php
-      // Description: prefer WC short description or full description
-      $desc_text = isset( $product['desc'] ) ? $product['desc'] : '';
-      if ( ! empty( $product['product_id'] ) ) {
-        if ( function_exists( 'wc_get_product' ) ) {
-          $wc = wc_get_product( intval( $product['product_id'] ) );
-          if ( $wc ) {
-            $short = $wc->get_short_description();
-            if ( $short ) {
-              $desc_text = wp_strip_all_tags( $short );
-            } else {
-              $full = $wc->get_description();
-              if ( $full ) $desc_text = wp_strip_all_tags( $full );
-            }
-          }
-        } else {
-          $excerpt = get_post_field( 'post_excerpt', intval( $product['product_id'] ) );
-          if ( $excerpt ) $desc_text = wp_strip_all_tags( $excerpt );
-        }
-      }
-    ?>
-    <p class="product-card__desc"><?php echo esc_html( $desc_text ); ?></p>
-
-    <?php
-      $btn_text = __( 'Ver Producto', 'beslock' );
-      $btn_href = isset( $product['link'] ) ? $product['link'] : '#';
-      $btn_classes = 'btn product-card__btn';
-      if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) {
-        $pid = intval( $product['product_id'] );
-        $wc = wc_get_product( $pid );
-        if ( $wc ) {
-          $btn_href = get_permalink( $pid );
-          $btn_text = __( 'Ver Producto', 'beslock' );
-        }
-      }
-    ?>
-    <div class="product-card__actions">
-      <a href="<?php echo esc_url( $btn_href ); ?>" class="<?php echo esc_attr( $btn_classes ); ?> product-card__btn--link" tabindex="0" rel="nofollow"><?php echo esc_html( $btn_text ); ?></a>
-
-      <?php if ( ! empty( $product['product_id'] ) && function_exists( 'wc_get_product' ) ) :
-        $add_to_cart_url = esc_url( add_query_arg( 'add-to-cart', intval( $product['product_id'] ), home_url( '/' ) ) );
-      ?>
-        <a href="<?php echo $add_to_cart_url; ?>" class="product-card__add-to-cart" aria-label="<?php esc_attr_e( 'Añadir al carrito', 'beslock' ); ?>" rel="nofollow">
-          <i class="bi bi-cart" aria-hidden="true"></i>
-        </a>
-      <?php endif; ?>
-    </div>
-  </div>
-</div>
+if ( $arg_product ) {
+  get_template_part( 'template-parts/product-card', null, array( 'product' => $arg_product, 'show_description' => $show_desc ) );
+}
+?>
 
 <?php
 /* end file */

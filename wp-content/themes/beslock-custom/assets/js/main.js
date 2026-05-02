@@ -460,6 +460,25 @@
 
 })();
 
+/* Failsafe: ensure loader is hidden even if other JS modules fail */
+(function(){
+  try{
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function(){
+        try{
+          var l = document.getElementById('beslockLoader') || document.querySelector('.beslock-loader');
+          if (l){ l.style.display = 'none'; l.setAttribute('aria-hidden','true'); l.style.pointerEvents = 'none'; }
+        }catch(e){}
+      }, { once:true });
+    } else {
+      try{
+        var l = document.getElementById('beslockLoader') || document.querySelector('.beslock-loader');
+        if (l){ l.style.display = 'none'; l.setAttribute('aria-hidden','true'); l.style.pointerEvents = 'none'; }
+      }catch(e){}
+    }
+  }catch(e){}
+})();
+
 /* === HERO BESLOCK LOGIC (appended) === */
 (function () {
   'use strict';

@@ -33,13 +33,14 @@ do_action( 'woocommerce_cart_is_empty' );
             Descubre nuestros productos y equipa tu espacio con Beslock
         </p>
 
-        <div class="beslock-cart__recommendations">
-            <?php
-              // Reuse the exact homepage product listing block so the cart recommendations
-              // render identically to the front-page. Do NOT implement a manual loop here.
-              get_template_part( 'templates/blocks/products-portfolio' );
-            ?>
-        </div>
+                <div class="beslock-cart__recommendations">
+                    <?php
+                    /* Render the products portfolio but ensure description is hidden in cart context.
+                       The portfolio wrapper handles is_cart() and will pass show_desc=false accordingly.
+                    */
+                    get_template_part( 'templates/blocks/products-portfolio' );
+                    ?>
+                </div>
 
     </div>
 </div>

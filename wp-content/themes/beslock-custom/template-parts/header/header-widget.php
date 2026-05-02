@@ -23,7 +23,7 @@ $site_name = get_bloginfo( 'name' );
       <?php $cart_url = esc_url( wc_get_cart_url() ); ?>
       <a class="header__icon header__icon--cart" href="<?php echo $cart_url; ?>" aria-label="Go to cart">
         <i class="bi bi-cart" aria-hidden="true"></i>
-        <?php if ( function_exists( 'WC' ) && WC()->cart && WC()->cart->get_cart_contents_count() > 0 ) : ?>
+        <?php if ( class_exists( 'WooCommerce' ) && WC()->cart && WC()->cart->get_cart_contents_count() > 0 ) : ?>
           <span class="header__cart-count" aria-hidden="true"><?php echo intval( WC()->cart->get_cart_contents_count() ); ?></span>
         <?php endif; ?>
       </a>
