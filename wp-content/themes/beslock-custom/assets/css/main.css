@@ -401,29 +401,39 @@ body {
   height: 48px !important;
 }
 
-/* Badge safe positioning for product-card images */
+/* Product card image + badge — unified, non-intrusive overlay */
 .product-card__image {
   position: relative;
-  display: flex;
-  justify-content: center;
-  padding-top: 10px;
+  overflow: hidden; /* ensure badge doesn't affect layout */
 }
-
+.product-card__image img:not(.product-card__badge) {
+  position: relative;
+  z-index: 1; /* keep product image under badge */
+  display: block;
+}
 .product-card__badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
 
-  width: 80px;
+  display: block;
+  width: 64px; /* desktop default */
   height: auto;
 
-  transform: rotate(12deg);
+  max-width: none !important;
+  min-width: 0 !important;
+
+  transform: rotate(10deg);
   transform-origin: top right;
 
-  opacity: 0.95;
-
   pointer-events: none;
-  z-index: 2;
+  z-index: 100; /* sit above images and overlays */
+
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+@media (max-width: 768px) {
+  .product-card__badge { width: 52px; }
 }
 
 /* Brand and trademark styling (small superscript ®) */
@@ -644,30 +654,7 @@ body {
   .pc-actions { width: 85%; }
 }
 
-/* ==========================
-   Product card badge (product-card__badge) — controlled, single-source
-========================== */
-.product-card__image {
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-.product-card__badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-
-  width: 80px;
-  height: auto;
-
-  transform: rotate(12deg);
-  transform-origin: top right;
-
-  opacity: 0.95;
-
-  pointer-events: none;
-  z-index: 2;
-}
+/* Product card badge rules consolidated earlier in this file. */
 
 /* Enforce button typography inside product cards */
 .product-card .btn-primary {
@@ -1182,31 +1169,7 @@ body {
   border: 2px solid var(--beslock-green-lite);
 }
 
-/* ========== PRODUCT CARD BADGE (INSTAL) ========== */
-.product-card__image {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.product-card__badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-
-  width: 85px;
-  height: auto;
-
-  transform: rotate(10deg);
-
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.95;
-}
-
-@media (max-width: 480px) {
-  .product-card__badge { width: 70px; top: 8px; right: 8px; }
-}
+/* Product card badge rules consolidated earlier in this file. */
 
 
 /* ========== HERO: BOTÓN CONTRASTE INVERTIDO ========== */
@@ -1460,7 +1423,6 @@ hero__title {
   opacity: 0.95;
   font-size: 1.15rem;
   color: var(--beslock-green);
-  .product-card__badge { width: 70px; top: 8px; right: 8px; }
 /* removed small margin-top rules to avoid conflicts; final spacing at file end */
 .product-card__desc {
   color: var(--beslock-text-sec);

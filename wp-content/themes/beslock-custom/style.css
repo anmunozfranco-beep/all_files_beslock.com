@@ -386,11 +386,12 @@ body { padding-top: var(--header-height); }
 .pc-btn-cart i, .pc-btn-cart svg { font-size: 34px; color: #2f6b4f; line-height: 1; }
 @media (max-width: 480px) { .pc-actions { width: 85%; } }
 
-/* Product card badge (product-card__badge) */
-.product-card__image { position: relative; display: flex; justify-content: center; align-items: center; padding-top: 10px; }
-.product-card__badge { position: absolute; top: 10px; right: 10px; width: 80px; height: auto; transform: rotate(12deg); transform-origin: top right; opacity: 0.95; pointer-events: none; z-index: 2; }
+/* Product card image + badge — unified, non-intrusive overlay */
+.product-card__image { position: relative; overflow: hidden; }
+.product-card__image img:not(.product-card__badge) { position: relative; z-index: 1; display: block; }
+.product-card__badge { position: absolute; top: 8px; right: 8px; display: block; width: 64px; height: auto; max-width: none !important; min-width: 0 !important; transform: rotate(10deg); transform-origin: top right; pointer-events: none; z-index: 100; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); }
 
-@media (max-width: 480px) { .product-card__badge { width: 64px; top: 8px; right: 8px; } }
+@media (max-width: 768px) { .product-card__badge { width: 52px; } }
 
 /* Enforce button typography inside product cards */
 .product-card .btn-primary { font-size: 0.95rem !important; font-weight: 600 !important; }
