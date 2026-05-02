@@ -374,6 +374,18 @@ body { padding-top: var(--header-height); }
 /* .product-card__actions { outline: 2px solid red !important; } */
 
 /* ==========================
+	Isolated product-card actions component (pc-actions)
+	Mirror styles in theme CSS for safety
+========================== */
+.pc-actions * { all: unset; box-sizing: border-box; }
+.pc-actions { width: 75%; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.pc-btn-main, .pc-btn-cart { all: unset; box-sizing: border-box; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.pc-btn-main { flex: 1; height: 48px; background: #6b8f7c; color: #fff; border-radius: 12px; text-decoration: none; font-weight: 600; padding: 0 14px; }
+.pc-btn-cart { width: 52px; height: 48px; background: #e5e5e5; border-radius: 12px; text-decoration: none; }
+.pc-btn-cart i, .pc-btn-cart svg { font-size: 34px; color: #2f6b4f; line-height: 1; }
+@media (max-width: 480px) { .pc-actions { width: 85%; } }
+
+/* ==========================
 	 Final: unify actions into a single centered flex group
 	 Ensures btn-primary no longer centers independently and btn-cart stays in flow
 ========================== */

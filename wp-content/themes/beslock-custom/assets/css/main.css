@@ -413,6 +413,67 @@ body {
 /* .product-card__actions { outline: 2px solid red !important; } */
 
 /* ==========================
+   Isolated product-card actions component (pc-actions)
+   Fully self-contained to avoid theme interference
+========================== */
+.pc-actions * {
+  all: unset;
+  box-sizing: border-box;
+}
+
+.pc-actions {
+  width: 75%;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pc-btn-main,
+.pc-btn-cart {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pc-btn-main {
+  flex: 1;
+  height: 48px;
+
+  background: #6b8f7c;
+  color: #ffffff;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0 14px;
+}
+
+.pc-btn-cart {
+  width: 52px;
+  height: 48px;
+
+  background: #e5e5e5;
+  border-radius: 12px;
+  text-decoration: none;
+}
+
+.pc-btn-cart i,
+.pc-btn-cart svg {
+  font-size: 34px;
+  color: #2f6b4f;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .pc-actions { width: 85%; }
+}
+
+/* ==========================
    Centered 75% actions block with 85/15 split
 ========================== */
 .product-card__actions {

@@ -39,13 +39,13 @@ $show_description = $args['show_description'] ?? false;
 
 <?php endif; ?>
 
-<div class="product-card__actions">
+<div class="pc-actions">
 
-    <a href="<?php echo esc_url(get_permalink($product->get_id())); ?>" class="btn-primary">
+    <a href="<?php echo esc_url( get_permalink( $product->get_id() ) ); ?>" class="pc-btn-main">
         Ver Producto
     </a>
 
-    <a href="?add-to-cart=<?php echo $product->get_id(); ?>" class="btn-cart" aria-label="Add to cart">
+    <a href="?add-to-cart=<?php echo $product->get_id(); ?>" class="pc-btn-cart" aria-label="Add to cart">
         <i class="bi bi-cart"></i>
     </a>
 
