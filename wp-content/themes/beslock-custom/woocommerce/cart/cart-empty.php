@@ -35,10 +35,28 @@ do_action( 'woocommerce_cart_is_empty' );
 
                 <div class="beslock-cart__recommendations">
                     <?php
-                    /* Render the products portfolio but ensure description is hidden in cart context.
-                       The portfolio wrapper handles is_cart() and will pass show_desc=false accordingly.
-                    */
-                    get_template_part( 'templates/blocks/products-portfolio' );
+                    $args = [
+                        'post_type' => 'product',
+                        'posts_per_page' => 4,
+                    ];
+
+                    $loop = new WP_Query( $args );
+
+                    if ( $loop->have_posts() ) : ?>
+
+                        <div class="products-portfolio__grid">
+
+                            <?php while ( $loop->have_posts() ) : $loop->the_post(); ?>
+
+                                <?php wc_get_template_part( 'content', 'product' ); ?>
+
+                            <?php endwhile; ?>
+
+                        </div>
+
+                    <?php endif;
+
+                    wp_reset_postdata();
                     ?>
                 </div>
 

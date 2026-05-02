@@ -45,7 +45,7 @@ get_header();
   <?php if ( ! file_exists( get_stylesheet_directory() . '/template-parts/hero.php' ) && ! file_exists( get_stylesheet_directory() . '/templates/blocks/hero.php' ) ) : ?>
     <section class="home-fallback">
       <div class="u-container">
-        <h1>Beslock Smart Locks</h1>
+        <h1><span class="brand">BESLOCK<span class="brand__tm">®</span></span> Smart Locks</h1>
         <p>Secure your home with smart technology</p>
       </div>
     </section>

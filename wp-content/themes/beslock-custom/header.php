@@ -25,7 +25,10 @@
     <button id="menuBtn" class="header__icon header__icon--menu" aria-controls="mobileDrawer" aria-expanded="false" aria-label="<?php esc_attr_e('Open menu', 'beslock'); ?>">&#9776;</button>
 
     <a href="<?php echo esc_url( home_url('/') ); ?>" class="header__logo">
-      <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/logo-green.png' ); ?>" alt="<?php esc_attr_e('BESLOCK Logo', 'beslock'); ?>" />
+      <span class="logo-wrapper">
+        <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/logo-green.png' ); ?>" alt="<?php esc_attr_e('BESLOCK Logo', 'beslock'); ?>" />
+        <span class="logo__tm" aria-hidden="true">®</span>
+      </span>
     </a>
 
     <?php
