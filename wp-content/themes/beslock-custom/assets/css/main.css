@@ -990,32 +990,27 @@ body {
   border: 2px solid var(--beslock-green-lite);
 }
 
-/* ========== PRODUCT CARD BADGE (INSTAL) ========== */
-/* Load the badge as a transparent image and avoid any transform so it
-   renders at its natural aspect ratio. No rotation/scale applied. */
+/* Clean product-card__badge override (INSTAL) */
 .product-card__badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: auto;
-  max-width: 100px;
-  height: auto;
-  z-index: 12; /* above overlays but below modals */
-  pointer-events: auto;
-  /* Scale the badge to 60% of its intrinsic size and keep origin top-right */
-  transform: scale(0.6) !important;
-  transform-origin: 100% 0% !important;
-  transition: transform 180ms cubic-bezier(.2,.9,.3,1), opacity 160ms ease, box-shadow 160ms ease;
-  will-change: opacity;
-  filter: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 0 !important;
-  mix-blend-mode: normal !important;
-  display: block;
-}
-@media (min-width: 600px) {
-  .product-card__badge { max-width: 130px; top: 10px; right: 10px; }
+  position: absolute !important;
+
+  top: 6px !important;
+  right: 6px !important;
+
+  width: 90px !important; /* control size directly */
+  height: auto !important;
+
+  transform: rotate(12deg) scale(0.75) !important;
+  transform-origin: top right;
+
+  z-index: 5;
+
+  pointer-events: none;
+
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+
+  /* DEBUG: temporary outline to verify CSS is loading */
+  outline: 2px solid red !important;
 }
 
 
@@ -1221,6 +1216,7 @@ hero__title {
   transform: translateY(-6px) !important;
 }
 .product-card__image {
+  position: relative;
   padding-top: 34px;    /* 85% del padding vertical (antes solo abajo) */
   padding-bottom: 6px;  /* 15% del padding vertical (antes solo abajo) */
   /* Ajusta estos valores si el padding total debe ser mayor o menor */
@@ -1231,30 +1227,7 @@ hero__title {
   border-radius: 16px 16px 0 0;
   display: block;
 }
-/* Badge overlay shown on selected products */
-.product-card__badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: auto;
-  max-width: 100px;
-  height: auto;
-  z-index: 12;
-  pointer-events: auto;
-  transform: scale(0.6) !important;
-  transform-origin: 100% 0% !important;
-  transition: transform 180ms cubic-bezier(.2,.9,.3,1), opacity 160ms ease, box-shadow 160ms ease;
-  will-change: transform, opacity;
-  filter: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 0 !important;
-  mix-blend-mode: normal !important;
-  display: block;
-}
-@media (max-width: 600px) {
-  .product-card__badge { max-width: 62px; top: 8px; right: 8px; transform: scale(0.6) !important; }
-}
+/* product-card__badge handled by single clean override above */
 .product-card__title {
   font-weight: 700;
   font-size: 1.15rem;
