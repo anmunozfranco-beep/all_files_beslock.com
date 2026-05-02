@@ -320,3 +320,49 @@ body { padding-top: var(--header-height); }
 /* Debug helper (temporary) — uncomment to visualize centering during QA */
 /* .product-card__actions { outline: 2px solid red !important; } */
 
+/* ==========================
+	 Centered 75% actions block with 85/15 split
+========================== */
+.product-card__actions {
+	width: 75% !important;
+	margin: 0 auto !important;
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+}
+
+.product-card__actions .btn-primary {
+	flex: 0 0 85% !important;
+	height: 48px !important;
+	border-radius: 12px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.product-card__actions .btn-cart {
+	flex: 0 0 15% !important;
+	height: 48px !important;
+	border-radius: 12px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.product-card__actions .btn-cart i,
+.product-card__actions .btn-cart svg {
+	font-size: 34px !important;
+	color: #2f6b4f !important;
+	line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+	.product-card__actions { width: 85% !important; }
+}
+
+.product-card__actions a {
+	text-decoration: none !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
