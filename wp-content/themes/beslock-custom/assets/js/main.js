@@ -486,18 +486,23 @@
       if (video) {
         // If video can play through, trigger transition
         video.addEventListener('canplaythrough', function onCP() { try{ video.removeEventListener('canplaythrough', onCP); }catch(e){} showVideo(); }, { once: true });
-        // Also listen for enough data to play (safer for some browsers)
-        video.addEventListener('loadeddata', function onLD(){ try{ video.removeEventListener('loadeddata', onLD); }catch(e){} /* no-op */ }, { once: true });
+        // Also listen for enough data to play (loadeddata) and trigger transition when available
+        video.addEventListener('loadeddata', function onLD(){ try{ video.removeEventListener('loadeddata', onLD); }catch(e){} showVideo(); }, { once: true });
       }
 
-      // Failsafe: ensure transition even on slow networks
-      setTimeout(showVideo, 2500);
+      // Failsafe: ensure transition even on slow networks (2s)
+      setTimeout(showVideo, 2000);
 
       // Slight micro-zoom on logo before reveal to feel cinematic
       if (logo && fallback) {
         // add a small class that scales the logo slightly, CSS handles transform on .hero.is-ready
-        // ensure fallback visible initially
-        fallback.style.visibility = fallback.style.visibility || 'visible';
+        // ensure fallback visible immediately to avoid black flash
+        try {
+          fallback.style.visibility = 'visible';
+          fallback.style.opacity = '1';
+          fallback.style.zIndex = '10';
+          fallback.style.display = '';
+        } catch (e) {}
       }
 
       // Accessibility: if user requests reduced motion, skip video and keep fallback

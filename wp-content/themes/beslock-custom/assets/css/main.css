@@ -1255,7 +1255,7 @@ body {
   position: relative;
   width: 100%;
   min-height: 74vh;
-  background: var(--beslock-bg-2);
+  background: #ffffff !important;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1309,8 +1309,12 @@ body {
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  z-index: 3;
+  z-index: 10 !important;
   transition: opacity 500ms ease, transform 500ms ease;
+  /* Force visible fallback to avoid black flash */
+  opacity: 1 !important;
+  visibility: visible !important;
+  outline: 2px solid red; /* debug: remove after verification */
 }
 .hero__brand {
   display: flex;
@@ -1343,21 +1347,23 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
+  opacity: 0 !important; /* start hidden */
   filter: blur(6px) saturate(1.02);
   transition: opacity 800ms ease, filter 900ms ease, transform 900ms ease;
-  z-index: 1;
+  z-index: 1 !important;
+  background: #ffffff !important; /* safety background to avoid black */
 }
 
 /* Ready state: video visible, fallback fades/zooms out */
 .hero.is-ready .hero__video {
-  opacity: 1;
+  opacity: 1 !important;
   filter: blur(0) saturate(1);
 }
 .hero.is-ready .hero__fallback {
-  opacity: 0;
+  opacity: 0 !important;
   transform: scale(1.02);
-  pointer-events: none;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 .hero.is-ready .hero__logo {
   transform: scale(1.05);
