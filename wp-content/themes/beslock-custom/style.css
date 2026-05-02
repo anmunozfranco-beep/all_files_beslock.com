@@ -273,3 +273,50 @@ body { padding-top: var(--header-height); }
 	justify-content: center !important;
 }
 
+/* ==========================
+	 Product card actions — precise centered layout (reset + enforce)
+	 Scoping is strict to avoid affecting other links across the site.
+========================== */
+.product-card__actions {
+	display: flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+	gap: 10px !important;
+	width: 100% !important;
+}
+
+.product-card__actions .btn-primary {
+	flex: 0 0 auto !important;
+	width: 200px !important;
+	height: 48px !important;
+	border-radius: 12px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.product-card__actions .btn-cart {
+	flex: 0 0 52px !important;
+	width: 52px !important;
+	height: 48px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.product-card__actions .btn-cart i,
+.product-card__actions .btn-cart svg {
+	font-size: var(--cart-icon-size) !important;
+	color: var(--cart-icon-color) !important;
+	line-height: 1 !important;
+}
+
+.product-card__actions a {
+	text-decoration: none !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+/* Debug helper (temporary) — uncomment to visualize centering during QA */
+/* .product-card__actions { outline: 2px solid red !important; } */
+
