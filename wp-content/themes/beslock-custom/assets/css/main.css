@@ -994,23 +994,25 @@ body {
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .product-card__badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
 
-  width: 90px;
+  width: 85px;
   height: auto;
 
-  transform: rotate(12deg);
+  transform: rotate(10deg);
 
   pointer-events: none;
   z-index: 2;
+  opacity: 0.95;
 }
 
-@media (max-width: 600px) {
-  .product-card__badge { width: 70px; top: 6px; right: 6px; transform: rotate(10deg); }
+@media (max-width: 480px) {
+  .product-card__badge { width: 70px; top: 8px; right: 8px; }
 }
 
 
