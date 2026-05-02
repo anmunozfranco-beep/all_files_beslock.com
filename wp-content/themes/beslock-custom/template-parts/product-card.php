@@ -5,10 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Use global $product and fail silently if it's not available or invalid.
 global $product;
-if ( ! isset( $product ) || ! is_a( $product, 'WC_Product' ) ) {
-  return;
-}
 
+// Do not return early — keep rendering the card. Badge logic must be
+// non-blocking: only enable badge when we have a valid product instance.
 $show_description = $args['show_description'] ?? false;
 ?>
 
@@ -18,10 +17,13 @@ $show_description = $args['show_description'] ?? false;
     <?php echo $product->get_image( 'medium' ); ?>
 
     <?php
-    // Safe slug logic for badge display (whitelist).
-    $product_slug   = $product->get_slug();
-    $badge_products = array( 'e-orbit', 'e-flex', 's-shield', 'e-prime' );
-    $show_badge     = in_array( $product_slug, $badge_products, true );
+    // Non-blocking badge logic: compute $show_badge only if $product is valid.
+    $show_badge = false;
+    if ( isset( $product ) && is_a( $product, 'WC_Product' ) ) {
+      $product_slug   = $product->get_slug();
+      $badge_products = array( 'e-orbit', 'e-flex', 's-shield', 'e-prime' );
+      $show_badge     = in_array( $product_slug, $badge_products, true );
+    }
 
     if ( $show_badge ) :
       $badge_path = get_template_directory() . '/assets/images/instal.png';
@@ -31,11 +33,9 @@ $show_description = $args['show_description'] ?? false;
           src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/instal.png' ); ?>"
           alt="<?php echo esc_attr_x( 'Instalación incluida', 'badge alt', 'beslock' ); ?>"
           aria-hidden="true"
-        />
-      <?php
-      endif;
-    endif;
-    ?>
+        >
+      <?php endif; ?>
+    <?php endif; ?>
   </div>
 
   <h3 class="product-card__title"><?php echo esc_html( $product->get_name() ); ?></h3>
