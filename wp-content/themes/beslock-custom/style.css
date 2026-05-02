@@ -401,7 +401,9 @@ body { padding-top: var(--header-height); }
 
 /* ===== PRODUCT BADGE OVERRIDE: ENSURE PURE OVERLAY ===== */
 .product-card__image { position: relative !important; display: flex !important; align-items: center !important; justify-content: center !important; isolation: isolate !important; }
-.product-card__image > img:not(.product-card__badge) { width: 100% !important; height: 100% !important; object-fit: contain !important; position: relative !important; z-index: 1 !important; transform: none !important; transition: none !important; }
+.products-portfolio .product-card__image > img:not(.product-card__badge), .beslock-cart__recommendations .product-card__image > img:not(.product-card__badge) { width: 100% !important; height: auto !important; object-fit: contain !important; position: relative !important; z-index: 1 !important; transform: none !important; transition: none !important; }
+/* Single product image rules to prevent layout break */
+.single-product .product-card__image img, .single-product img.wp-post-image { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
 .product-card__badge { position: absolute !important; top: 0 !important; right: 0 !important; width: 64px !important; height: auto !important; transform: translate(30%, -30%) rotate(12deg) !important; z-index: 10000 !important; pointer-events: none !important; display: block !important; max-width: none !important; min-width: 0 !important; flex: none !important; box-sizing: content-box !important; }
 @media (max-width: 768px) { .product-card__badge { width: 52px !important; transform: translate(20%, -20%) rotate(10deg) !important; } }
 .pc-badge, .pc-badge img, .product-card__badge img { width: auto !important; max-width: none !important; transform: none !important; }
