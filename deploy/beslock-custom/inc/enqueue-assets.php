@@ -224,6 +224,18 @@ add_action( 'wp_enqueue_scripts', function(){
   }
 }, 110 );
 
+// Fallback initializer for product gallery — enqueue after Woo scripts
+add_action( 'wp_enqueue_scripts', function(){
+  if ( function_exists( 'is_product' ) && is_product() ) {
+    $theme_dir_uri  = get_stylesheet_directory_uri();
+    $theme_dir_path = get_stylesheet_directory();
+    $init_path = $theme_dir_path . '/assets/js/product-gallery-init.js';
+    if ( file_exists( $init_path ) ) {
+      wp_enqueue_script( 'beslock-product-gallery-init', $theme_dir_uri . '/assets/js/product-gallery-init.js', array( 'jquery', 'wc-single-product', 'flexslider' ), filemtime( $init_path ), true );
+    }
+  }
+}, 111 );
+
 // Inline early-capture script: prevent navigation to raw uploads image URLs and open overlay
 add_action( 'wp_head', function(){
   ?>
