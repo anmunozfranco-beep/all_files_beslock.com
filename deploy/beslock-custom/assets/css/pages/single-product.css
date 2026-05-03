@@ -8,8 +8,8 @@
 }
 
 .single-product .product {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex !important;
+  flex-wrap: wrap;
   gap: 40px;
 
   max-width: 1200px;
@@ -20,7 +20,7 @@
 }
 
 .single-product .woocommerce-product-gallery {
-  width: 100%;
+  flex: 1 1 500px;
   max-width: 600px;
 }
 
@@ -32,13 +32,30 @@
 }
 
 .single-product .summary {
-  width: 100%;
+  flex: 1 1 400px;
   max-width: 500px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.single-product .summary * {
+  display: revert !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.single-product form.cart {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {
   .single-product .product {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 }
 /* BEM Phase 1 placeholder: pages/single-product.css
