@@ -441,6 +441,130 @@
     border-bottom: 2px solid #1f5f3a !important;
   }
 
+/* ==================================================
+   Refined single-product layout (strictly scoped)
+   All rules prefixed with `body.single-product` as requested
+   ================================================== */
+
+body.single-product {
+  overflow-x: hidden !important;
+}
+
+body.single-product main,
+body.single-product .product-page {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+/* Hero layout: balanced two-column */
+body.single-product .product-page__hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  padding-top: 20px; /* remove excess top space intent */
+  box-sizing: border-box;
+}
+
+/* Image: reduce visual weight */
+body.single-product .product-page__media {
+  max-width: 460px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+body.single-product .beslock-gallery-slide img,
+body.single-product .beslock-gallery-slide picture img {
+  max-height: 420px;
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Product info alignment */
+body.single-product .product-page__info {
+  max-width: 420px;
+}
+
+body.single-product .product-page__title {
+  font-size: 42px;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+body.single-product .product-page__price {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+body.single-product .product-page__excerpt {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 24px;
+}
+
+/* Buy section compact */
+body.single-product .beslock-buy-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+body.single-product .single_add_to_cart_button {
+  padding: 10px 18px;
+  border-radius: 6px;
+}
+
+/* Tabs styling */
+body.single-product .product-page__content {
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+body.single-product .woocommerce-tabs ul.tabs {
+  display: flex;
+  gap: 30px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+body.single-product .woocommerce-tabs ul.tabs li {
+  list-style: none;
+}
+
+body.single-product .woocommerce-tabs ul.tabs li a {
+  text-decoration: none;
+  padding: 10px 0;
+  color: #888;
+  font-size: 15px;
+}
+
+body.single-product .woocommerce-tabs ul.tabs li.active a {
+  color: #1f5f3a;
+  font-weight: 600;
+  border-bottom: 2px solid #1f5f3a;
+}
+
+/* Mobile safe adjustments */
+@media (max-width: 768px) {
+  body.single-product .product-page__hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  body.single-product .product-page__media {
+    max-width: 100%;
+  }
+
+  body.single-product .product-page__title {
+    font-size: 30px;
+  }
+}
+
+
   /* Desktop-only, high-specificity containment: force gallery to a constrained width
      This block is intended as a last-resort fix for desktop viewports where
      upstream styles or third-party assets leak flex/viewport-based widths. */
