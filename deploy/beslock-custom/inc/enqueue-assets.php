@@ -132,7 +132,8 @@ add_action( 'wp_enqueue_scripts', function() {
 
   $product_page_css = $theme_dir_path . '/assets/css/product-page.css';
   if ( file_exists( $product_page_css ) ) {
-    wp_enqueue_style( 'beslock-product-page', $theme_dir_uri . '/assets/css/product-page.css', [ 'beslock-main-style' ], filemtime( $product_page_css ) );
+    // Temporarily disabled for debugging single-product layout issues
+    // wp_enqueue_style( 'beslock-product-page', $theme_dir_uri . '/assets/css/product-page.css', [ 'beslock-main-style' ], filemtime( $product_page_css ) );
   }
 
   $product_tabs_css = $theme_dir_path . '/assets/css/product-tabs.css';
