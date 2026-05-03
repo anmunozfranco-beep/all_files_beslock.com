@@ -427,6 +427,7 @@ nav#mobileDrawer .mobile-drawer__panel .mobile-menu {
   flex-direction: column !important;
   justify-content: space-evenly !important;
   padding: 0 !important;
+  width: 100% !important;
 }
 
 /* Apply to anchor links only so #productsToggle (button) is not changed */
