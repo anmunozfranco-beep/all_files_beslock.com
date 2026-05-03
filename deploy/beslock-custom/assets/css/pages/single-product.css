@@ -441,3 +441,29 @@
     border-bottom: 2px solid #1f5f3a !important;
   }
 
+  /* Desktop-only, high-specificity containment: force gallery to a constrained width
+     This block is intended as a last-resort fix for desktop viewports where
+     upstream styles or third-party assets leak flex/viewport-based widths. */
+  @media (min-width: 1024px) {
+    body.single-product div.single-product .product-page__hero .product-page__media,
+    body.single-product div.single-product .product-page__media {
+      width: 520px !important;
+      max-width: 520px !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    body.single-product div.single-product .beslock-gallery-reel {
+      width: 520px !important;
+      max-width: 520px !important;
+      overflow: hidden !important;
+      transform: none !important;
+    }
+
+    body.single-product div.single-product .beslock-gallery-slide {
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+

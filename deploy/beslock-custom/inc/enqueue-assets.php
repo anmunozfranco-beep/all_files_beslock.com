@@ -417,4 +417,4 @@ add_action( 'wp_enqueue_scripts', function() {
       wp_enqueue_style( 'beslock-single-product', $theme_dir_uri . '/assets/css/pages/single-product.css', array( 'beslock-extra-style', 'beslock-main-style' ), filemtime( $single_css ) );
     }
   }
-}, 25 );
+}, 50 );
