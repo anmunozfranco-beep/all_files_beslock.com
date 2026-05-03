@@ -117,65 +117,12 @@ body {
   }
 
   /* IMAGE */
-  /* MOVED TO components/product-card.css (container only)
-  .product-card__image {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  */
-
   .product-card__image img {
     max-width: 180px;
     width: 100%;
     height: auto;
     display: block;
   }
-
-  /* TITLE */
-  /* MOVED TO components/product-card.css
-  .product-card__title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1f3d2b;
-    margin: 0;
-  }
-  */
-
-  /* PRICE */
-  /* MOVED TO components/product-card.css
-  .product-card__price {
-    font-size: 20px;
-    font-weight: 700;
-    color: #000;
-    margin: 0;
-    text-align: center;
-  }
-  */
-
-  /* DESCRIPTION */
-  /* MOVED TO components/product-card.css
-  .product-card__description {
-    font-size: 14.7px;
-    color: #555;
-    max-width: 260px;
-    margin: 0 auto;
-    line-height: 1.45;
-  }
-  */
-
-  /* ACTIONS */
-  /* MOVED TO components/product-card.css (container only)
-  .product-card__actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    margin-top: 10px;
-  }
-  */
 
   /* PRIMARY BUTTON */
   .btn-primary {
@@ -237,9 +184,6 @@ body {
   WooCommerce price HTML and only center the overlay horizontally above
   the card content (over the image). */
 .product-card { position: relative; }
-/* MOVED TO components/product-card.css
-.product-card__image { position: relative; }
-*/
 .product-card__price-overlay {
   position: absolute;
   bottom: -1.2rem; /* sit between image and title (overlapping slightly) */
@@ -284,9 +228,6 @@ body {
    consistent look on small screens where the media-query rule
    previously only applied for large desktop sizes. */
 .product-card { position: relative; }
-/* MOVED TO components/product-card.css
-.product-card__image { position: relative; }
-*/
 .product-card__price-overlay {
   position: absolute;
   bottom: -1.2rem;
@@ -600,19 +541,6 @@ body {
 }
 
 /* ========== PRODUCT CARD BADGE (INSTAL) ========== */
-/* MOVED TO components/badge.css (base positioning only)
-.product-card__badge {
-  position: absolute !important;
-  top: 6px !important;
-  right: 6px !important;
-  width: 90px !important;
-  height: auto !important;
-  transform: rotate(12deg) scale(0.75) !important;
-  transform-origin: top right;
-  z-index: 5;
-  pointer-events: none;
-}
-*/
 @media (max-width: 600px) {
   .product-card__badge { width: 70px !important; top: 6px !important; right: 6px !important; transform: rotate(10deg) scale(0.7) !important; }
 }
@@ -804,31 +732,12 @@ hero__title {
     max-width: 300px;
   }
 }
-.product-card { /* MOVED TO components/product-card.css */
-  /*
-    background: var(--beslock-white);
-    border-radius: 20px;
-    box-shadow: 0 2px 18px rgba(7,5,5,0.09);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    transition: box-shadow 360ms cubic-bezier(.16,.84,.29,1), transform 360ms cubic-bezier(.16,.84,.29,1);
-    will-change: transform, box-shadow;
-  */
-}
+/* base .product-card moved to components/product-card.css */
 .product-card:hover {
   box-shadow: 0 14px 40px rgba(7,5,5,0.14);
   transform: translateY(-6px) !important;
 }
-/* MOVED TO components/product-card.css
-.product-card__image {
-  padding-top: 34px;    /* 85% del padding vertical (antes solo abajo) */
-  padding-bottom: 6px;  /* 15% del padding vertical (antes solo abajo) */
-  position: relative;
-  /\* Ajusta estos valores si el padding total debe ser mayor o menor *\/
-}
-*/
+/* product-card image container moved to components/product-card.css */
 .product-card__image img {
   width: 100%;
   max-width: 220px;
@@ -879,9 +788,7 @@ hero__title {
   border-radius: 10px;
   cursor: pointer;
   text-decoration: none;
-  /* MOVED TO components/product-card.css */
-  .product-card__image { position: relative; }
-  */
+  
   margin-top: 1rem;
 }
 
