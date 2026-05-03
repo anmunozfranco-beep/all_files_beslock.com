@@ -16,3 +16,15 @@
   will-change: transform, box-shadow;
 }
 
+/* Container & image wrapper for product-card (migrated from main.css) */
+.product-card__image {
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding-top: 34px;    /* migrated from main.css */
+   padding-bottom: 6px;  /* migrated from main.css */
+   position: relative;
+}
+
+

@@ -117,12 +117,14 @@ body {
   }
 
   /* IMAGE */
+  /* MOVED TO components/product-card.css (container only)
   .product-card__image {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
+  */
 
   .product-card__image img {
     max-width: 180px;
@@ -224,10 +226,12 @@ body {
     padding: 0 2.5rem;
 
 /* Product card price overlay positioning: keep existing visual styles from
-   WooCommerce price HTML and only center the overlay horizontally above
-   the card content (over the image). */
+  WooCommerce price HTML and only center the overlay horizontally above
+  the card content (over the image). */
 .product-card { position: relative; }
+/* MOVED TO components/product-card.css
 .product-card__image { position: relative; }
+*/
 .product-card__price-overlay {
   position: absolute;
   bottom: -1.2rem; /* sit between image and title (overlapping slightly) */
@@ -272,7 +276,9 @@ body {
    consistent look on small screens where the media-query rule
    previously only applied for large desktop sizes. */
 .product-card { position: relative; }
+/* MOVED TO components/product-card.css
 .product-card__image { position: relative; }
+*/
 .product-card__price-overlay {
   position: absolute;
   bottom: -1.2rem;
@@ -586,7 +592,9 @@ body {
 }
 
 /* ========== PRODUCT CARD BADGE (INSTAL) ========== */
+./* MOVED TO components/product-card.css
 .product-card__image { position: relative; }
+.*/
 .product-card__badge {
     position: absolute !important;
     top: 6px !important;
@@ -807,12 +815,14 @@ hero__title {
   box-shadow: 0 14px 40px rgba(7,5,5,0.14);
   transform: translateY(-6px) !important;
 }
+/* MOVED TO components/product-card.css
 .product-card__image {
   padding-top: 34px;    /* 85% del padding vertical (antes solo abajo) */
   padding-bottom: 6px;  /* 15% del padding vertical (antes solo abajo) */
-  /* Ajusta estos valores si el padding total debe ser mayor o menor */
+  position: relative;
+  /\* Ajusta estos valores si el padding total debe ser mayor o menor *\/
 }
-.product-card__image { position: relative; }
+*/
 .product-card__image img {
   width: 100%;
   max-width: 220px;
@@ -863,7 +873,9 @@ hero__title {
   border-radius: 10px;
   cursor: pointer;
   text-decoration: none;
-  font-weight: 500;
+  /* MOVED TO components/product-card.css */
+  .product-card__image { position: relative; }
+  */
   margin-top: 1rem;
 }
 
