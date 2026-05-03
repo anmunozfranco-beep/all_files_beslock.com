@@ -187,10 +187,11 @@ add_action( 'wp_enqueue_scripts', function() {
     // Temporarily disabled for debugging single-product layout issues
     // wp_enqueue_style( 'beslock-product-gallery-reel', $theme_dir_uri . '/assets/css/product-gallery-reel.css', [ 'beslock-main-style' ], filemtime( $reel_css ) );
   }
-  $reel_js = $theme_dir_path . '/assets/js/product-gallery-reel.js';
-  if ( file_exists( $reel_js ) ) {
-    wp_enqueue_script( 'beslock-product-gallery-reel-js', $theme_dir_uri . '/assets/js/product-gallery-reel.js', [ 'beslock-main-js' ], filemtime( $reel_js ), true );
-  }
+  // product gallery reel JS removed in favor of native WooCommerce gallery
+  // $reel_js = $theme_dir_path . '/assets/js/product-gallery-reel.js';
+  // if ( file_exists( $reel_js ) ) {
+  //   wp_enqueue_script( 'beslock-product-gallery-reel-js', $theme_dir_uri . '/assets/js/product-gallery-reel.js', [ 'beslock-main-js' ], filemtime( $reel_js ), true );
+  // }
 
   $header_state_js = $theme_dir_path . '/assets/js/header-state.js';
   $ver_header_state_js = file_exists( $header_state_js ) ? filemtime( $header_state_js ) : null;
