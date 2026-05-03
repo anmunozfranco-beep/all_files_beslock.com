@@ -1,3 +1,46 @@
+/* Scoped single-product layout fixes
+   ALL selectors in this file are strictly prefixed with .single-product
+   to avoid affecting any other page or component. Follow the project's
+   conservative migration rules. */
+
+.single-product {
+  overflow-x: hidden;
+}
+
+.single-product .product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+
+  box-sizing: border-box;
+}
+
+.single-product .woocommerce-product-gallery {
+  width: 100%;
+  max-width: 600px;
+}
+
+.single-product .woocommerce-product-gallery img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.single-product .summary {
+  width: 100%;
+  max-width: 500px;
+}
+
+@media (max-width: 768px) {
+  .single-product .product {
+    grid-template-columns: 1fr;
+  }
+}
 /* BEM Phase 1 placeholder: pages/single-product.css
    Page-specific adjustments for single product view will go here.
    KEEP EMPTY for now. */
