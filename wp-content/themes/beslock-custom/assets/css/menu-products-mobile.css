@@ -97,7 +97,7 @@ nav#mobileDrawer .mobile-drawer__panel {
   will-change: transform, opacity !important;
   transition: transform var(--drawer-duration) var(--drawer-ease) !important;
   z-index: 1301 !important;
-  overflow: visible !important; 
+  overflow: hidden !important; 
   /* allow absolute children to overflow */
   -webkit-overflow-scrolling: touch !important;
   padding: 1.25rem 1.25rem 0.75rem 1.25rem !important;
