@@ -406,3 +406,15 @@ add_action( 'wp_enqueue_scripts', function() {
   }
 
 }, 100 );
+
+// Ensure single-product page styles load after other theme styles and plugins.
+add_action( 'wp_enqueue_scripts', function() {
+  if ( function_exists( 'is_product' ) && is_product() ) {
+    $theme_dir_path = get_stylesheet_directory();
+    $theme_dir_uri  = get_stylesheet_directory_uri();
+    $single_css = $theme_dir_path . '/assets/css/pages/single-product.css';
+    if ( file_exists( $single_css ) ) {
+      wp_enqueue_style( 'beslock-single-product', $theme_dir_uri . '/assets/css/pages/single-product.css', array( 'beslock-extra-style', 'beslock-main-style' ), filemtime( $single_css ) );
+    }
+  }
+}, 25 );

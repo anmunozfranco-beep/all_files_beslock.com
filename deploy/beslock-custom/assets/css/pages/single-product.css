@@ -373,3 +373,71 @@
     }
   }
 
+  /* High-specificity overrides to ensure styles apply when other styles compete.
+     These rules are intentionally prefixed with `body.single-product` to
+     increase specificity and to act as a last-resort safety net. */
+  body.single-product {
+    overflow-x: hidden !important;
+  }
+
+  body.single-product body,
+  body.single-product main,
+  body.single-product .product-page {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Strong gallery containment and width rules (critical fixes) */
+  body.single-product .product-page__media {
+    max-width: 520px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    contain: layout !important;
+  }
+
+  body.single-product .beslock-gallery-reel {
+    display: flex !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.single-product .beslock-gallery-slide {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.single-product .beslock-gallery-slide img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 500px !important;
+    object-fit: contain !important;
+  }
+
+  /* Tabs: target WooCommerce real selectors */
+  body.single-product .woocommerce-tabs ul.tabs {
+    display: flex !important;
+    gap: 24px !important;
+    border-bottom: 1px solid #eee !important;
+  }
+
+  body.single-product .woocommerce-tabs ul.tabs li {
+    list-style: none !important;
+  }
+
+  body.single-product .woocommerce-tabs ul.tabs li a {
+    text-decoration: none !important;
+    padding: 10px 0 !important;
+    color: #777 !important;
+    font-weight: 500 !important;
+  }
+
+  body.single-product .woocommerce-tabs ul.tabs li.active a,
+  body.single-product .woocommerce-tabs ul.tabs li.active a:link {
+    color: #1f5f3a !important;
+    border-bottom: 2px solid #1f5f3a !important;
+  }
+
