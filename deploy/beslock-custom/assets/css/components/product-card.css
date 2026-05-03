@@ -44,4 +44,14 @@
    text-align: center;
 }
 
+/* Description (migrated from main.css) - Phase 3B
+    Keep spacing and typography here; layout-sensitive rules remain in main.css until verified. */
+.product-card__description {
+   font-size: 14.7px;
+   color: #555;
+   max-width: 260px;
+   margin: 0 auto;
+   line-height: 1.45;
+}
+
 

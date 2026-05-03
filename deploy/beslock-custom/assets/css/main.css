@@ -155,6 +155,7 @@ body {
   */
 
   /* DESCRIPTION */
+  /* MOVED TO components/product-card.css
   .product-card__description {
     font-size: 14.7px;
     color: #555;
@@ -162,6 +163,7 @@ body {
     margin: 0 auto;
     line-height: 1.45;
   }
+  */
 
   /* ACTIONS */
   .product-card__actions {
