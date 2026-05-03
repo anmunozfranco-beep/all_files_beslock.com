@@ -98,6 +98,7 @@ nav#mobileDrawer .mobile-drawer__panel {
   transition: transform var(--drawer-duration) var(--drawer-ease) !important;
   z-index: 1301 !important;
   overflow: hidden !important; 
+  display: none !important;
   /* allow absolute children to overflow */
   -webkit-overflow-scrolling: touch !important;
   padding: 1.25rem 1.25rem 0.75rem 1.25rem !important;
@@ -107,7 +108,7 @@ nav#mobileDrawer .mobile-drawer__panel {
 
 /* Drawer abierto */
 nav#mobileDrawer.is-open { pointer-events: auto; }
-nav#mobileDrawer.is-open .mobile-drawer__panel { transform: translate3d(0, 0, 0) !important; }
+nav#mobileDrawer.is-open .mobile-drawer__panel { display: block !important; transform: translate3d(0, 0, 0) !important; }
 nav#mobileDrawer.is-open .mobile-drawer__backdrop,
 #drawerBackdrop.backdrop-visible {
   background: var(--backdrop-color) !important;
