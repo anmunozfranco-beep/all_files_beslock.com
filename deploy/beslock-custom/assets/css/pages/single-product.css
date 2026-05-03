@@ -20,8 +20,6 @@
 }
 
 .single-product .woocommerce-product-gallery {
-
-.single-product .woocommerce-product-gallery {
   position: relative;
   overflow: hidden;
 
@@ -35,33 +33,34 @@
 .single-product .woocommerce-product-gallery img {
   width: 100%;
   height: auto;
-  max-width: 100%;
-  object-fit: contain;
   display: block;
 }
 
+/* The following slider-wrapper rules removed/commented to avoid
+   interfering with WooCommerce's JS-driven slider. Let the gallery
+   script control transform/width of slides. If needed, re-introduce
+   a safe override scoped narrowly to the problematic slide only. */
+/*
 .single-product .woocommerce-product-gallery__wrapper {
   display: flex;
   max-width: 100%;
   overflow: hidden;
 }
 
-/* Ensure each slide occupies full wrapper width and cannot overflow */
 .single-product .woocommerce-product-gallery__wrapper > * {
   flex: 0 0 100%;
   max-width: 100%;
 }
 
-/* Prevent any child inside the gallery from exceeding its container */
 .single-product .woocommerce-product-gallery * {
   max-width: 100%;
   box-sizing: border-box;
 }
+*/
 
-/* Safety: block horizontal bleed from the product container */
-.single-product .product {
-  overflow: hidden;
-}
+/* Removed a global overflow hide on `.single-product .product` to avoid
+   masking WooCommerce-driven transforms and controls. Keep layout rules
+   above (display:flex/flex-wrap/gap) intact. */
 
 .single-product .summary {
   flex: 0 0 50%;
@@ -92,6 +91,13 @@
 @media (max-width: 768px) {
   .single-product .product {
     flex-direction: column;
+    gap: 24px;
+  }
+
+  .single-product .woocommerce-product-gallery,
+  .single-product .summary {
+    width: 100%;
+    max-width: 100%;
   }
 }
 /* BEM Phase 1 placeholder: pages/single-product.css
