@@ -52,3 +52,34 @@
      with selectors prefixed by `.single-product` and avoid overriding
      WooCommerce gallery internals (wrapper/slide transforms). */
 
+  /* Restore WooCommerce slider block behavior and prevent duplicated slides
+     This is intentionally scoped under `.single-product` and uses
+     !important only where required to override previous debug rules. */
+  .single-product .woocommerce-product-gallery__wrapper {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .single-product .woocommerce-product-gallery__wrapper > * {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .single-product .woocommerce-product-gallery {
+    overflow: hidden;
+    position: relative;
+    display: block !important;
+  }
+
+  /* Remove any lingering flex interference on gallery and wrapper */
+  .single-product .woocommerce-product-gallery,
+  .single-product .woocommerce-product-gallery__wrapper {
+    display: block !important;
+  }
+
+  .single-product .woocommerce-product-gallery img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
