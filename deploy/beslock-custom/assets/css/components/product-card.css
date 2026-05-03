@@ -54,4 +54,17 @@
    line-height: 1.45;
 }
 
+/* Actions container (migrated base layout only) - Phase 3C
+    NOTE: we intentionally do NOT move position:absolute variants
+    or button-specific styles. Those remain in main.css to preserve
+    cascade and avoid regressions during staged migration. */
+.product-card__actions {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 12px;
+   width: 100%;
+   margin-top: 10px;
+}
+
 
