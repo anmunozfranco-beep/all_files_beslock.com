@@ -22,6 +22,9 @@
 .single-product .woocommerce-product-gallery {
 
 .single-product .woocommerce-product-gallery {
+  position: relative;
+  overflow: hidden;
+
   flex: 0 0 50%;
   max-width: 50%;
   width: 50%;
@@ -38,7 +41,25 @@
 }
 
 .single-product .woocommerce-product-gallery__wrapper {
+  display: flex;
   max-width: 100%;
+  overflow: hidden;
+}
+
+/* Ensure each slide occupies full wrapper width and cannot overflow */
+.single-product .woocommerce-product-gallery__wrapper > * {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* Prevent any child inside the gallery from exceeding its container */
+.single-product .woocommerce-product-gallery * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Safety: block horizontal bleed from the product container */
+.single-product .product {
   overflow: hidden;
 }
 
