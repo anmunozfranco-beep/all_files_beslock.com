@@ -24,11 +24,13 @@ function beslock_enqueue_main_style() {
 add_action( 'wp_enqueue_scripts', 'beslock_enqueue_main_style', 1 );
 
 // Load theme `inc` modules (ensure enqueue handlers are registered)
-// We deliberately include `inc/core/enqueue.php` to guarantee the detailed
-// style/script enqueue logic is always available to the theme runtime.
-if ( file_exists( get_stylesheet_directory() . '/inc/core/enqueue.php' ) ) {
-  require_once get_stylesheet_directory() . '/inc/core/enqueue.php';
-}
+// NOTE: `inc/core/enqueue.php` contains a legacy copy of enqueue logic.
+// Phase 1: prefer `inc/enqueue-assets.php` as the canonical enqueue handler
+// to avoid duplicate enqueues. The old include is disabled to prevent
+// duplication during the BEM migration preparation.
+// if ( file_exists( get_stylesheet_directory() . '/inc/core/enqueue.php' ) ) {
+//   require_once get_stylesheet_directory() . '/inc/core/enqueue.php';
+// }
 // Also include legacy / duplicate enqueue file if present to ensure no handlers are missed
 if ( file_exists( get_stylesheet_directory() . '/inc/enqueue-assets.php' ) ) {
   require_once get_stylesheet_directory() . '/inc/enqueue-assets.php';

@@ -1,3 +1,14 @@
+/* BEM entry imports (Phase 1 placeholders)
+  These files are intentionally empty placeholders for the initial
+  BEM split. Do NOT move existing rules yet — imports added for future
+  progressive migration. */
+@import "base/variables.css";
+@import "layout/header.css";
+@import "components/product-card.css";
+@import "components/badge.css";
+@import "components/hero.css";
+@import "pages/single-product.css";
+
 :root {
   --beslock-black:      #070505;
   --beslock-white:      #FFFFFF;

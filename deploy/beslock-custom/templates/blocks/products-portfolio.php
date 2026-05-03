@@ -91,7 +91,8 @@ echo '<section id="productos" class="products-portfolio section reveal"><div cla
   }
 
   set_query_var('product', $product);
-  get_template_part('templates/blocks/product-card');
+  // Use canonical template-parts location to avoid duplicate templates
+  get_template_part('template-parts/product-card');
 }
 echo '</div></section>';
 ?>
