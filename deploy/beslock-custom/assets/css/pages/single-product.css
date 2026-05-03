@@ -83,3 +83,48 @@
     display: block;
   }
 
+  /* Beslock reel override for single-product pages
+     These rules ensure a single slide is visible, prevent horizontal
+     overflow, and provide a sensible visual slider before JS runs. */
+  .single-product .product-page__media {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .single-product .beslock-gallery-reel {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    transition: transform 0.4s ease !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: auto !important;
+    scroll-snap-type: none !important;
+    transform: translateX(0%) !important;
+  }
+
+  .single-product .beslock-gallery-slide {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    display: block !important;
+  }
+
+  .single-product .beslock-gallery-slide img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+  }
+
+  /* Ensure nav/buttons don't cause overflow */
+  .single-product .beslock-gallery-nav,
+  .single-product .beslock-gallery-dots,
+  .single-product .beslock-gallery-counter {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
