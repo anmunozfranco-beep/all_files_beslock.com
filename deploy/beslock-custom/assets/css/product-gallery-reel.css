@@ -12,8 +12,10 @@
   box-sizing: border-box;
 }
 .beslock-gallery-slide{
-  flex: 0 0 85vw;
-  max-width: 85vw;
+  /* Use container-relative sizing to avoid viewport-driven overflow */
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
   height: auto;
   scroll-snap-align: center;
   display: flex;
@@ -91,7 +93,7 @@
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height: 46vw;
+  min-height: 40vh; /* keep reasonable aspect without using vw */
   background: #f5f5f7;
   color: #777;
   font-size: 14px;
