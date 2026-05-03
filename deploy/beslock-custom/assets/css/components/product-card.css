@@ -26,5 +26,22 @@
    padding-bottom: 6px;  /* migrated from main.css */
    position: relative;
 }
+/* Title and price (base) migrated from main.css - Phase 3A
+    Keep more specific overrides in main.css (cart, front-page, high-specificity rules).
+*/
+.product-card__title {
+   font-size: 18px;
+   font-weight: 600;
+   color: #1f3d2b;
+   margin: 0;
+}
+
+.product-card__price {
+   font-size: 20px;
+   font-weight: 700;
+   color: #000;
+   margin: 0;
+   text-align: center;
+}
 
 
