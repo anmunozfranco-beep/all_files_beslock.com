@@ -128,3 +128,37 @@
     box-sizing: border-box;
   }
 
+  /* Hero grid layout: two-column media + info (scoped to .single-product) */
+  .single-product {
+    overflow-x: hidden;
+  }
+
+  .single-product .product-page__hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+
+  .single-product .product-page__media {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .single-product .product-page__info {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .single-product .product-page__hero {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+  }
+
