@@ -87,15 +87,18 @@
      These rules ensure a single slide is visible, prevent horizontal
      overflow, and provide a sensible visual slider before JS runs. */
   .single-product .product-page__media {
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
     position: relative;
-    width: 100%;
+    contain: layout;
   }
 
   .single-product .beslock-gallery-reel {
     display: flex !important;
     flex-direction: row !important;
-    width: 100% !important;
+    width: max-content !important;
+    max-width: 100% !important;
     transition: transform 0.4s ease !important;
     gap: 0 !important;
     padding: 0 !important;
@@ -103,7 +106,7 @@
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: auto !important;
     scroll-snap-type: none !important;
-    transform: translateX(0%) !important;
+    transform: translateX(0) !important;
   }
 
   .single-product .beslock-gallery-slide {
@@ -126,6 +129,16 @@
   .single-product .beslock-gallery-counter {
     width: 100%;
     box-sizing: border-box;
+  }
+
+  /* Break width propagation from flex track to parent and force viewport behavior */
+  .single-product .product-page__media > * {
+    max-width: 100%;
+  }
+
+  /* Hard stop overflow at hero container as a safety net */
+  .single-product .product-page__hero {
+    overflow: hidden;
   }
 
   /* Hero grid layout: two-column media + info (scoped to .single-product) */
