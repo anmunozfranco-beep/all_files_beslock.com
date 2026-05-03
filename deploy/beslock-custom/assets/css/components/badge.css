@@ -1,2 +1,19 @@
 /* BEM Phase 1 placeholder: components/badge.css
    Product badge styles to be migrated later. KEEP EMPTY for now. */
+
+/* Base product-card badge positioning (migrated from main.css)
+   Phase 1: only move safe, layout-sensitive properties (position, top/right,
+   size, transform, transform-origin, z-index, pointer-events). Do NOT move
+   transitions, filters, or advanced effects yet. */
+.product-card__badge {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  width: 90px !important;
+  height: auto !important;
+  transform: rotate(12deg) scale(0.75) !important;
+  transform-origin: top right;
+  z-index: 5;
+  pointer-events: none;
+}
+
