@@ -40,11 +40,8 @@
   gap: 16px;
 }
 
-.single-product .summary * {
-  display: revert !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
+/* Removed aggressive visibility reset to preserve WooCommerce JS-driven
+   dynamic states (tabs, gallery, add-to-cart, variations). */
 
 .single-product form.cart {
   display: flex;
