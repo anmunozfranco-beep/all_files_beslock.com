@@ -140,6 +140,193 @@ input.qty {
   .product-page__title{ font-size:1.6rem }
 }
 
+/* Prevent right-column content from overflowing: allow children to shrink and wrap */
+.product-page__info {
+  min-width: 0 !important; /* allow flex/grid children to shrink */
+}
+.product-page__info * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+.product-page__info .product-page__title,
+.product-page__info .product-page__excerpt,
+.product-page__info .product-page__meta,
+.product-page__info p,
+.product-page__info li {
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  hyphens: auto !important;
+}
+.product-page__buy,
+.beslock-buy-controls,
+.beslock-qty {
+  min-width: 0 !important; /* ensure controls can shrink inside column */
+}
+.product-page__buy .single_add_to_cart_button {
+  white-space: normal !important; /* allow button text to wrap instead of overflowing */
+}
+
+/* Desktop refinements: wider media, sidebar info, horizontal buy controls */
+@media (min-width: 1024px){
+  /* Main container: center and constrain width */
+  .product-page{ max-width:1280px; margin:0 auto; padding-left:1rem; padding-right:1rem; }
+
+  /* Two-column hero: 60% gallery / 40% buy box */
+  .product-page__hero{ display:grid; grid-template-columns: 60% 40%; gap: 32px; align-items:start; }
+
+  /* Gallery area: make main image + vertical thumbnails column */
+  .product-page__media{ max-width:100%; }
+  .product-page__media .beslock-gallery-reel,
+  .product-page__media .woocommerce-product-gallery__wrapper { display:block !important; overflow:visible !important; }
+
+  /* Use horizontal reel on desktop like mobile: snap + swipe/scroll */
+  .beslock-gallery-reel { display: flex; gap: 0.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; padding-bottom: 0.5rem; }
+  /* stronger specificity to avoid overrides from other CSS */
+  body.single-product .product-page__media .beslock-gallery-reel {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    padding-bottom: 0.5rem !important;
+    white-space: nowrap !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-slide {
+    box-sizing: border-box !important;
+    flex: 0 0 86% !important;
+    min-width: 86% !important;
+    scroll-snap-align: center !important;
+    display: inline-block !important;
+    vertical-align: top !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-reel {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 48px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    padding: 0 !important; /* remove lateral padding so slides fill the reel */
+    /* Make the reel occupy 35% of the viewport width (reduced by 10% -> 31.5vw) and shift it 10% from the left */
+    width: 35% !important;
+    max-width: 35% !important;
+    position: relative !important;
+    margin-left: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure each slide keeps a 1:1 aspect ratio (square) and fills the reel */
+  body.single-product .product-page__media .beslock-gallery-slide {
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Vertically center the right column content within the hero on desktop */
+  .product-page__hero { align-items: center !important; }
+  .product-page__info { display: flex !important; flex-direction: column !important; justify-content: center !important; }
+
+  body.single-product .product-page__media .beslock-gallery-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+/* Authoritative override: ensure same reel width/position and square slides on intermediate and larger viewports */
+@media (min-width: 768px) {
+  body.single-product .product-page__media .beslock-gallery-reel {
+    width: 35% !important;
+    max-width: 35% !important;
+    position: relative !important;
+    margin-left: 0 !important; /* align to container left */
+    padding-bottom: 0 !important;
+    -ms-overflow-style: none !important; /* IE 10+ */
+    scrollbar-width: none !important; /* Firefox */
+  }
+
+  /* Hide WebKit scrollbar while preserving scroll functionality */
+  body.single-product .product-page__media .beslock-gallery-reel::-webkit-scrollbar {
+    height: 0; /* hide horizontal scrollbar */
+    display: none;
+  }
+
+  body.single-product .product-page__media .beslock-gallery-slide {
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  body.single-product .product-page__media .beslock-gallery-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Desktop: move hero top to 15vh and increase reel size by ~15% */
+  .product-page {
+    margin-top: 15vh !important;
+  }
+
+  body.single-product .product-page__media .beslock-gallery-reel {
+    /* Reel default width (overridden below for hero-centering) */
+    width: 44% !important;
+    max-width: 44% !important;
+  }
+
+  /* Make the reel occupy 80% of the media column and center it inside the hero
+     so the visual reel is centered within the left hero column. This keeps the
+     1:1 slides and allows the right column to overlap the reel when needed. */
+  .product-page__media .beslock-gallery-reel {
+    width: 80% !important;
+    max-width: 80% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure the right-side buy/info panel sits above the reel when overlapping */
+  .product-page__info {
+    position: relative !important;
+    z-index: 100 !important;
+  }
+}
+  body.single-product .product-page__media .beslock-gallery-slide {
+    box-sizing: border-box !important;
+    /* each slide occupies the full reel width so only one is visible */
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    scroll-snap-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-slide img {
+    max-width:95% !important; /* centro y un poco de espacio lateral dentro del slide */
+    height:auto !important;
+    object-fit:contain !important;
+    border-radius:8px !important;
+    display:block !important;
+    margin: 0 auto !important; /* centrar imagen */
+  }
+  /* Make slides square on desktop */
+  body.single-product .product-page__media .beslock-gallery-slide {
+    aspect-ratio: 1 / 1 !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-slide img {
+    max-width: 95% !important;
+    max-height: 95% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+  body.single-product .product-page__media .beslock-gallery-slide.active img { outline: none !important; box-shadow: none !important; }
 /* Constrain gallery thumbnails and images within the media area */
 .product-page__media .woocommerce-product-gallery{ max-width:100%; }
 .product-page__media .woocommerce-product-gallery__image img{ width:100%; height:auto; object-fit:contain }

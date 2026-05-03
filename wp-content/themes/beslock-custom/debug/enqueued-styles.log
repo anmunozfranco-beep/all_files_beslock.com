@@ -2,6 +2,7 @@
 wp-img-auto-sizes-contain => inline/unknown
 beslock-main-style => http://localhost:8000/wp-content/themes/beslock-custom/style.css
 wp-emoji-styles => inline/unknown
+select2 => http://localhost:8000/wp-content/plugins/woocommerce/assets/css/select2.css
 woocommerce-inline => inline/unknown
 beslock-extra-style => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/main.css
 beslock-bootstrap-icons => https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css

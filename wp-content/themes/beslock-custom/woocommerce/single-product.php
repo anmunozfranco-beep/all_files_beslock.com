@@ -17,6 +17,7 @@ if ( have_posts() ) :
 ?>
 
 <main class="product-page product-page--single" id="main" role="main">
+  <div class="u-container">
   <div class="product-page__hero">
     <div class="product-page__media">
       <?php
@@ -76,7 +77,8 @@ if ( have_posts() ) :
         <?php do_action( 'beslock_product_trust_badges' ); ?>
       </div>
     </div>
-  </div>
+  </div><!-- .product-page__hero -->
+  </div><!-- .u-container -->
 
   <div class="product-page__content">
 

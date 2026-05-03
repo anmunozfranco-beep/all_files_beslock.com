@@ -105,4 +105,24 @@
   margin-top: 8px;
 }
 
+/* Improve drag/slide reliability across devices */
+.beslock-gallery-reel {
+  touch-action: pan-x;
+  -ms-touch-action: pan-x;
+  -webkit-tap-highlight-color: transparent;
+  cursor: grab;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.beslock-gallery-reel:active { cursor: grabbing; }
+.beslock-gallery-slide img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Ensure inner slides don't capture touch gestures that should pan the reel */
+.beslock-gallery-slide { touch-action: none; }
+
 

@@ -4,85 +4,463 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Ensure the main theme stylesheet handle is registered very early so other
- * styles can safely declare it as a dependency. This registers `beslock-main-style`
- * and enqueues it from `style.css` (child theme stylesheet) at priority 1.
+/* Beslock Custom Theme – Functions
+ * Mobile-first + BEM + GSAP Ready
  */
-function beslock_enqueue_main_style() {
-  $style_path = get_stylesheet_directory() . '/style.css';
-  $ver = file_exists( $style_path ) ? filemtime( $style_path ) : null;
+add_action( 'wp_enqueue_scripts', function() {
 
-  wp_register_style(
+  // If this theme is used as a child theme, ensure the Kadence parent stylesheet
+  // is enqueued so the site inherits the parent's layout and e-commerce assets.
+  if ( function_exists( 'is_child_theme' ) && is_child_theme() ) {
+    wp_enqueue_style( 'kadence-parent-style', get_template_directory_uri() . '/style.css', [], null );
+  }
+
+
+  // Helper para versiones basadas en tiempo de modificación (si existe el archivo)
+  $theme_dir_uri  = get_stylesheet_directory_uri();
+  $theme_dir_path = get_stylesheet_directory();
+
+  $ver_main_css = file_exists( $theme_dir_path . '/assets/css/main.css' )
+    ? filemtime( $theme_dir_path . '/assets/css/main.css' )
+    : null;
+
+  /* -------------------------------
+   * CSS PRINCIPAL
+   * ------------------------------- */
+  wp_enqueue_style(
     'beslock-main-style',
-    get_stylesheet_uri(),
-    array(),
-    $ver
+    $theme_dir_uri . '/assets/css/main.css',
+    [],
+    $ver_main_css
   );
 
-  wp_enqueue_style( 'beslock-main-style' );
-}
-add_action( 'wp_enqueue_scripts', 'beslock_enqueue_main_style', 1 );
+  // Inline fallback: force the header to be fixed when some environments
+  // (hosting / transforms / parent styles) prevent `position: sticky` from working.
+  // This inline rule is minimal and intentionally specific so it wins over
+  // common overrides without requiring !important in theme files.
+  $inline_header_fallback = "\n.header{position:fixed;top:0;left:0;right:0;z-index:var(--z-header);}\n";
+  wp_add_inline_style( 'beslock-main-style', $inline_header_fallback );
 
-// Load theme `inc` modules (ensure enqueue handlers are registered)
-// We deliberately include `inc/core/enqueue.php` to guarantee the detailed
-// style/script enqueue logic is always available to the theme runtime.
-if ( file_exists( get_stylesheet_directory() . '/inc/core/enqueue.php' ) ) {
-  require_once get_stylesheet_directory() . '/inc/core/enqueue.php';
-}
-// Also include legacy / duplicate enqueue file if present to ensure no handlers are missed
-if ( file_exists( get_stylesheet_directory() . '/inc/enqueue-assets.php' ) ) {
-  require_once get_stylesheet_directory() . '/inc/enqueue-assets.php';
-}
-// Load WooCommerce logic modules (keep logic out of templates)
-if ( file_exists( get_stylesheet_directory() . '/inc/woocommerce/setup.php' ) ) {
-  require_once get_stylesheet_directory() . '/inc/woocommerce/setup.php';
-}
-if ( file_exists( get_stylesheet_directory() . '/inc/woocommerce/product-features.php' ) ) {
-  require_once get_stylesheet_directory() . '/inc/woocommerce/product-features.php';
-}
-if ( file_exists( get_stylesheet_directory() . '/inc/woocommerce/product-hooks.php' ) ) {
-  require_once get_stylesheet_directory() . '/inc/woocommerce/product-hooks.php';
-}
-if ( file_exists( get_stylesheet_directory() . '/inc/woocommerce/cart.php' ) ) {
-  require_once get_stylesheet_directory() . '/inc/woocommerce/cart.php';
-}
-if ( file_exists( get_stylesheet_directory() . '/inc/woocommerce/enqueue-assets.php' ) ) {
-  require_once get_stylesheet_directory() . '/inc/woocommerce/enqueue-assets.php';
-}
+    // Localize and center the WooCommerce empty-cart message on the Cart page
+    add_filter( 'wc_empty_cart_message', function( $message ) {
+      return esc_html__( 'Tu carrito está vacío.', 'beslock' );
+    } );
 
-/**
- * Enqueue main theme assets: `style.css` as the primary handle and optional
- * assets under `assets/css` and `assets/js` loaded after it.
- */
-function beslock_enqueue_assets() {
-  // MAIN CSS (style.css)
-  $style_file = get_stylesheet_directory() . '/style.css';
-  $ver = file_exists( $style_file ) ? filemtime( $style_file ) : null;
-  if ( ! wp_style_is( 'beslock-main-style', 'registered' ) ) {
-    wp_register_style( 'beslock-main-style', get_stylesheet_uri(), array(), $ver );
-  }
-  if ( ! wp_style_is( 'beslock-main-style', 'enqueued' ) ) {
-    wp_enqueue_style( 'beslock-main-style' );
+    add_action( 'wp_head', function() {
+      if ( function_exists( 'is_cart' ) && is_cart() ) {
+        ?>
+        <style>
+          /* Center empty cart message and return-to-shop button */
+          .wc-empty-cart-message, .wc-empty-cart-message .cart-empty, .wp-block-woocommerce-empty-cart-block { text-align: center !important; }
+          .return-to-shop { text-align: center !important; }
+          .return-to-shop .button { display: inline-block !important; margin: 0 auto !important; }
+        </style>
+        <?php
+      }
+    }, 20 );
+
+  // Translate remaining WooCommerce empty-cart strings to Spanish and related CTAs
+  add_filter( 'gettext', function( $translated, $text, $domain ) {
+    if ( 'woocommerce' !== $domain ) return $translated;
+
+    switch ( $text ) {
+      case 'Your cart is currently empty.':
+      case 'Your cart is currently empty!':
+        return 'Tu carrito está vacío.';
+      case 'Return to shop':
+        return 'Volver a la tienda';
+      case 'Browse store':
+        return 'Explorar la tienda';
+      case 'New in store':
+        return 'Resumen de Productos';
+      default:
+        return $translated;
+    }
+  }, 20, 3 );
+
+  // Center mini-cart empty state in header/mini-cart components
+  add_action( 'wp_head', function() {
+    ?>
+    <style>
+      /* Center various empty-cart wrappers used in blocks/mini-cart */
+      .wc-block-mini-cart__empty-cart-wrapper,
+      .wc-block-mini-cart__empty-cart-wrapper *,
+      .woocommerce-mini-cart__empty-message,
+      .wc-block-cart__empty-cart__title,
+      .wp-block-woocommerce-empty-cart-block { text-align: center !important; }
+      .wc-block-mini-cart__empty-cart-wrapper .button,
+      .woocommerce-mini-cart .return-to-shop .button { margin: 0 auto !important; display: inline-block !important; }
+    </style>
+    <?php
+  }, 25 );
+  /* -------------------------------
+   * Bootstrap Icons (CDN) - GLOBAL
+   * Cargado de forma global en frontend para uso en header/menu/modales
+   * Versión: 1.13.1 (sin SRI por flujo de desarrollo)
+   * ------------------------------- */
+  wp_enqueue_style(
+    'beslock-bootstrap-icons',
+    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
+    [],
+    '1.13.1'
+  );
+
+  /* -------------------------------
+   * CSS ESPECÍFICO PARA MENÚ PRODUCTOS MÓVIL
+   * Se cargará siempre para aplicar la versión móvil en todas las resoluciones
+   * ------------------------------- */
+  $menu_css_path = $theme_dir_path . '/assets/css/menu-products-mobile.css';
+  $ver_menu_css = file_exists( $menu_css_path ) ? filemtime( $menu_css_path ) : null;
+
+  wp_enqueue_style(
+    'beslock-menu-products-mobile',
+    $theme_dir_uri . '/assets/css/menu-products-mobile.css',
+    [ 'beslock-main-style' ],
+    $ver_menu_css
+  );
+
+  // CSS del nuevo componente models (mobile)
+  $models_css_path = $theme_dir_path . '/assets/css/models-mobile.css';
+  $ver_models_css = file_exists( $models_css_path ) ? filemtime( $models_css_path ) : null;
+
+  wp_enqueue_style(
+    'beslock-models-mobile',
+    $theme_dir_uri . '/assets/css/models-mobile.css',
+    [ 'beslock-main-style', 'beslock-menu-products-mobile' ],
+    $ver_models_css
+  );
+
+
+  /* -------------------------------
+   * GSAP + ScrollTrigger desde CDN
+   * ------------------------------- */
+  wp_enqueue_script(
+    'gsap',
+    'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js',
+    [],
+    null,
+    true
+  );
+  wp_enqueue_script(
+    'scrolltrigger',
+    'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js',
+    [ 'gsap' ],
+    null,
+    true
+  );
+
+  /* -------------------------------
+   * JS PRINCIPAL DEL TEMA
+   * ------------------------------- */
+  $main_js_path = $theme_dir_path . '/assets/js/main.js';
+  $ver_main_js = file_exists( $main_js_path ) ? filemtime( $main_js_path ) : null;
+
+  wp_enqueue_script(
+    'beslock-main-js',
+    $theme_dir_uri . '/assets/js/main.js',
+    [ 'scrolltrigger' ], // asegura carga en el orden correcto
+    $ver_main_js,
+    true
+  );
+
+  // Small helper to replace placeholder gallery images at runtime
+  $fix_placeholder_js = $theme_dir_path . '/assets/js/fix-placeholder.js';
+  if ( file_exists( $fix_placeholder_js ) ) {
+    wp_enqueue_script( 'beslock-fix-placeholder-js', $theme_dir_uri . '/assets/js/fix-placeholder.js', array( 'beslock-main-js' ), filemtime( $fix_placeholder_js ), true );
   }
 
-  // OPTIONAL extra CSS (assets/css/main.css)
-  $extra_css = get_stylesheet_directory() . '/assets/css/main.css';
-  if ( file_exists( $extra_css ) ) {
-    wp_enqueue_style(
-      'beslock-extra-style',
-      get_stylesheet_directory_uri() . '/assets/css/main.css',
-      array( 'beslock-main-style' ),
-      filemtime( $extra_css )
-    );
+  /* -------------------------------
+   * JS ESPECÍFICO PARA MENÚ PRODUCTOS MÓVIL
+   * Se encola siempre para que el drawer funcione en todas las resoluciones
+   * ------------------------------- */
+  $menu_js_path = $theme_dir_path . '/assets/js/menu-products-mobile.js';
+  $ver_menu_js = file_exists( $menu_js_path ) ? filemtime( $menu_js_path ) : null;
+
+  wp_enqueue_script(
+    'beslock-menu-products-mobile-js',
+    $theme_dir_uri . '/assets/js/menu-products-mobile.js',
+    [ 'beslock-main-js' ],
+    $ver_menu_js,
+    true
+  );
+
+  // JS del nuevo componente models (manejo de toggle del panel Products)
+  $models_js_path = $theme_dir_path . '/assets/js/models-mobile.js';
+  $ver_models_js = file_exists( $models_js_path ) ? filemtime( $models_js_path ) : null;
+
+  wp_enqueue_script(
+    'beslock-models-mobile-js',
+    $theme_dir_uri . '/assets/js/models-mobile.js',
+    [ 'beslock-main-js', 'beslock-menu-products-mobile-js' ],
+    $ver_models_js,
+    true
+  );
+
+  // Product page widgets (free-shipping bar, social proof)
+  $widgets_css = $theme_dir_path . '/assets/css/product-widgets.css';
+  if ( file_exists( $widgets_css ) ) {
+    wp_enqueue_style( 'beslock-product-widgets', $theme_dir_uri . '/assets/css/product-widgets.css', [ 'beslock-main-style' ], filemtime( $widgets_css ) );
   }
 
-  // MAIN JS
-  $main_js = get_stylesheet_directory() . '/assets/js/main.js';
-  if ( file_exists( $main_js ) ) {
-    wp_enqueue_script( 'beslock-main-js', get_stylesheet_directory_uri() . '/assets/js/main.js', array(), filemtime( $main_js ), true );
+  // Product page styles (mobile-first BEM)
+  $product_page_css = $theme_dir_path . '/assets/css/product-page.css';
+  if ( file_exists( $product_page_css ) ) {
+    wp_enqueue_style( 'beslock-product-page', $theme_dir_uri . '/assets/css/product-page.css', [ 'beslock-main-style' ], filemtime( $product_page_css ) );
+    // Add small inline overrides to ensure key layout rules win the cascade on product pages
+    $inline_product_css = "\nbody.single-product .product-page { margin-top: 0 !important; }\n" .
+      "body.single-product .product-page__media .beslock-gallery-reel { width: 80% !important; max-width: 80% !important; margin-left: auto !important; margin-right: auto !important; box-sizing: border-box !important; }\n" .
+      "body.single-product .product-page__media .beslock-gallery-slide { aspect-ratio: 1 / 1 !important; flex: 0 0 100% !important; min-width: 100% !important; }\n" .
+      "body.single-product .product-page__info { position: relative !important; z-index: 100 !important; }\n";
+    wp_add_inline_style( 'beslock-product-page', $inline_product_css );
   }
-}
-add_action( 'wp_enqueue_scripts', 'beslock_enqueue_assets' );
+
+  // Product tabs (Especificaciones / Reviews) - mobile-first
+  $product_tabs_css = $theme_dir_path . '/assets/css/product-tabs.css';
+  if ( file_exists( $product_tabs_css ) ) {
+    wp_enqueue_style( 'beslock-product-tabs', $theme_dir_uri . '/assets/css/product-tabs.css', [ 'beslock-product-page' ], filemtime( $product_tabs_css ) );
+  }
+  $product_tabs_js = $theme_dir_path . '/assets/js/product-tabs.js';
+  if ( file_exists( $product_tabs_js ) ) {
+    wp_enqueue_script( 'beslock-product-tabs-js', $theme_dir_uri . '/assets/js/product-tabs.js', [ 'beslock-main-js' ], filemtime( $product_tabs_js ), true );
+  }
+
+  // Product quantity controls script (inject +/- buttons)
+  $qty_js = $theme_dir_path . '/assets/js/product-quantity-controls.js';
+  if ( file_exists( $qty_js ) ) {
+    wp_enqueue_script( 'beslock-product-qty-js', $theme_dir_uri . '/assets/js/product-quantity-controls.js', [ 'beslock-main-js' ], filemtime( $qty_js ), true );
+  }
+
+  // Product badge injector: injects instal badge for specified product titles
+  $badge_js = $theme_dir_path . '/assets/js/product-badge-inject.js';
+  if ( file_exists( $badge_js ) ) {
+    wp_enqueue_script( 'beslock-product-badge-js', $theme_dir_uri . '/assets/js/product-badge-inject.js', [ 'beslock-main-js' ], filemtime( $badge_js ), true );
+    wp_localize_script( 'beslock-product-badge-js', 'beslock_badge_params', array(
+      'theme_uri' => $theme_dir_uri,
+      'targets'   => array( 'e-Orbit', 'e-Flex', 'e-Shield', 'e-Prime' ),
+    ) );
+  }
+
+  // NOTE: Cross-fade system disabled.
+  // We use the rotator implementation (product-rotator.css/js) with `.product-image-rotator` + `.product-frame`.
+  // The previous cross-fade assets were targeting different class names and were causing layout drift.
+
+  /* Product rotator (grid-based, opacity-only) */
+  $product_rotator_css = $theme_dir_path . '/assets/css/product-rotator.css';
+  if ( file_exists( $product_rotator_css ) ) {
+    wp_enqueue_style( 'beslock-product-rotator', $theme_dir_uri . '/assets/css/product-rotator.css', [ 'beslock-main-style' ], filemtime( $product_rotator_css ) );
+  }
+
+  $product_rotator_js = $theme_dir_path . '/assets/js/product-rotator.js';
+  if ( file_exists( $product_rotator_js ) ) {
+    wp_enqueue_script( 'beslock-product-rotator-js', $theme_dir_uri . '/assets/js/product-rotator.js', [ 'beslock-main-js' ], filemtime( $product_rotator_js ), true );
+  }
+
+  // Product gallery reel (server-rendered): enqueue CSS and JS
+  $reel_css = $theme_dir_path . '/assets/css/product-gallery-reel.css';
+  if ( file_exists( $reel_css ) ) {
+    wp_enqueue_style( 'beslock-product-gallery-reel', $theme_dir_uri . '/assets/css/product-gallery-reel.css', [ 'beslock-main-style' ], filemtime( $reel_css ) );
+    // repeat key overrides after reel stylesheet to ensure they win the cascade in all environments
+    $inline_after_reel = "\nbody.single-product .product-page { margin-top: 0 !important; }\n" .
+      "body.single-product .product-page__media .beslock-gallery-reel { width: 80% !important; max-width: 80% !important; margin-left: auto !important; margin-right: auto !important; box-sizing: border-box !important; }\n" .
+      "body.single-product .product-page__media .beslock-gallery-slide { aspect-ratio: 1 / 1 !important; flex: 0 0 100% !important; min-width: 100% !important; }\n" .
+      "body.single-product .product-page__info { position: relative !important; z-index: 100 !important; }\n";
+    wp_add_inline_style( 'beslock-product-gallery-reel', $inline_after_reel );
+  }
+  $reel_js = $theme_dir_path . '/assets/js/product-gallery-reel.js';
+  if ( file_exists( $reel_js ) ) {
+    wp_enqueue_script( 'beslock-product-gallery-reel-js', $theme_dir_uri . '/assets/js/product-gallery-reel.js', [ 'beslock-main-js' ], filemtime( $reel_js ), true );
+  }
+
+  /* -------------------------------
+   * Header state script + CSS (BBC-like behavior)
+   * Adds a minimal, reversible scroll-state controller for the header.
+   * ------------------------------- */
+  $header_state_js = $theme_dir_path . '/assets/js/header-state.js';
+  $ver_header_state_js = file_exists( $header_state_js ) ? filemtime( $header_state_js ) : null;
+  wp_enqueue_script(
+    'beslock-header-state',
+    $theme_dir_uri . '/assets/js/header-state.js',
+    [],
+    $ver_header_state_js,
+    true
+  );
+
+  $header_state_css = $theme_dir_path . '/assets/css/header-state.css';
+  if ( file_exists( $header_state_css ) ) {
+    wp_enqueue_style( 'beslock-header-state-css', $theme_dir_uri . '/assets/css/header-state.css', [ 'beslock-main-style' ], filemtime( $header_state_css ) );
+  }
+
+});
+
+// Inline early-capture script: prevent navigation to raw uploads image URLs
+// and open a lightweight fullscreen overlay instead. This runs in the head
+// so it can intercept pointer/touch events before default navigation.
+add_action( 'wp_head', function(){
+  ?>
+  <script>
+  (function(){
+    function openOverlay(src){
+      try{
+        if(window.__beslock_inline_overlay) return;
+        var overlay = document.createElement('div');
+        overlay.id = 'beslock-inline-overlay';
+        overlay.style.position = 'fixed';
+        overlay.style.left = '0';
+        overlay.style.top = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.background = 'rgba(8,8,8,0.95)';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.zIndex = 2147483647;
+        overlay.style.cursor = 'zoom-out';
+
+        var img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        img.style.objectFit = 'contain';
+
+        // Close button (visible, accessible)
+        var btn = document.createElement('button');
+        btn.setAttribute('type','button');
+        btn.setAttribute('aria-label','Close image');
+        btn.className = 'beslock-inline-close';
+        btn.innerHTML = '\u00D7';
+        btn.style.position = 'absolute';
+        btn.style.top = '12px';
+        btn.style.right = '12px';
+        btn.style.width = '44px';
+        btn.style.height = '44px';
+        btn.style.border = '0';
+        btn.style.borderRadius = '22px';
+        btn.style.background = 'rgba(0,0,0,0.5)';
+        btn.style.color = '#fff';
+        btn.style.fontSize = '28px';
+        btn.style.lineHeight = '44px';
+        btn.style.textAlign = 'center';
+        btn.style.cursor = 'pointer';
+        btn.style.zIndex = 2147483650;
+
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          try{ if(overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }catch(err){}
+          window.__beslock_inline_overlay = null;
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
+          document.removeEventListener('keydown', onKey);
+        }, false);
+
+        // Ensure the overlay is a positioned container so the absolute button sits correctly
+        overlay.style.position = 'fixed';
+        overlay.style.padding = '24px';
+
+        overlay.appendChild(btn);
+        overlay.appendChild(img);
+
+        function close(){
+          try{ if(overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }catch(e){}
+          window.__beslock_inline_overlay = null;
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
+          document.removeEventListener('keydown', onKey);
+        }
+
+        function onKey(e){ if(e.key === 'Escape' || e.keyCode === 27) close(); }
+
+        overlay.addEventListener('click', function(e){
+          // ignore clicks on actionable children
+          var actionable = e.target.closest && e.target.closest('a, button');
+          if(actionable) return;
+          close();
+        }, { capture: true });
+
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        document.body.appendChild(overlay);
+        window.__beslock_inline_overlay = overlay;
+        document.addEventListener('keydown', onKey);
+      }catch(e){ }
+    }
+
+    function inertAnchors(){
+      try{
+        var anchors = document.querySelectorAll('.woocommerce div.product div.images a');
+        anchors.forEach(function(a){
+          try{
+            var href = a.getAttribute('href') || a.href || '';
+            if(href && href.indexOf('/wp-content/uploads/') !== -1){
+              a.setAttribute('data-beslock-inert','1');
+              try{ a.removeAttribute('href'); }catch(e){}
+              a.style.cursor = 'default';
+            }
+          }catch(e){}
+        });
+      }catch(e){}
+    }
+
+    function onPointer(e){
+      try{
+        var a = e.target && e.target.closest ? e.target.closest('a') : null;
+        if(!a) return;
+        if(!(a.closest && a.closest('.woocommerce div.product'))) return;
+        var href = a.getAttribute('href') || a.href || '';
+        if(href && href.indexOf('/wp-content/uploads/') !== -1){
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          try{ a.removeAttribute('href'); }catch(e){}
+          openOverlay(href);
+        }
+      }catch(err){}
+    }
+
+    // Run early and on DOM changes
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', inertAnchors);
+    } else { inertAnchors(); }
+
+    document.addEventListener('pointerdown', onPointer, true);
+    document.addEventListener('touchstart', onPointer, true);
+
+    // Observe product area and keep anchors inert
+    try{
+      var prod = document.querySelector('.woocommerce div.product');
+      if(prod && window.MutationObserver){
+        var mo = new MutationObserver(function(){ inertAnchors(); });
+        mo.observe(prod, { childList:true, subtree:true, attributes:true });
+      }
+    }catch(e){}
+  })();
+  </script>
+  <?php
+}, 1 );
+
+
+
+// Ensure single-product hero sits 5px below the fixed header by measuring header height
+add_action( 'wp_footer', function() {
+  if ( function_exists( 'is_product' ) && is_product() ) {
+    ?>
+    <script>
+    (function(){
+      function setHeroOffset(){
+        try{
+          var header = document.querySelector('.header');
+          var hero = document.querySelector('.product-page');
+          if(!header || !hero) return;
+          var h = header.offsetHeight || 0;
+          hero.style.marginTop = h + 'px';
+        }catch(e){}
+      }
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setHeroOffset); else setHeroOffset();
+      window.addEventListener('resize', function(){ setTimeout(setHeroOffset, 80); });
+    })();
+    </script>
+    <?php
+  }
+}, 20 );
 
 /**
  * Declare WooCommerce support for the child theme if not already present.
@@ -132,6 +510,405 @@ add_action( 'after_setup_theme', function() {
     return 0;
   } );
 
+// Final inline CSS at end of body to absolutely ensure product page layout overrides
+add_action( 'wp_footer', function() {
+  if ( function_exists( 'is_product' ) && is_product() ) {
+    ?>
+    <style>
+      /* Last-resort overrides to ensure layout wins the cascade */
+      body.single-product .product-page { margin-top: 0 !important; }
+      body.single-product .product-page__media .beslock-gallery-reel {
+        width: 80% !important;
+        max-width: 80% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-sizing: border-box !important;
+        overflow-x: auto !important;
+      }
+      body.single-product .product-page__media .beslock-gallery-slide {
+        aspect-ratio: 1 / 1 !important;
+        flex: 0 0 100% !important;
+        min-width: 100% !important;
+      }
+      body.single-product .product-page__info {
+        position: relative !important;
+        z-index: 100 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+      }
+    </style>
+    <?php
+  }
+}, 999 );
+
+// Global header offset: ensure page content starts below the fixed header
+add_action( 'wp_footer', function() {
+  ?>
+  <script>
+  (function(){
+    function applyHeaderOffset(){
+      try{
+        var header = document.querySelector('.header');
+        if(!header) return;
+        var h = header.offsetHeight || 0;
+        // Prefer CSS variable so components can reference it if needed
+        document.documentElement.style.setProperty('--beslock-header-height', h + 'px');
+        // Apply safe body padding to push content below fixed header
+        var current = parseInt(window.getComputedStyle(document.body).paddingTop, 10) || 0;
+        // Only set if header is fixed or overlapping content
+        var headerStyle = window.getComputedStyle(header);
+        var isFixed = headerStyle.position === 'fixed' || headerStyle.position === 'sticky';
+        if(isFixed){
+          document.body.style.paddingTop = h + 'px';
+        }
+      }catch(e){}
+    }
+
+    var rafScheduled = false;
+    function schedule(){ if(rafScheduled) return; rafScheduled = true; requestAnimationFrame(function(){ rafScheduled = false; applyHeaderOffset(); }); }
+
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyHeaderOffset); else applyHeaderOffset();
+    window.addEventListener('resize', function(){ setTimeout(schedule, 60); });
+
+    // Use a ResizeObserver on the header to react to dynamic height changes
+    try{
+      var headerEl = document.querySelector('.header');
+      if(headerEl && window.ResizeObserver){
+        var ro = new ResizeObserver(function(){ schedule(); });
+        ro.observe(headerEl);
+      }
+    }catch(e){}
+  })();
+  </script>
+  <style>
+    /* Expose header height as CSS var fallback */
+    :root { --beslock-header-height: 0px; }
+    /* Smoothly animate content when header height changes (chosen: 220ms cubic-bezier for natural easing) */
+    body { transition: padding-top 220ms cubic-bezier(.2,.8,.2,1); -webkit-transition: padding-top 220ms cubic-bezier(.2,.8,.2,1); }
+    .product-page { transition: margin-top 220ms cubic-bezier(.2,.8,.2,1); -webkit-transition: margin-top 220ms cubic-bezier(.2,.8,.2,1); }
+  </style>
+  <?php
+}, 25 );
+
+// Fallback: client-side replacer for strings rendered by JS/blocks (runs on Cart page)
+add_action( 'wp_footer', function() {
+  if ( function_exists( 'is_cart' ) && is_cart() ) {
+    ?>
+    <script>
+    (function(){
+      try{
+        var map = {
+          'Your cart is currently empty!': 'Tu carrito está vacío.',
+          'Your cart is currently empty.': 'Tu carrito está vacío.',
+          'New in store': 'Resumen de Productos',
+          'Browse store': 'Explorar la tienda',
+          'Return to shop': 'Volver a la tienda'
+        };
+
+        function replaceTextInNode(node){
+          try{
+            var text = node.nodeValue;
+            if(!text) return;
+            var replaced = text;
+            Object.keys(map).forEach(function(k){
+              if(replaced.indexOf(k) !== -1) replaced = replaced.split(k).join(map[k]);
+            });
+            if(replaced !== text) node.nodeValue = replaced;
+          }catch(e){}
+        }
+
+        function runReplace(){
+          var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+          var n;
+          while(n = walker.nextNode()){
+            replaceTextInNode(n);
+          }
+        }
+
+        // Initial pass
+        runReplace();
+
+        // Observe for dynamically injected content (blocks/mini-cart)
+        var mo = new MutationObserver(function(mutations){
+          runReplace();
+        });
+        mo.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+        // Stop observing after a short period to avoid performance cost
+        setTimeout(function(){ try{ mo.disconnect(); }catch(e){} }, 5000);
+      }catch(e){}
+    })();
+    </script>
+    <?php
+  }
+}, 30 );
+
+// Cart page: replace block add-to-cart buttons under suggested products with product-card action set
+add_action( 'wp_footer', function() {
+  if ( ! ( function_exists( 'is_cart' ) && is_cart() ) ) return;
+  ?>
+  <script>
+  (function(){
+    try{
+      // broaden selector to match multiple block markup variants (Kadence / WC blocks / wp-block-button)
+      var selector = [
+        'body .wp-block-woocommerce-empty-cart-block ul li div .wc-block-grid__product-add-to-cart a',
+        'body .wp-block-woocommerce-empty-cart-block ul li a.wp-block-button__link',
+        'body .wp-block-woocommerce-empty-cart-block ul li a.add_to_cart_button',
+        'body .wp-block-woocommerce-empty-cart-block ul li a' // fallback: any link inside suggestion li
+      ].join(', ');
+
+      function replaceButtons(){
+        // inject styles for the created action buttons (scoped to suggestions area)
+        if(!document.getElementById('beslock-cart-suggestions-styles')){
+          var css = '\n/* Hide legacy add-to-cart and wp-button elements inside suggestions so we can render our BEM actions */\n.wp-block-woocommerce-empty-cart-block ul li a.add_to_cart_button, .wp-block-woocommerce-empty-cart-block ul li a.wp-block-button__link, .wp-block-woocommerce-empty-cart-block ul li .wc-block-grid__product-add-to-cart, .wp-block-woocommerce-empty-cart-block ul li .wc-block-grid__product__meta { display:none !important; }\n' +
+                    '' +
+              '\n/* Product card primary link (match main.css pixel-perfect) */\n.beslock-empty-suggestions-actions .product-card__btn--link{ text-decoration:none !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; padding:0.6rem 1.1rem !important; border-radius:10px !important; background:var(--beslock-green) !important; color:#ff0 !important; border:none !important; font-weight:700 !important; font-size:1.09rem !important; opacity:0.65 !important; transition: opacity 280ms cubic-bezier(.16,.84,.29,1) !important, transform 360ms cubic-bezier(.16,.84,.29,1) !important, box-shadow 360ms cubic-bezier(.16,.84,.29,1) !important; will-change: transform, opacity, box-shadow; backface-visibility: hidden; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__btn--link:hover{ opacity:1 !important; transform: translateY(-2px) scale(1.01) !important; box-shadow: 0 8px 24px rgba(3,69,38,0.10) !important; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__btn--link:active{ transform: translateY(0) scale(0.995) !important; box-shadow: 0 4px 10px rgba(3,69,38,0.06) !important; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__btn--link:focus{ outline: 3px solid rgba(3,69,38,0.14) !important; }\n' +
+              '\n/* Product card add-to-cart (match main.css pixel-perfect) */\n.beslock-empty-suggestions-actions .product-card__add-to-cart{ display:inline-flex !important; align-items:center !important; justify-content:center !important; width:48px !important; height:48px !important; border-radius:10px !important; background:var(--beslock-bg-2) !important; color:#fff !important; text-decoration:none !important; transition: transform 360ms cubic-bezier(.16,.84,.29,1) !important, background 240ms cubic-bezier(.16,.84,.29,1) !important, box-shadow 360ms cubic-bezier(.16,.84,.29,1) !important; will-change: transform, background, box-shadow; backface-visibility: hidden; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__add-to-cart .bi{ color: var(--beslock-green) !important; font-size: 2rem !important; line-height:1 !important; font-weight:400 !important; text-shadow:none !important; transition: color 180ms ease !important; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__add-to-cart:hover{ background: var(--beslock-green) !important; transform: translateY(-2px) scale(1.02) !important; box-shadow: 0 7px 20px rgba(3,69,38,0.09) !important; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__add-to-cart:active{ transform: translateY(0) scale(0.995) !important; box-shadow: 0 3px 8px rgba(3,69,38,0.06) !important; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__add-to-cart:hover .bi{ color: var(--beslock-bg-2) !important; text-shadow:none !important; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__add-to-cart:focus{ outline: 3px solid rgba(3,69,38,0.14) !important; }\n' +
+              '\n.beslock-empty-suggestions-actions .product-card__btn--link, .beslock-empty-suggestions-actions .product-card__add-to-cart { display:inline-flex !important; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__btn--link{ min-height:44px; line-height:1; }\n' +
+              '.beslock-empty-suggestions-actions .product-card__btn--link i{ vertical-align:middle; }\n' +
+              '\n/* For suggestions: place actions in document flow below product info (not absolute) */\n.beslock-empty-suggestions-actions.product-card__actions { position: static !important; display: flex !important; gap: 0.5rem !important; align-items: center !important; justify-content: center !important; margin-top: 0.6rem !important; padding-left: 1.2rem !important; padding-right: 1.2rem !important; width: 100% !important; box-sizing: border-box !important; z-index: 6 !important; }\n';
+              // Force a very high-specificity selector to guarantee visual parity
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__btn--link:hover { opacity:1 !important; transform: translateY(-2px) scale(1.01) !important; box-shadow:0 8px 24px rgba(3,69,38,0.10) !important; }\n' +
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__btn--link:active { transform: translateY(0) scale(0.995) !important; box-shadow:0 4px 10px rgba(3,69,38,0.06) !important; }\n' +
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14) !important; }\n' +
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__add-to-cart { display:inline-flex !important; align-items:center !important; justify-content:center !important; width:48px !important; height:48px !important; border-radius:10px !important; background:var(--beslock-bg-2) !important; color:#fff !important; text-decoration:none !important; transition: transform 360ms cubic-bezier(.16,.84,.29,1) !important, background 240ms cubic-bezier(.16,.84,.29,1) !important, box-shadow 360ms cubic-bezier(.16,.84,.29,1) !important; will-change: transform, background, box-shadow !important; }\n' +
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__add-to-cart .bi { color: var(--beslock-green) !important; font-size:2rem !important; line-height:1 !important; font-weight:400 !important; }\n' +
+                         '\n';
+              css += '\nbody .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__btn--link { display:inline-flex !important; align-items:center !important; justify-content:center !important; padding:0.6rem 1.1rem !important; border-radius:10px !important; background:var(--beslock-green) !important; color:#fff !important; border:none !important; font-weight:700 !important; font-size:1.09rem !important; opacity:0.65 !important; text-decoration:none !important; transition: opacity 280ms cubic-bezier(.16,.84,.29,1) !important, transform 360ms cubic-bezier(.16,.84,.29,1) !important, box-shadow 360ms cubic-bezier(.16,.84,.29,1) !important; will-change: transform, opacity, box-shadow !important; backface-visibility: hidden !important; box-shadow: none !important; }\n';
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__btn--link:hover { opacity:1 !important; transform: translateY(-2px) scale(1.01) !important; box-shadow:0 8px 24px rgba(3,69,38,0.10) !important; }\n' +
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__btn--link:active { transform: translateY(0) scale(0.995) !important; box-shadow:0 4px 10px rgba(3,69,38,0.06) !important; }\n' +
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__btn--link:focus { outline: 3px solid rgba(3,69,38,0.14) !important; }\n' +
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__add-to-cart { display:inline-flex !important; align-items:center !important; justify-content:center !important; width:48px !important; height:48px !important; border-radius:10px !important; background:var(--beslock-bg-2) !important; color:#fff !important; text-decoration:none !important; transition: transform 360ms cubic-bezier(.16,.84,.29,1) !important, background 240ms cubic-bezier(.16,.84,.29,1) !important, box-shadow 360ms cubic-bezier(.16,.84,.29,1) !important; will-change: transform, background, box-shadow !important; }\n' +
+                         'body .wp-block-woocommerce-empty-cart-block .beslock-empty-suggestions-actions .product-card__add-to-cart .bi { color: var(--beslock-green) !important; font-size:2rem !important; line-height:1 !important; font-weight:400 !important; }\n' +
+                         '\n';
+              // force color on link and any child element (covers icon/text and visited state)
+              css += '.beslock-empty-suggestions-actions .product-card__btn--link, .beslock-empty-suggestions-actions .product-card__btn--link * { color: #fff !important; }\n';
+              css += '.beslock-empty-suggestions-actions .product-card__btn--link:link, .beslock-empty-suggestions-actions .product-card__btn--link:visited { color: #fff !important; }\n';
+              css += '\n/* Increase spacing between suggestion items (10rem) */\n.wp-block-woocommerce-empty-cart-block ul, .wp-block-woocommerce-empty-cart-block .wc-block-grid__products { gap: 10rem !important; }\n';
+              css += '.wp-block-woocommerce-empty-cart-block ul li, .wp-block-woocommerce-empty-cart-block .wc-block-grid__product { margin-bottom: 10rem !important; padding-bottom: 0 !important; }\n';
+              css += '.wp-block-woocommerce-empty-cart-block ul li .product-details { margin-bottom: 8px !important; }\n';
+              css += '\n/* Cart-empty: enforce title and price sizes to match product-card */\n';
+              css += '.wp-block-woocommerce-empty-cart-block .product-card__title { font-size: 1.15rem !important; font-weight: 700 !important; }\n';
+              css += '.wp-block-woocommerce-empty-cart-block .product-card__price-overlay, .wp-block-woocommerce-empty-cart-block .product-card__price-overlay .price, .wp-block-woocommerce-empty-cart-block .product-card__price-overlay .woocommerce-Price-amount { font-size: 1rem !important; font-weight: 600 !important; }\n';
+              css += '\n/* Even stronger: apply directly to processed LIs and wc-block variants to guarantee effect */\n';
+              css += '.beslock-processed .product-card__title, body .wp-block-woocommerce-empty-cart-block .beslock-processed .product-card__title { font-size: 1.15rem !important; font-weight:700 !important; }\n';
+              css += '.beslock-processed .product-card__price-overlay, .beslock-processed .product-card__price-overlay .price, .beslock-processed .woocommerce-Price-amount { font-size: 1rem !important; font-weight:600 !important; }\n';
+              css += 'body .wp-block-woocommerce-empty-cart-block .wc-block-grid__product .product-card__title, body .wp-block-woocommerce-empty-cart-block ul li .product-card__title { font-size:1.15rem !important; font-weight:700 !important; }\n';
+              css += '\n/* Cover common block title selectors used by WooCommerce blocks */\n';
+              css += '.wp-block-woocommerce-empty-cart-block .wc-block-grid__product__title, .wp-block-woocommerce-empty-cart-block .wc-block-grid__product .wc-block-grid__product__title, .wp-block-woocommerce-empty-cart-block .woocommerce-loop-product__title, .wp-block-woocommerce-empty-cart-block .wc-block-grid__product .woocommerce-loop-product__title { font-size: 1.15rem !important; font-weight:700 !important; line-height:1.18 !important; }\n';
+              css += '.wp-block-woocommerce-empty-cart-block .wc-block-grid__product__title a, .wp-block-woocommerce-empty-cart-block .wc-block-grid__product .wc-block-grid__product__title a, .wp-block-woocommerce-empty-cart-block .woocommerce-loop-product__title a { font-size: 1.15rem !important; font-weight:700 !important; color: inherit !important; text-decoration: none !important; }\n';
+              css += '\n/* Double the product title size (X2) for empty-cart suggestions */\n';
+              css += '.wp-block-woocommerce-empty-cart-block .wc-block-grid__product-title, .wp-block-woocommerce-empty-cart-block .wc-block-grid__product-title-link, .wp-block-woocommerce-empty-cart-block .wc-block-grid__product-title a, .beslock-processed .wc-block-grid__product-title, body .wp-block-woocommerce-empty-cart-block .beslock-processed .wc-block-grid__product-title { font-size: 2.3rem !important; font-weight: 800 !important; line-height: 1.05 !important; }\n';
+              css += '\n/* Align actions spacing with title->price gap */\n';
+              css += '.beslock-empty-suggestions-actions, .wp-block-woocommerce-empty-cart-block .product-card__actions { margin-top: 0.5rem !important; }\n';
+              css += '\n/* Stronger selectors for varied block markup: ensure vertical flow and margin application */\n';
+              css += 'body .wp-block-woocommerce-empty-cart-block .wc-block-grid__products > li, body .wp-block-woocommerce-empty-cart-block ul > li, body .wp-block-woocommerce-empty-cart-block .wc-block-grid__products .wc-block-grid__product { display: block !important; margin-bottom: 10rem !important; padding-bottom: 0 !important; }\n';
+              css += 'body .wp-block-woocommerce-empty-cart-block .wc-block-grid__products { display: block !important; }\n';
+            var s = document.createElement('style'); s.id = 'beslock-cart-suggestions-styles'; s.type = 'text/css'; s.appendChild(document.createTextNode(css)); document.head.appendChild(s);
+        }
+          var nodes = document.querySelectorAll(selector);
+          nodes.forEach(function(a){
+          try{
+            var addHref = a.getAttribute('href') || '#';
+            var li = a.closest('li') || a.closest('.wc-block-grid__product') || a.parentNode;
+            if(!li) return;
+            // avoid processing the same LI repeatedly
+            if(li.classList && li.classList.contains('beslock-processed')) return;
+
+            // find a plausible product page link inside the li (exclude add-to-cart links)
+            var productHref = null;
+            var anchors = li.querySelectorAll('a[href]');
+            anchors.forEach(function(lnk){
+              var href = lnk.getAttribute('href') || '';
+              if(href && href.indexOf('add-to-cart') === -1 && href.indexOf('?add-to-cart') === -1 && href.indexOf('#') === -1){
+                if(!productHref) productHref = href;
+              }
+            });
+
+            // remove legacy add-to-cart / button nodes so we can implement actions cleanly
+            try{
+              var legacySelectors = ['a.add_to_cart_button', 'a.wp-block-button__link', '.wc-block-grid__product-add-to-cart', '.wc-block-grid__product__meta .wp-block-button__link'];
+              legacySelectors.forEach(function(sel){
+                var els = li.querySelectorAll(sel);
+                els.forEach(function(e){
+                  try{
+                    // Skip removal if the element wraps an image (we don't want to hide product images)
+                    if(e && e.querySelector && e.querySelector('img')) return;
+                    e.parentNode && e.parentNode.removeChild(e);
+                  }catch(err){}
+                });
+              });
+            }catch(e){}
+
+            // create actions container
+            var actions = document.createElement('div');
+            actions.className = 'product-card__actions product-card__actions--inline beslock-empty-suggestions-actions';
+
+            var view = document.createElement('a');
+            view.className = 'btn product-card__btn product-card__btn--link product-card__btn--full';
+            view.href = productHref || '#';
+            view.textContent = 'Ver Producto';
+            // Keep view anchor without inline styles so theme CSS applies
+            view.setAttribute('role','button');
+
+            var cart = document.createElement('a');
+            cart.className = 'product-card__add-to-cart';
+            cart.href = addHref;
+            cart.setAttribute('rel','nofollow');
+            cart.setAttribute('aria-label','Ir al carrito');
+            // icon markup only; let theme CSS control appearance and interactions
+            cart.innerHTML = '<i class="bi bi-cart" aria-hidden="true"></i>';
+
+            actions.appendChild(view);
+            actions.appendChild(cart);
+
+            // Keep the view anchor clean (no inline styles) so theme CSS `.product-card__btn--link` applies.
+
+            // Do not replace text nodes in-place; rely on the `view` anchor appended
+            // to `actions` so styling from `.beslock-empty-suggestions-actions` applies.
+
+            // Prefer inserting actions directly after the product details block
+            var details = li.querySelector('.product-details, .product-card__content, .entry-content-wrap');
+            if(details && details.parentNode){
+              details.parentNode.insertBefore(actions, details.nextSibling);
+            } else {
+              // fallback: place after image or append at end
+              var imgWrap = li.querySelector('.wp-block-image, .product-card__image, .wc-block-grid__product__image');
+              if(imgWrap && imgWrap.parentNode){
+                imgWrap.parentNode.insertBefore(actions, imgWrap.nextSibling);
+              } else {
+                li.appendChild(actions);
+              }
+            }
+
+            // Ensure the LI is a positioned container so absolute .product-card__actions works
+            try{ if(li && li.style) li.style.position = li.style.position || 'relative'; }catch(e){}
+
+            // Fallback: if theme CSS didn't style the 'view' anchor, apply inline styles.
+            try{
+              (function(){
+                var computed = window.getComputedStyle(view);
+                var bg = computed.backgroundColor || computed.getPropertyValue('background-color');
+                var display = computed.display || '';
+                var needsFallback = false;
+                if(!bg || bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') needsFallback = true;
+                if(display.indexOf('inline') === -1 && display.indexOf('flex') === -1) needsFallback = true;
+                if(needsFallback){
+                  try{
+                    var _rootStyles = window.getComputedStyle(document.documentElement || document.body);
+                    var _green = (_rootStyles.getPropertyValue('--beslock-green') || '').trim() || '#0b6b3a';
+                    view.style.display = 'inline-flex';
+                    view.style.alignItems = 'center';
+                    view.style.justifyContent = 'center';
+                    view.style.padding = '0.6rem 1.1rem';
+                    view.style.borderRadius = '10px';
+                    view.style.background = _green;
+                    view.style.color = '#fff';
+                    view.style.border = 'none';
+                    view.style.fontWeight = '700';
+                    view.style.opacity = '0.95';
+                    view.style.textDecoration = 'none';
+                    view.style.transition = 'opacity 280ms cubic-bezier(.16,.84,.29,1), transform 360ms cubic-bezier(.16,.84,.29,1), box-shadow 360ms cubic-bezier(.16,.84,.29,1)';
+                  }catch(e){}
+                }
+              })();
+            }catch(e){}
+
+            // Remove any inline styles from our anchors so the theme/injected CSS wins
+            try{ view.removeAttribute && view.removeAttribute('style'); }catch(e){}
+            try{ cart.removeAttribute && cart.removeAttribute('style'); }catch(e){}
+
+            // mark LI as processed and hide legacy wrappers via CSS (non-destructive)
+            try{ li.classList.add('beslock-processed'); }catch(e){}
+            if(!document.getElementById('beslock-cart-suggestions-legacy-hide')){
+              var hideCss = '.beslock-processed .wc-block-grid__product-add-to-cart, .beslock-processed .wp-block-button, .beslock-processed .wp-block-button__link, .beslock-processed a.add_to_cart_button, .beslock-processed .added_to_cart, .beslock-processed .kadence-block-button { display:none !important; }';
+              var hs = document.createElement('style'); hs.id = 'beslock-cart-suggestions-legacy-hide'; hs.type = 'text/css'; hs.appendChild(document.createTextNode(hideCss)); document.head.appendChild(hs);
+            }
+          }catch(e){}
+        });
+      }
+
+        if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', replaceButtons); else replaceButtons();
+      // observe for dynamic injections for a longer window (15s) to catch late block renders
+      try{
+        var mo = new MutationObserver(function(){ replaceButtons(); });
+        mo.observe(document.body, { childList:true, subtree:true });
+        setTimeout(function(){ try{ mo.disconnect(); }catch(e){} }, 15000);
+      }catch(e){}
+    }catch(e){}
+  })();
+  </script>
+  <?php
+}, 40 );
+
+// Front-page: ensure product-card actions are visible and remove legacy buttons
+add_action( 'wp_footer', function() {
+  if ( ! ( function_exists( 'is_front_page' ) && is_front_page() ) ) return;
+  ?>
+  <script>
+  (function(){
+    try{
+      var css = `
+        .products-portfolio__grid .product-card .product-card__actions { display:flex !important; position: absolute !important; left: 1.2rem !important; right: 1.2rem !important; bottom: 1rem !important; gap: 0.5rem !important; align-items: center !important; justify-content: center !important; z-index: 9999 !important; }
+        .products-portfolio__grid .product-card .product-card__btn--link { display: inline-flex !important; }
+        .products-portfolio__grid .product-card .product-card__add-to-cart { display: inline-flex !important; }
+        .products-portfolio__grid .product-card .product-card__actions--inline { position: static !important; }
+        /* Hide common injected add-to-cart/button elements */
+        .products-portfolio__grid .product-card .wc-block-grid__product-add-to-cart,
+        .products-portfolio__grid .product-card .wp-block-button,
+        .products-portfolio__grid .product-card .wp-block-button__link,
+        .products-portfolio__grid .product-card a.add_to_cart_button,
+        .products-portfolio__grid .product-card .added_to_cart,
+        .products-portfolio__grid .product-card .kadence-block-button { display:none !important; }
+      `;
+      var s = document.createElement('style'); s.type = 'text/css'; s.appendChild(document.createTextNode(css)); document.head.appendChild(s);
+
+      function cleanCards(){
+        var cards = document.querySelectorAll('.products-portfolio__grid .product-card');
+        cards.forEach(function(card){
+          // remove legacy buttons under the image
+          var legacy = card.querySelectorAll('.wc-block-grid__product-add-to-cart, .wp-block-button, a.add_to_cart_button, .added_to_cart, .kadence-block-button');
+          legacy.forEach(function(n){ try{ n.parentNode && n.parentNode.removeChild(n); }catch(e){} });
+
+          // ensure our actions exist and visible
+          var actions = card.querySelector('.product-card__actions');
+          if(!actions){
+            // try to construct actions from available data
+            var link = card.querySelector('a') ? card.querySelector('a').href : '#';
+            var pid = card.getAttribute('data-product-id') || card.dataset.productId || null;
+            actions = document.createElement('div'); actions.className = 'product-card__actions product-card__actions--inline';
+            var view = document.createElement('a'); view.className = 'btn product-card__btn product-card__btn--link product-card__btn--full'; view.href = link; view.textContent = 'Ver Producto';
+            var cart = document.createElement('a'); cart.className = 'product-card__add-to-cart'; cart.href = pid ? (window.location.origin + '/?add-to-cart=' + pid) : '#'; cart.setAttribute('rel','nofollow'); cart.setAttribute('aria-label','Ir al carrito'); cart.innerHTML = '<i class="bi bi-cart" aria-hidden="true"></i>';
+            actions.appendChild(view); actions.appendChild(cart);
+            // append into card
+            var content = card.querySelector('.product-card__content') || card;
+            content.appendChild(actions);
+          } else {
+            // ensure visible
+            actions.style.display = 'flex';
+          }
+        });
+      }
+
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', cleanCards); else cleanCards();
+      // also run after a short delay to catch lazy-inserted content
+      setTimeout(cleanCards, 800);
+    }catch(e){}
+  })();
+  </script>
+  <?php
+}, 35 );
   /**
    * Admin Tools page: Import portfolio images into Media Library.
    */
@@ -144,6 +921,75 @@ add_action( 'after_setup_theme', function() {
       'beslock_import_portfolio_page'
     );
   } );
+
+/**
+ * Ensure translations and centering for empty-cart are applied early
+ * in case block rendering occurs before `wp_enqueue_scripts` hooks.
+ */
+// Force text for wc_empty_cart_message
+add_filter( 'wc_empty_cart_message', function( $message ) {
+  return 'Tu carrito está vacío.';
+}, 5 );
+
+// Early gettext override for WooCommerce empty-cart strings
+add_filter( 'gettext', function( $translated, $text, $domain ) {
+  if ( 'woocommerce' !== $domain ) return $translated;
+  if ( 'Your cart is currently empty.' === $text || 'Your cart is currently empty!' === $text ) return 'Tu carrito está vacío.';
+  if ( 'Return to shop' === $text ) return 'Volver a la tienda';
+  if ( 'Browse store' === $text ) return 'Explorar la tienda';
+  if ( 'New in store' === $text ) return 'Resumen de Productos';
+  return $translated;
+}, 5, 3 );
+
+// Early CSS for centering cart/mini-cart empty states
+add_action( 'wp_head', function() {
+  ?>
+  <style>
+    .wc-empty-cart-message, .wc-block-cart__empty-cart__title, .wp-block-woocommerce-empty-cart-block, .wc-block-mini-cart__empty-cart-wrapper, .woocommerce-mini-cart__empty-message { text-align: center !important; }
+    .return-to-shop .button, .wc-block-mini-cart__empty-cart-wrapper .button { margin: 0 auto !important; display: inline-block !important; }
+    /* Make the product-card actions inline for the empty-cart view and preserve hover effects */
+    .product-card--empty { position: static !important; padding: 12px 0; }
+    .product-card__actions--inline { position: relative !important; display: inline-flex !important; gap: 0.75rem !important; align-items: center !important; justify-content: center !important; }
+    .product-card__btn--full { padding: 0.6rem 1.2rem !important; }
+  </style>
+  <?php
+}, 5 );
+
+// Replace default wc_empty_cart_message action with our localized version (safe override)
+add_action( 'init', function() {
+  if ( has_action( 'woocommerce_cart_is_empty', 'wc_empty_cart_message' ) ) {
+    remove_action( 'woocommerce_cart_is_empty', 'wc_empty_cart_message', 10 );
+  }
+  add_action( 'woocommerce_cart_is_empty', function() {
+    // Use WooCommerce notice markup for compatibility
+    if ( function_exists( 'wc_print_notice' ) ) {
+      wc_print_notice( '<p class="beslock-empty-cart">Tu carrito está vacío.</p>', 'notice' );
+    } else {
+      echo '<div class="wc-empty-cart-message"><p class="beslock-empty-cart">Tu carrito está vacío.</p></div>';
+    }
+  }, 10 );
+}, 5 );
+
+// Output buffering on Cart page to replace any remaining English strings (covers block/html injected content)
+add_action( 'template_redirect', function() {
+  if ( function_exists( 'is_cart' ) && is_cart() ) {
+    ob_start( function( $buffer ) {
+      $search = array(
+        'Your cart is currently empty!',
+        'Your cart is currently empty.',
+        'Return to shop',
+        'Browse store'
+      );
+      $replace = array(
+        'Tu carrito está vacío.',
+        'Tu carrito está vacío.',
+        'Volver a la tienda',
+        'Explorar la tienda'
+      );
+      return str_replace( $search, $replace, $buffer );
+    } );
+  }
+}, 1 );
 
   function beslock_import_portfolio_page() {
     if ( ! current_user_can( 'manage_options' ) ) {
@@ -568,21 +1414,9 @@ function beslock_fix_placeholders_page() {
 // to `body.woocommerce` selectors so it's safe to include globally — this
 // ensures the shop/cart/checkout pages receive the intended header fixes.
 add_action( 'wp_enqueue_scripts', function() {
-  // Ensure the main theme stylesheet is registered/enqueued before dependents.
-  $main_css_path = get_stylesheet_directory() . '/assets/css/main.css';
-  if ( file_exists( $main_css_path ) ) {
-    $ver = filemtime( $main_css_path );
-    if ( ! wp_style_is( 'beslock-main-style', 'registered' ) ) {
-      wp_register_style( 'beslock-main-style', get_stylesheet_directory_uri() . '/assets/css/main.css', array(), $ver );
-    }
-    if ( ! wp_style_is( 'beslock-main-style', 'enqueued' ) ) {
-      wp_enqueue_style( 'beslock-main-style' );
-    }
-  }
-
   $css_file = get_stylesheet_directory() . '/assets/css/wc-scope-fix.css';
   if ( file_exists( $css_file ) ) {
-    wp_enqueue_style( 'beslock-wc-scope-fix', get_stylesheet_directory_uri() . '/assets/css/wc-scope-fix.css', array( 'beslock-main-style' ), filemtime( $css_file ) );
+    wp_enqueue_style( 'beslock-wc-scope-fix', get_stylesheet_directory_uri() . '/assets/css/wc-scope-fix.css', [ 'beslock-main-style' ], filemtime( $css_file ) );
   }
 }, 20 );
 
@@ -632,7 +1466,6 @@ add_action( 'wp_enqueue_scripts', function() {
  * Remove Kadence header rendering hooks so the child theme header is the only one used.
  * Runs on after_setup_theme with slightly higher priority so parent registrations exist.
  */
-/*
 add_action( 'after_setup_theme', function() {
   // List of Kadence hooks and callbacks to remove. This is aggressive by design.
   $removals = [
@@ -670,11 +1503,10 @@ add_action( 'after_setup_theme', function() {
       }
     }
     // Also remove any remaining callbacks attached to these hooks as a last resort.
-    // remove_all_actions( $hook );
+    remove_all_actions( $hook );
   }
 
 }, 30 );
-*/
 
 /**
  * DEBUG: Volcar estilos encolados a un archivo para diagnóstico local.
@@ -766,9 +1598,26 @@ add_action( 'wp_head', function() {
 }, 9999 );
 
 function beslock_strip_kadence_css( $buffer ) {
-  // Temporarily disable aggressive stripping of head output. Returning the
-  // buffer unchanged avoids removing enqueued <link> or <style> tags and
-  // allows theme/plugin styles to be printed normally while debugging.
+  // Remove <link ... href="...kadence...css" ...> or links to the Kadence theme folder
+  $buffer = preg_replace( '#<link[^>]+href=(?:"|\')[^"\']*/themes/[^/]*kadence[^"\']*(?:"|\')[^>]*>#i', '', $buffer );
+  $buffer = preg_replace( '#<link[^>]+href=(?:"|\')[^"\']*kadence[^"\']*(?:"|\')[^>]*>#i', '', $buffer );
+  // Remove <style id="...kadence...">...</style>
+  $buffer = preg_replace( '#<style[^>]*id=(?:"|\')[^"\']*kadence[^"\']*(?:"|\')[^>]*>.*?</style>#is', '', $buffer );
+  // Remove any inline <style> blocks that contain the comment or marker 'kadence' inside
+  $buffer = preg_replace( '#<style[^>]*>[^<]*kadence[^<]*</style>#is', '', $buffer );
+  // Additionally remove any linked CSS that points at the parent theme folder explicitly
+  $buffer = preg_replace( '#<link[^>]+href=(?:"|\')[^"\']*/wp-content/themes/kadence/[^"\']*(?:"|\')[^>]*>#i', '', $buffer );
+    // --- NEW: remove WordPress/global/block inline style blocks and font blocks ---
+    // Remove explicit global styles inline block
+    $buffer = preg_replace( '#<style[^>]*id=(?:"|\')global-styles-inline-css(?:"|\')[^>]*>.*?</style>#is', '', $buffer );
+    // Remove any <style id="...-inline-css"> blocks (wp-block-* inline styles, block editor inline CSS, etc.)
+    $buffer = preg_replace( '#<style[^>]*id=(?:"|\')[^"\']+-inline-css(?:"|\')[^>]*>.*?</style>#is', '', $buffer );
+    // Remove wp-block heading/separator inline styles and other block inline styles
+    $buffer = preg_replace( '#<style[^>]*id=(?:"|\')wp-block[^"\']*(?:"|\')[^>]*>.*?</style>#is', '', $buffer );
+    // Remove local font blocks injected by core/plugins (class 'wp-fonts-local' or similar)
+    $buffer = preg_replace( '#<style[^>]*class=(?:"|\')?wp-fonts-local(?:"|\')?[^>]*>.*?</style>#is', '', $buffer );
+    // Remove any remaining style tags that declare CSS variables from theme.json (very aggressive)
+    $buffer = preg_replace( '#<style[^>]*>\s*:root\s*\{.*?--wp--preset--.*?</style>#is', '', $buffer );
   return $buffer;
 }
 
@@ -840,7 +1689,8 @@ function beslock_kadence_archive_hero_buffer_end() {
     echo '<div class="beslock-trust-badges">';
     foreach ( $badges as $b ) {
       $slug = sanitize_title( $b );
-      echo '<span class="beslock-badge beslock-badge--' . esc_attr( $slug ) . '">' . esc_html( $b ) . '</span>';
+      $src = get_stylesheet_directory_uri() . '/assets/images/instal.png';
+      echo '<span class="beslock-badge beslock-badge--' . esc_attr( $slug ) . '"><img src="' . esc_url( $src ) . '" alt="' . esc_attr( $b ) . '"/></span>';
     }
     echo '</div>';
   }, 10 );
@@ -972,7 +1822,7 @@ function beslock_kadence_archive_hero_buffer_end() {
    * Threshold is configurable; default to 200000 (in site currency minor units) if not specified.
    */
   function beslock_free_shipping_progress_html( $threshold = 200000 ) {
-    if ( ! class_exists( 'WooCommerce' ) ) {
+    if ( ! function_exists( 'WC' ) ) {
       return '';
     }
 

@@ -65,3 +65,35 @@
   align-self: center; /* keep button centered horizontally */
 }
 
+/* Hide other themes/plugins add-to-cart buttons inside our products portfolio
+   so only the product-card actions are visible. Scoped to avoid site-wide
+   removals. */
+.products-portfolio__grid .wc-block-grid__product-add-to-cart,
+.products-portfolio__grid .wc-block-grid__product .wc-block-grid__product-add-to-cart,
+.products-portfolio__grid .wc-block-grid__product-add-to-cart .wp-block-button__link,
+.products-portfolio__grid a.add_to_cart_button,
+.products-portfolio__grid .wc-block-grid__product .wc-block-grid__product-add-to-cart,
+.products-portfolio__grid .wc-block-grid__product .wc-block-grid__product-add-to-cart a {
+  display: none !important;
+}
+
+/* Ensure our product-card actions are visible and positioned */
+.products-portfolio__grid .product-card__actions { position: absolute; left: 1.2rem; right: 1.2rem; bottom: 1rem; display: flex; gap: 0.5rem; align-items: center; justify-content: center; z-index: 6; }
+
+/* Broad hide: any button-like element injected by blocks/plugins under
+   our portfolio product cards should be hidden to avoid duplicates. */
+.products-portfolio__grid .product-card .wp-block-button,
+.products-portfolio__grid .product-card .wp-block-button__link,
+.products-portfolio__grid .product-card .button,
+.products-portfolio__grid .product-card .added_to_cart,
+.products-portfolio__grid .product-card a.added_to_cart,
+.products-portfolio__grid .product-card .wc-block-grid__product-add-to-cart,
+.products-portfolio__grid .product-card .wc-block-grid__product .wc-block-grid__product-add-to-cart,
+.products-portfolio__grid .product-card .kadence-block-button,
+.products-portfolio__grid .product-card .kadence-svg-iconset {
+  display: none !important;
+}
+
+/* Ensure our actions are visible above any hidden elements */
+.products-portfolio__grid .product-card__actions { z-index: 50; }
+
