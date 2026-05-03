@@ -601,3 +601,10 @@ body.single-product .woocommerce-tabs ul.tabs li.active a {
   body.single-product div.product { grid-template-columns: 1fr; }
 }
 
+/* Targeted fix: prevent mobile drawer panel from contributing to horizontal overflow
+   on single product pages only. This overrides the theme's menu-products-mobile.css
+   rule which sets `overflow: visible` on the drawer panel. */
+body.single-product nav#mobileDrawer .mobile-drawer__panel {
+  overflow: hidden !important;
+}
+
