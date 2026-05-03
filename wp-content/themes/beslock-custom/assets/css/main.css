@@ -8,6 +8,10 @@
   --beslock-green:      #034526;
   --beslock-green-lite: #046739;
 
+  /* Cart icon system variables */
+  --cart-icon-size: 34px;
+  --cart-icon-color: #2f6b4f;
+
   /* Nota: No definimos aquí --site-logo-height porque lo atamos al header (ver más abajo).
      Si prefieres, puedes establecer un valor global aquí, por ejemplo:
      --site-logo-height: 38px;
@@ -42,6 +46,46 @@ body {
   font-size: 1rem;
 }
 
+/* ========== BASE BUTTON SYSTEM ========== */
+/* Provide a lightweight, theme-controlled button base so components using
+   the `.btn` utility render consistently even if parent theme styles are
+   not present. Keep this minimal and reusable across the site. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Primary style for product-card links; leverages theme variable for brand color. */
+.product-card__btn--link {
+  background: var(--beslock-green);
+  color: #fff;
+  text-decoration: none;
+  border: 2px solid red; /* debug: confirm selector applies */
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  opacity: 0.95;
+  box-shadow: 0 6px 18px rgba(3,69,38,0.08);
+}
+.product-card__btn--link:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+  box-shadow: 0 10px 28px rgba(3,69,38,0.12);
+}
+.product-card__btn--link:active { transform: translateY(0); }
+
+
 /* ========== CONTENEDOR UNIVERSAL ========== */
 .u-container {
   width: 100%;
@@ -54,6 +98,143 @@ body {
     max-width: 860px;
     padding: 0 2rem;
   }
+
+  /* ========== PRODUCT CARD FIXES (front-page) ========== */
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    gap: 12px;
+  }
+
+  /* IMAGE */
+  .product-card__image {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .product-card__image img {
+    max-width: 260px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* TITLE */
+  .product-card__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f3d2b;
+    margin: 0;
+  }
+
+  /* PRICE */
+  .product-card__price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+    text-align: center;
+  }
+
+  /* DESCRIPTION */
+  .product-card__description {
+    font-size: 14.7px;
+    color: #555;
+    max-width: 260px;
+    margin: 0 auto;
+    line-height: 1.45;
+  }
+
+  /* ACTIONS */
+  .product-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  /* PRIMARY BUTTON */
+  .btn-primary {
+    flex: 1 1 auto;
+    max-width: 260px;
+    height: 48px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #6f8f7c;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* CART BUTTON */
+  .btn-cart {
+    flex: 0 0 52px;
+    height: 48px;
+    border-radius: 12px;
+    background: #e5e5e5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ICON FIX (MATCH HEADER SIZE) */
+  .btn-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-cart i { line-height: 1; }
+
+  /* ICON / CONTAINER: Standardize cart icon across header and product cards */
+
+  .header__icon,
+  .header__icon--cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+  }
+
+  .header__icon--cart i,
+  .header__icon--cart svg,
+  .header__icon i,
+  .product-card__cart-btn i,
+  .product-card__cart-btn svg,
+  .btn-cart i,
+  .btn-cart svg {
+    font-size: var(--cart-icon-size);
+    width: var(--cart-icon-size);
+    height: var(--cart-icon-size);
+    line-height: 1;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cart-icon-color);
+  }
+
+  .product-card__cart-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    min-height: 52px;
+  }
+
 }
 @media (min-width: 1200px) {
   .u-container {
@@ -79,6 +260,642 @@ body {
 .product-card__price-overlay * { display: inline; }
   }
 }
+
+/* ==========================
+   Product card actions — precise centered layout (reset + enforce)
+   Scoping is strict to avoid affecting other links across the site.
+========================== */
+.product-card__actions {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+.product-card__actions .btn-primary {
+  flex: 0 0 auto !important;
+  width: 200px !important;
+  height: 48px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.product-card__actions .btn-cart {
+  flex: 0 0 52px !important;
+  width: 52px !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.product-card__actions .btn-cart i,
+.product-card__actions .btn-cart svg {
+  font-size: var(--cart-icon-size) !important;
+  color: var(--cart-icon-color) !important;
+  line-height: 1 !important;
+}
+
+/* Remove inheritance conflicts only inside product-card actions */
+.product-card__actions a {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ==========================
+   FORCE OVERRIDES: neutralize theme flex and enforce 75% centered block with 85/15 split
+   This is intentionally strict and scoped to `.product-card__actions` only.
+========================== */
+.product-card__actions {
+  width: 75% !important;
+  margin: 0 auto !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.product-card__actions .btn-primary {
+  flex: 0 0 85% !important;   /* kills flex:1 from theme */
+  max-width: none !important; /* kills max-width:75% */
+  width: 85% !important;
+
+  height: 48px !important;
+  border-radius: 12px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.product-card__actions .btn-cart {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+
+  height: 48px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.product-card__actions .btn-cart i,
+.product-card__actions .btn-cart svg {
+  font-size: 34px !important;
+  color: #2f6b4f !important;
+}
+
+.product-card__actions a {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* DEBUG (TEMPORAL): uncomment to visualize the actions container during QA */
+/* .product-card__actions { outline: 2px solid red !important; } */
+
+/* ==========================
+   Final: unify actions into a single centered flex group
+   Ensures btn-primary no longer centers independently and btn-cart stays in flow
+========================== */
+.product-card__actions {
+  width: 75% !important;
+  margin: 0 auto !important;
+
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  gap: 8px !important;
+}
+
+.product-card__actions .btn-primary {
+  margin: 0 !important; /* avoid auto margins that center it alone */
+  display: flex !important;
+
+  flex: 0 0 85% !important;   /* fixed proportion */
+  max-width: none !important; /* remove theme max-width */
+  width: 85% !important;
+
+  height: 48px !important;
+  border-radius: 12px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.product-card__actions .btn-cart {
+  margin: 0 !important;
+
+  flex: 0 0 15% !important;
+  width: 15% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  height: 48px !important;
+}
+
+/* Product card image + badge — unified, non-intrusive overlay */
+.product-card__image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate; /* prevents stacking conflicts */
+  overflow: hidden; /* safety */
+}
+
+.product-card__image img:not(.product-card__badge) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
+  position: relative;
+  z-index: 1;
+
+  transform: none !important; /* prevent animation conflicts */
+  display: block;
+  transition: none !important;
+}
+
+.product-card__badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  /* initial hidden state for pop animation */
+  opacity: 0;
+  transform: translate(25%, -25%) scale(0.85) rotate(12deg);
+
+  width: 64px;
+  height: auto;
+
+  display: block;
+  pointer-events: none;
+
+  flex: none !important;
+  max-width: none !important;
+  min-width: 0 !important;
+
+  z-index: 100; /* ensure overlay above everything */
+
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.18));
+
+  transition: opacity 300ms ease-out, transform 420ms cubic-bezier(0.4,0,0.2,1);
+}
+
+@media (max-width: 768px) {
+  .product-card__badge {
+    width: 52px;
+    transform: translate(20%, -20%) scale(0.85) rotate(10deg);
+  }
+}
+
+/* When a section reveals, pop the badge in shortly after the section becomes active */
+.section-reveal.is-active .product-card__badge {
+  opacity: 1;
+  transform: translate(25%, -25%) scale(1) rotate(12deg);
+  transition-delay: 120ms;
+  /* Optional slight overshoot using animation for a premium stamp feel */
+  animation: badge-pop 420ms cubic-bezier(0.4,0,0.2,1) 120ms both;
+}
+
+@keyframes badge-pop {
+  0% {
+    opacity: 0;
+    transform: translate(25%, -25%) scale(0.8) rotate(12deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(25%, -25%) scale(1.05) rotate(12deg);
+  }
+  100% {
+    transform: translate(25%, -25%) scale(1) rotate(12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card__badge {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translate(25%, -25%) scale(1) rotate(12deg) !important;
+  }
+}
+
+/* Brand and trademark styling (small superscript ®) */
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.brand__tm {
+  font-size: 0.55em;
+  vertical-align: super;
+  margin-left: 2px;
+  line-height: 1;
+}
+
+/* Optional precise control — uncomment if needed */
+.brand__tm--precise {
+  position: relative;
+  top: -0.4em;
+}
+
+/* Logo wrapper and TM positioning (header) */
+.logo-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.logo-wrapper img {
+  display: block;
+  height: auto;
+}
+
+/* Remove underline for header logo links */
+.header__logo,
+.header__logo:link,
+.header__logo:visited,
+.header__logo:hover,
+.header__logo:active {
+  text-decoration: none !important;
+}
+
+.logo__tm {
+  position: absolute;
+
+  /* Dynamic alignment based on the logo height variable. If
+     --site-logo-height is not defined, fall back to 38px. */
+  top: calc(var(--site-logo-height, 38px) * 0.05);
+  right: calc(var(--site-logo-height, 38px) * -0.35);
+
+  /* Dynamic size proportional to logo height */
+  font-size: calc(var(--site-logo-height, 38px) * 0.25);
+
+  font-weight: 600;
+  line-height: 1;
+
+  color: inherit;
+
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  pointer-events: none;
+}
+
+/* Manual fine-tuning overrides (uncomment to adjust visually):
+.logo__tm { right: -16px; }
+.logo__tm { right: -18px; }
+.logo__tm { top: 2px; }
+*/
+
+/* Subtle premium animation for TM: fade + micro lift, runs once */
+.logo__tm {
+  opacity: 0;
+  transform: translateY(2px) scale(0.96);
+}
+
+@keyframes tmFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(2px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+
+.logo-wrapper.loaded .logo__tm {
+  animation: tmFadeIn 420ms ease-out 120ms forwards;
+}
+
+/* Legacy .reveal system removed. Use .section-reveal instead. */
+
+/* Prevent flicker on images: DO NOT apply transform hacks; restore natural state */
+.product-card img {
+  transform: none !important;
+  will-change: auto !important;
+  backface-visibility: visible !important;
+}
+
+/* ========================
+   Single product safe resets
+   Ensure WooCommerce single product pages are not affected by global card rules
+   ======================== */
+.single-product img,
+.single-product .wp-post-image {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* Gallery container sizing and centering on single product */
+.single-product .woocommerce-product-gallery {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.single-product .woocommerce-product-gallery__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ========================
+   Single product grid layout (image + summary)
+   Scoped only to .single-product to avoid leaking styles
+   ======================== */
+.single-product .product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.single-product .woocommerce-product-gallery {
+  width: 100%;
+  max-width: 600px;
+}
+
+.single-product .woocommerce-product-gallery img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-width: 100%;
+}
+
+.single-product .summary {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Prevent any horizontal overflow site-wide as a safety net */
+body { overflow-x: hidden; }
+
+/* Container baseline for site */
+.u-container,
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Mobile stacking for single product */
+@media (max-width: 768px) {
+  .single-product .product {
+    grid-template-columns: 1fr;
+  }
+
+  .single-product .woocommerce-product-gallery {
+    max-width: 100%;
+  }
+}
+
+/* Ensure product images reserve space to avoid layout shift during load.
+   Use aspect-ratio and object-fit so images don't change layout when swapped. */
+.product-card__image {
+  position: relative;
+  width: 100%;
+
+  /* Keep reserved space */
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.product-card__image img {
+  width: 100%;
+  height: 100%;
+
+  /* IMPORTANT: keep product aspect and avoid cropping distortion */
+  object-fit: contain;
+
+  display: block;
+  max-width: none !important;
+  transform: scale(var(--pc-image-scale, 1));
+  transform-origin: center center;
+}
+
+.product-card__actions a {
+  float: none !important;
+  position: relative !important;
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Product card sizing + grid */
+.product-card {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.products-portfolio__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+/* Debug helper (commented) */
+/* .product-card__actions { outline: 2px solid red !important; } */
+
+/* Debug helper (temporary) — uncomment to visualize centering during QA */
+/* .product-card__actions { outline: 2px solid red !important; } */
+
+/* ==========================
+   Isolated product-card actions component (pc-actions)
+   Fully self-contained to avoid theme interference
+========================== */
+.pc-actions * {
+  all: unset;
+  box-sizing: border-box;
+}
+
+.pc-actions {
+  width: 75%;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pc-btn-main,
+.pc-btn-cart {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pc-btn-main {
+  flex: 1;
+  height: 48px;
+
+  background: #6b8f7c;
+  color: #ffffff;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0 14px;
+}
+
+.pc-btn-cart {
+  width: 52px;
+  height: 48px;
+
+  background: #e5e5e5;
+  border-radius: 12px;
+  text-decoration: none;
+}
+
+.pc-btn-cart i,
+.pc-btn-cart svg {
+  font-size: 34px;
+  color: #2f6b4f;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .pc-actions { width: 85%; }
+}
+
+/* Product card badge rules consolidated earlier in this file. */
+
+/* Enforce button typography inside product cards */
+.product-card .btn-primary {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+}
+
+/* Ensure WooCommerce-rendered product-cards match front-page sizing (cart, blocks) */
+.woocommerce .product-card {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.woocommerce .products-portfolio__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+/* ==========================
+   Centered 75% actions block with 85/15 split
+========================== */
+.product-card__actions {
+  width: 75% !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.product-card__actions .btn-primary {
+  flex: 0 0 85% !important;
+  height: 48px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.product-card__actions .btn-cart {
+  flex: 0 0 15% !important;
+  height: 48px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.product-card__actions .btn-cart i,
+.product-card__actions .btn-cart svg {
+  font-size: 34px !important;
+  color: #2f6b4f !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 480px) {
+  .product-card__actions { width: 85% !important; }
+}
+
+.product-card__actions a {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* (Legacy cart-scale block removed — consolidated above to ensure single source of truth) */
+
+/* =========================
+   HEADER OFFSET (prevent header overlapping content)
+========================= */
+:root {
+  --header-height: 70px;
+}
+
+body {
+  padding-top: var(--header-height);
+}
+
+/* Final overrides to ensure cart icon variables win over legacy/third-party rules */
+.header__icon--cart i,
+.product-card__cart-btn i,
+.header__icon--cart svg,
+.product-card__cart-btn svg,
+.btn-cart i,
+.btn-cart svg {
+  font-size: var(--cart-icon-size) !important;
+  width: var(--cart-icon-size) !important;
+  height: var(--cart-icon-size) !important;
+  color: var(--cart-icon-color) !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Product-card vertical rhythm removed here; final single definition placed
+   at the end of this file to avoid duplicate/conflicting rules. */
+/* .product-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* vertical spacing between title, price, and actions */
+} */
+/* @media (min-width: 768px) {
+  .product-card__content { gap: 14px; }
+} */
+/* Optional fine-tuning: uncomment if extra offset is needed in specific contexts
+  .product-card__price { margin-top: 4px; }
+  .product-card__actions { margin-top: 8px; }
+} */
 
 /* ========== SECCIÓN BASE ========== */
 .section {
@@ -298,6 +1115,82 @@ body {
   pointer-events: none !important;
 }
 
+/* ===== CLEAN UP CART ICON (header) ===== */
+.header__icon--cart,
+.header__icon--cart i {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.header__icon--cart::after,
+.header__icon--cart::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Vertical alignment improvements (real centering) */
+.header__bar { display: flex; align-items: center; }
+.header__logo img { display: block; }
+.header__icon--cart { display: flex; align-items: center; justify-content: center; height: 100%; }
+
+.header__icon--cart i {
+  display: block;
+  font-size: var(--cart-icon-size);
+  line-height: 1;
+  transform: translateY(1px);
+  color: var(--cart-icon-color) !important;
+}
+
+/* ===== CLEAN UP CART ICON (product card) ===== */
+.product-card__cart-btn,
+.product-card__cart-btn i {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.product-card__cart-btn i {
+  font-size: var(--cart-icon-size);
+  color: var(--cart-icon-color) !important;
+}
+
+/* Remove decorative underlines/outlines that might affect icon elements inside theme */
+.header__icon--cart a,
+.header__icon--cart button,
+.product-card__cart-btn a,
+.product-card__cart-btn button {
+  text-decoration: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* ========== Remove underline only for product-card cart button ========= */
+.product-card__actions .btn-cart,
+.product-card__actions .btn-cart:link,
+.product-card__actions .btn-cart:visited,
+.product-card__actions .btn-cart:hover,
+.product-card__actions .btn-cart:active,
+.product-card__actions .btn-cart:focus {
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.product-card__actions .btn-cart::before,
+.product-card__actions .btn-cart::after {
+  content: none !important;
+  display: none !important;
+}
+
+.product-card__actions .btn-cart i {
+  text-decoration: none !important;
+  border: none !important;
+}
+
+.product-card__actions .btn-cart { display: flex; align-items: center; justify-content: center; }
+
 @media (min-width: 768px) {
   .header__cart-count { width: 20px; height: 20px; font-size: 0.75rem; top: 6px; right: 6px; }
 }
@@ -369,7 +1262,15 @@ body {
 /* Product card action buttons: remove underline from 'Ver Producto' and
   place a compact add-to-cart button next to it. Matches screenshot: large
   pill primary button + small square cart button. */
-.product-card__actions { position: absolute; left: 1.2rem; right: 1.2rem; bottom: calc(1rem - 10px); display: flex; gap: 0.5rem; align-items: center; justify-content: center; z-index: 6; }
+/* Scoped reset for product-card anchors: neutralize browser default link
+   styles (blue/underline) while allowing the component's own rules to
+   restore the intended design. Kept narrowly scoped to avoid global resets. */
+.product-card__btn,
+.product-card__btn--link {
+  text-decoration: none;
+  color: inherit;
+}
+.product-card__actions { position: absolute; left: 1.2rem; right: 1.2rem; bottom: 1rem; display: flex; gap: 0.5rem; align-items: center; justify-content: center; z-index: 6; }
 .product-card__btn--link { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.1rem; border-radius: 10px; background: var(--beslock-green); color: #fff; border: none; font-weight: 700; opacity: 0.65; transition: opacity 280ms cubic-bezier(.16,.84,.29,1), transform 360ms cubic-bezier(.16,.84,.29,1), box-shadow 360ms cubic-bezier(.16,.84,.29,1); will-change: transform, opacity, box-shadow; backface-visibility: hidden; }
 .product-card__btn--link:hover { opacity: 1; transform: translateY(-2px) scale(1.01); box-shadow: 0 8px 24px rgba(3,69,38,0.10); }
 .product-card__btn--link:active { transform: translateY(0) scale(0.995); box-shadow: 0 4px 10px rgba(3,69,38,0.06); }
@@ -399,33 +1300,7 @@ body {
   border: 2px solid var(--beslock-green-lite);
 }
 
-/* ========== PRODUCT CARD BADGE (INSTAL) ========== */
-/* Load the badge as a transparent image and avoid any transform so it
-   renders at its natural aspect ratio. No rotation/scale applied. */
-.product-card__badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: auto;
-  max-width: 100px;
-  height: auto;
-  z-index: 12; /* above overlays but below modals */
-  pointer-events: auto;
-  /* Scale the badge to 60% of its intrinsic size and keep origin top-right */
-  transform: scale(0.6) !important;
-  transform-origin: 100% 0% !important;
-  transition: transform 180ms cubic-bezier(.2,.9,.3,1), opacity 160ms ease, box-shadow 160ms ease;
-  will-change: opacity;
-  filter: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 0 !important;
-  mix-blend-mode: normal !important;
-  display: block;
-}
-@media (min-width: 600px) {
-  .product-card__badge { max-width: 130px; top: 10px; right: 10px; }
-}
+/* Product card badge rules consolidated earlier in this file. */
 
 
 /* ========== HERO: BOTÓN CONTRASTE INVERTIDO ========== */
@@ -458,7 +1333,7 @@ body {
   position: relative;
   width: 100%;
   min-height: 74vh;
-  background: var(--beslock-bg-2);
+  background: #ffffff !important;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -468,10 +1343,14 @@ body {
 }
 .hero__video {
   position: absolute;
-  z-index: 0;
-  top: 0; left: 0; width: 100%; height: 100%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  opacity: 0.77;
+  opacity: 0; /* start hidden */
+  z-index: 1;
+  background: #ffffff; /* safety */
+  transition: opacity 800ms ease;
   pointer-events: none;
 }
 .hero__overlay {
@@ -503,6 +1382,186 @@ body {
   margin: 0 auto 3rem auto;
   padding: 0 1rem;
 }
+/* ========== HERO: branded fallback + smooth video transition ========== */
+.hero__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  z-index: 2;
+  transition: opacity 600ms ease 200ms;
+  /* Force visible fallback to avoid black flash */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.hero__brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  justify-content: center;
+}
+.hero__logo {
+  width: 180px;
+  transform: scale(1);
+  transition: transform 600ms ease;
+  display: block;
+}
+.hero__trademark {
+  font-size: 14px;
+  position: relative;
+  top: -6px;
+}
+.hero__tagline {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #6b7280;
+  letter-spacing: 0.05em;
+}
+
+/* Video initial state: hidden, blurred */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0 !important; /* start hidden */
+  filter: blur(6px) saturate(1.02);
+  transition: opacity 800ms ease, filter 900ms ease, transform 900ms ease;
+  z-index: 1 !important;
+  background: #ffffff !important; /* safety background to avoid black */
+}
+
+/* Ready state: video visible, fallback fades/zooms out */
+.hero.is-ready .hero__video {
+  opacity: 1 !important;
+  filter: blur(0) saturate(1);
+}
+.hero.is-ready .hero__fallback {
+  opacity: 0 !important;
+  transform: scale(1.02);
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+.hero.is-ready .hero__logo {
+  transform: scale(1.05);
+}
+
+/* Performance hints */
+.hero__video { will-change: opacity, filter; }
+.hero__fallback { will-change: opacity, transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__video { display: none !important; }
+  .hero__fallback { opacity: 1 !important; transform: none !important; }
+}
+
+/* ===== PRODUCT BADGE OVERRIDE: ENSURE PURE OVERLAY =====
+   This block enforces the badge as a floating overlay and nullifies
+   conflicting global rules. Keep at file end to maximize specificity.
+=============================================================== */
+.product-card__image {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  isolation: isolate !important;
+  overflow: visible !important;
+}
+.products-portfolio .product-card,
+.products-portfolio .product-card__image,
+.beslock-cart__recommendations .product-card,
+.beslock-cart__recommendations .product-card__image {
+  overflow: visible !important;
+}
+.products-portfolio .product-card__image > img:not(.product-card__badge),
+.beslock-cart__recommendations .product-card__image > img:not(.product-card__badge) {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  position: relative !important;
+  z-index: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Single product page: restore natural image sizing */
+.single-product .product-card__image img,
+.single-product img.wp-post-image {
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+.product-card__badge {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+
+  width: 120px !important;
+  height: auto !important;
+
+  transform: translate(50%, -50%) rotate(14deg);
+
+  z-index: 100 !important;
+  pointer-events: none !important;
+  display: block !important;
+
+  max-width: none !important;
+  min-width: 0 !important;
+  flex: none !important;
+  box-sizing: content-box !important;
+
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.2));
+
+  /* default desktop: hidden until hover/reveal */
+  opacity: 0;
+  transition: opacity 280ms ease, transform 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile sizing */
+@media (hover: none), (max-width: 768px) {
+  .product-card__badge {
+    opacity: 1 !important;
+    width: 180px !important; /* ~1.5x */
+    transform: translate(45%, -45%) rotate(12deg) !important;
+  }
+}
+
+/* Reveal: sync badge with section reveal */
+.section-reveal.is-active .product-card__badge {
+  animation: badge-pop 420ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Optional premium pop animation (keeps same transform values above) */
+@keyframes badge-pop {
+  0% {
+    opacity: 0;
+    transform: translate(50%, -50%) scale(0.8) rotate(14deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(50%, -50%) scale(1.08) rotate(14deg);
+  }
+  100% {
+    transform: translate(50%, -50%) scale(1) rotate(14deg);
+  }
+}
+.section-reveal.is-active .product-card__badge.animation-pop {
+  animation: badge-pop 420ms cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+@media (max-width: 768px) {
+  .product-card__badge {
+    width: 52px !important;
+    transform: translate(20%, -20%) rotate(10deg) !important;
+  }
+}
+
+/* Reset other common selectors that might interfere */
+.pc-badge, .pc-badge img, .product-card__badge img { width: auto !important; max-width: none !important; transform: none !important; }
+
 hero__title {
   font-size: 2rem;
   font-weight: 700;
@@ -633,52 +1692,53 @@ hero__title {
   padding-top: 34px;    /* 85% del padding vertical (antes solo abajo) */
   padding-bottom: 6px;  /* 15% del padding vertical (antes solo abajo) */
   /* Ajusta estos valores si el padding total debe ser mayor o menor */
+  position: relative; /* ensure badge overlays the image */
 }
 .product-card__image img {
-  width: 100%;
-  max-width: 220px;
-  border-radius: 16px 16px 0 0;
-  display: block;
-}
-/* Badge overlay shown on selected products */
-.product-card__badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: auto;
-  max-width: 100px;
-  height: auto;
-  z-index: 12;
-  pointer-events: auto;
-  transform: scale(0.6) !important;
-  transform-origin: 100% 0% !important;
-  transition: transform 180ms cubic-bezier(.2,.9,.3,1), opacity 160ms ease, box-shadow 160ms ease;
-  will-change: transform, opacity;
-  filter: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding: 0 !important;
-  mix-blend-mode: normal !important;
-  display: block;
-}
-@media (max-width: 600px) {
-  .product-card__badge { max-width: 62px; top: 8px; right: 8px; transform: scale(0.6) !important; }
-}
-.product-card__content {
-  padding: 1rem 1.2rem 1.5rem;
-  text-align: center;
+  position: relative;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  flex: 1 1 auto;
-  padding-bottom: 3.6rem; /* reserve space for absolute actions */
+  display: block;
 }
-.product-card__title {
-  font-weight: 700;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 85px;
+
+/* ---------- Section spacing: products -> discover ---------- */
+/* Adds clean vertical rhythm between product grids and the discover block.
+   Avoids spacer elements and keeps spacing responsive. */
+.products-portfolio,
+.products-portfolio__grid {
+  margin-bottom: 48px;
+}
+
+.discover {
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .products-portfolio,
+  .products-portfolio__grid {
+    margin-bottom: 36px;
+  }
+
+  .discover {
+    margin-top: 16px;
+  }
+}
+  height: auto;
+
+  transform: rotate(10deg);
+
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.95;
   font-size: 1.15rem;
-  margin-bottom: 0.5rem;
   color: var(--beslock-green);
-}
+/* removed small margin-top rules to avoid conflicts; final spacing at file end */
 .product-card__desc {
   color: var(--beslock-text-sec);
   font-size: 0.96rem;
@@ -686,6 +1746,14 @@ hero__title {
   margin-bottom: 1rem;
 }
 .product-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
   margin-top: 1rem;
 }
 
@@ -771,11 +1839,21 @@ body.single-product a.single_add_to_cart_button .bi,
   }
 }
 
-/* ========== ANIMACIÓN REVEAL ========== */
-.reveal {
+/* ========== GLOBAL SECTION REVEAL (based on hero slide behavior) ========== */
+.section-reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.4s, transform 0.4s;
+  transform: translateY(20px);
+  will-change: opacity, transform;
+}
+
+.section-reveal.is-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
 /* ========== FOOTER ESPECÍFICO (site-footer) ========== */
@@ -1123,6 +2201,392 @@ body.single-product a.single_add_to_cart_button .bi,
 .hero-slide.is-exiting {
   z-index: 1;
   pointer-events: none;
+}
+
+/* ========= PRODUCT CARD: ENFORCE VERTICAL LAYOUT & MARGINS ==========
+   Ensure `.product-card__content` uses flex column layout and explicit
+   margins to guarantee visible spacing between title → price → actions.
+   This block is appended at the end to take precedence over earlier rules.
+*/
+.product-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 1.2rem 1.5rem;
+  padding-bottom: 3.6rem; /* reserve space for absolute-positioned actions */
+}
+
+/* Ensure children occupy full width so vertical margins separate blocks */
+.product-card__content > * { width: 100%; }
+
+/* Strong, visible spacing */
+.product-card__title { margin: 0 0 16px 0; }
+.product-card__price { margin: 0 0 18px 0; }
+.product-card__actions { margin-top: 12px; display:flex; justify-content:center; gap:10px; }
+
+/* Defensive: clear any browser-set block margins on h3 */
+.product-card__content h3 { margin-block-start: 0; margin-block-end: 0; }
+
+/* =========================
+   CART-ONLY: Empty cart product-card spacing overrides
+   Scope: .beslock-cart--empty — DO NOT modify global product-card rules
+   Placed at file end to ensure cascade priority for cart page only.
+   ========================= */
+.beslock-cart--empty .product-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px; /* cart-only breathing room */
+}
+.beslock-cart--empty .product-card__title {
+  margin-bottom: 14px;
+}
+.beslock-cart--empty .product-card__price {
+  margin-bottom: 16px;
+}
+.beslock-cart--empty .product-card__actions {
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+/* =========================
+   CART-ONLY: Premium UI tweaks for empty cart
+   Scope: .beslock-cart--empty — do NOT touch global product-card rules
+   ========================= */
+.beslock-cart--empty .product-card__price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.beslock-cart--empty .product-card__actions {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+.beslock-cart--empty .product-card__btn--link {
+  flex: 1;
+  max-width: 220px;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 10px 14px;
+  transition: all 0.25s ease;
+}
+
+.beslock-cart--empty .product-card__btn--link:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+.beslock-cart--empty .product-card__btn--link:active {
+  transform: scale(0.98);
+}
+
+.beslock-cart--empty .product-card__actions a:last-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
+.beslock-cart--empty .product-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.beslock-cart--empty .product-card:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   FRONT-PAGE: products-portfolio scoped improvements
+   Scoped to `.products-portfolio` so only homepage/product grid is affected.
+   Keeps visual parity with cart styles while not touching global rules.
+   ========================= */
+.products-portfolio {
+  margin-top: 24px;
+}
+
+.products-portfolio .product-card__title {
+  margin-bottom: 8px;
+}
+
+.products-portfolio .product-card__price {
+  margin-bottom: 12px;
+}
+
+.products-portfolio .product-card__desc {
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.products-portfolio .product-card__actions {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.products-portfolio .product-card__btn--link,
+.products-portfolio .product-card__actions a:last-child {
+  height: 44px;
+}
+
+.products-portfolio .product-card__btn--link {
+  padding: 0 16px;
+}
+
+.products-portfolio .product-card__actions a:last-child {
+  width: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.products-portfolio .product-card__btn,
+.products-portfolio .product-card__btn--link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   UNIFY: global price style and button sizing/alignment
+   These are conservative global rules to keep visual consistency across
+   front page and cart while cart-specific overrides remain more specific.
+*/
+.product-card__price {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.product-card__btn--link,
+.product-card__actions a:last-child {
+  height: 44px;
+}
+.product-card__btn--link { padding: 0 16px; }
+.product-card__actions a:last-child { width: 44px; min-width: 44px; }
+
+.product-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.product-card__btn,
+.product-card__btn--link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-card__title { margin-bottom: 6px; }
+.product-card__price { margin-bottom: 10px; }
+
+/* =========================
+   STRONG: product-card consistency overrides
+   High-specificity overrides scoped to `.product-card` to standardize
+   buttons, spacing and typography across front page and cart.
+   These are intentionally specific and use !important where necessary
+   to overcome third-party or theme rules. Place at file end.
+*/
+.product-card .product-card__btn--link,
+.product-card .product-card__actions a:last-child {
+  height: 44px !important;
+  min-height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.product-card .product-card__actions a:last-child {
+  width: 44px !important;
+  min-width: 44px !important;
+}
+
+.product-card .product-card__actions {
+  display: flex !important;
+  gap: 10px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-top: 12px !important;
+}
+
+.product-card .product-card__desc {
+  max-width: 260px !important;
+  margin: 0 auto !important;
+  line-height: 1.5 !important;
+}
+
+.product-card .product-card__price {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  margin-top: 6px !important;
+  margin-bottom: 12px !important;
+  letter-spacing: 0.2px !important;
+}
+
+.product-card .product-card__content {
+  padding-bottom: 1.5rem !important;
+}
+
+/* =========================
+   GLOBAL: unify product-card visuals to match cart (premium)
+   Applied to `.product-card` selectors. Kept conservative but specific
+   and appended at file end so it's the final authority.
+*/
+.product-card .product-card__price {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  margin-top: 6px;
+  margin-bottom: 14px;
+  letter-spacing: 0.3px;
+}
+
+.product-card .product-card__title {
+  margin-bottom: 6px;
+}
+
+.product-card .product-card__desc {
+  max-width: 260px;
+  margin: 0 auto 18px auto;
+  line-height: 1.55;
+}
+
+.product-card .product-card__btn--link {
+  height: 46px !important;
+  padding: 0 18px !important;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.product-card .product-card__actions a:last-child {
+  height: 46px !important;
+  width: 46px !important;
+  min-width: 46px;
+}
+
+.product-card .product-card__actions {
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.product-card .product-card__content {
+  padding-bottom: 1.8rem !important;
+}
+
+/* =========================
+   HIGH-SPECIFICITY FRONT-PAGE OVERRIDES
+   Force rules to win against later-loaded/theme styles for .products-portfolio
+   Only targets product cards in the front-page products grid.
+*/
+body .products-portfolio .product-card .product-card__title {
+  margin-bottom: 6px !important;
+}
+
+body .products-portfolio .product-card .product-card__price {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 14px !important;
+  letter-spacing: 0.3px !important;
+}
+
+body .products-portfolio .product-card .product-card__desc {
+  max-width: 260px !important;
+  margin: 0 auto 18px auto !important;
+  line-height: 1.55 !important;
+}
+
+body .products-portfolio .product-card .product-card__btn--link {
+  height: 46px !important;
+  padding: 0 18px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+body .products-portfolio .product-card .product-card__actions a:last-child {
+  height: 46px !important;
+  width: 46px !important;
+  min-width: 46px !important;
+}
+
+body .products-portfolio .product-card .product-card__actions {
+  margin-top: 10px !important;
+  gap: 10px !important;
+}
+
+body .products-portfolio .product-card .product-card__content {
+  padding-bottom: 1.8rem !important;
+}
+/* =========================
+   PRODUCT-CARD: prevent description ↔ buttons overlap
+   Scoped to `.product-card` and appended at file end. Uses conservative
+   !important only where necessary to overcome legacy/plugin rules.
+*/
+.product-card .product-card__desc {
+  margin-bottom: 16px !important;
+  position: relative;
+  z-index: 1;
+}
+.product-card .product-card__price,
+.product-card .product-card__title {
+  position: relative;
+  z-index: 1;
+}
+.product-card .product-card__content {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.product-card .product-card__actions {
+  position: relative;
+  margin-top: 12px !important;
+  z-index: 2;
+}
+
+/* CART-ONLY: fix overlapping buttons and enforce clean vertical flow
+   Scoped to `.beslock-cart--empty` so homepage/global `.product-card` remains untouched. */
+.beslock-cart--empty .product-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.beslock-cart--empty .product-card__title,
+.beslock-cart--empty .product-card__price,
+.beslock-cart--empty .product-card__actions {
+  width: 100%;
+}
+
+.beslock-cart--empty .product-card__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  position: static; /* ensure not absolute */
+}
+
+.beslock-cart--empty .product-card__btn,
+.beslock-cart--empty .product-card__btn--link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Prevent absolute/float rules from collapsing buttons inside cart */
+.beslock-cart--empty .product-card__actions * {
+  position: static !important;
+  float: none !important;
 }
 
 /* ===================== Features module styles ===================== */
@@ -1550,6 +3014,15 @@ body.single-product a.single_add_to_cart_button .bi,
 @media (max-width: 600px) {
   .hero-slide .features-wrapper .feature__title {
     font-size: 1.35rem;
+  }
+
+/* Temporary safety: ensure loader never blocks UI if JS fails */
+.beslock-loader {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
     font-weight: 800;
     white-space: normal;
     overflow: visible;

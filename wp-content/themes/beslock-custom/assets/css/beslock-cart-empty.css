@@ -1,0 +1,58 @@
+:root {
+  --header-height: 64px;
+}
+
+.beslock-cart--offset {
+  padding-top: var(--header-height);
+}
+
+.beslock-cart {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.beslock-cart__container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.beslock-cart__empty-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.beslock-cart__empty-subtitle {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 24px;
+}
+
+.beslock-cart__section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.beslock-cart__recommendations {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  width: 100%;
+  align-items: stretch;
+  grid-auto-rows: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.product-card {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: none; /* ensure no inadvertent restriction */
+}

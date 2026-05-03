@@ -1,0 +1,108 @@
+/* Beslock product gallery reel - mobile-first
+   Each slide is centered in the viewport and sized to 85vw
+*/
+.beslock-gallery-reel{
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding: 12px 6px;
+  box-sizing: border-box;
+}
+.beslock-gallery-slide{
+  flex: 0 0 85vw;
+  max-width: 85vw;
+  height: auto;
+  scroll-snap-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.beslock-gallery-slide img{
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+/* hide native controls that might conflict */
+.beslock-gallery-reel:focus{ outline: none; }
+
+/* optional small nav hint */
+.beslock-gallery-hint{
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  margin-top: 6px;
+}
+
+/* Navigation buttons */
+.beslock-gallery-nav{
+  position: relative;
+}
+.beslock-gallery-nav button{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  border: 0;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+}
+.beslock-gallery-nav button.prev{ left: 8px; }
+.beslock-gallery-nav button.next{ right: 8px; }
+
+/* Dots */
+.beslock-gallery-dots{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  margin-top:10px;
+}
+.beslock-gallery-dots button{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:0;
+  background: rgba(0,0,0,0.2);
+  transition: transform 180ms ease, background-color 180ms ease, opacity 180ms ease;
+  opacity: 0.9;
+  padding:0;
+}
+.beslock-gallery-dots button.active{ background: rgba(0,0,0,0.8); }
+
+/* active slide subtle scale & fade */
+.beslock-gallery-slide img{ transition: transform 260ms ease, opacity 260ms ease; opacity: 0.96; }
+.beslock-gallery-slide.active img{ transform: scale(1.02); opacity: 1; }
+
+/* Placeholder when no images */
+.beslock-gallery-placeholder{
+  width: 100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height: 46vw;
+  background: #f5f5f7;
+  color: #777;
+  font-size: 14px;
+}
+
+/* Counter (e.g. 1 / 4) */
+.beslock-gallery-counter{
+  text-align: center;
+  font-size: 13px;
+  color: #444;
+  margin-top: 8px;
+}
+
+

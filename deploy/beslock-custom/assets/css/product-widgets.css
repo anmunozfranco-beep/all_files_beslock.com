@@ -1,0 +1,91 @@
+.beslock-free-shipping-wrap { margin-left: 1rem; margin-right: 1rem; margin-top: 0.25rem; }
+.beslock-free-shipping { background: #eefaf5; border-radius: 8px; padding: 0.5rem; }
+.beslock-free-shipping__inner { display:flex; gap:0.75rem; align-items:center; justify-content:space-between; }
+.beslock-free-shipping__text { color: #065a3d; font-weight:700; font-size:0.95rem; }
+.beslock-free-shipping__bar { background:#fff; border-radius:999px; height:8px; flex:1; margin-left:1rem; border:1px solid rgba(3,69,38,0.06); }
+.beslock-free-shipping__fill { height:100%; background:linear-gradient(90deg,#06a37a,#028a5b); border-radius:999px; }
+.beslock-social-proof-inline { margin-top:0.8rem; font-weight:600; color:var(--beslock-green); }
+.product-page__social-proof .product-page__views { background:#0b8454; color:#fff; padding:0.5rem 0.8rem; border-radius:8px; font-weight:600; display:inline-block; }
+
+/* Defensive fixes: constrain WooCommerce gallery images and the photoswipe trigger */
+.woocommerce div.product div.images .woocommerce-product-gallery__image img,
+.woocommerce div.product div.images .woocommerce-product-gallery__image a img{
+	max-width:100% !important;
+	height:auto !important;
+	display:block !important;
+	object-fit:contain !important;
+}
+.woocommerce div.product div.images .woocommerce-product-gallery__image{
+	max-width:100% !important;
+	overflow:hidden !important;
+}
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger{
+	width:36px !important;
+	height:36px !important;
+	font-size:1.1rem !important;
+	line-height:1 !important;
+	background:#fff !important;
+	border-radius:999px !important;
+	text-indent:-9999px !important;
+	box-sizing:content-box !important;
+	padding:0 !important;
+}
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger span[aria-hidden="true"]{
+	/* Keep the inner glyph visually hidden (as WooCommerce intends) */
+	border:0 !important;
+	clip-path:inset(50%) !important;
+	height:1px !important;
+	width:1px !important;
+	overflow:hidden !important;
+	position:absolute !important;
+	left:50% !important;
+	top:50% !important;
+	margin:-1px !important;
+}
+
+/* Hard-hide the photoswipe trigger completely to remove the visible magnifier */
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
+/* Temporary: hide any remaining placeholder/magnifier images that slipped into the gallery */
+.woocommerce div.product div.images .woocommerce-product-gallery__image--placeholder,
+.woocommerce div.product div.images .woocommerce-product-gallery__image img[src*="lupa"],
+.woocommerce div.product div.images .woocommerce-product-gallery__image img[src*="magnif"],
+.woocommerce div.product div.images .woocommerce-product-gallery__image img[src*="magnifier"],
+.woocommerce div.product div.images .woocommerce-product-gallery__image img[src*="placeholder"] {
+	display: none !important;
+	visibility: hidden !important;
+	opacity: 0 !important;
+}
+
+/* Header styles for single-product pages are intentionally delegated to
+	`assets/css/wc-scope-fix.css` which mirrors the frontpage header geometry.
+	Removing local overrides here so the frontpage header rules apply unchanged. */
+
+/* Ensure the header rendered via the header-widget sits above product content */
+.single-product .header {
+  z-index: 100 !important;
+}
+
+/* Move WooCommerce product gallery block down on single product pages */
+.single-product .product-page__media,
+.single-product .woocommerce div.product div.images {
+	margin-top: 90px !important;
+}
+
+/* Align logo vertically with frontpage: move up 36px on single-product pages */
+.single-product .header__logo {
+	top: calc(50% - 36px) !important;
+}
+
+/* When admin bar present, keep same visual offset */
+body.admin-bar .single-product .header__logo {
+	top: calc(50% - 36px + 16px) !important;
+}
+
+/* (Removed fixed close-button; overlay click-to-close implemented in JS) */
+
