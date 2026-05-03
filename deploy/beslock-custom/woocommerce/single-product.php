@@ -8,6 +8,11 @@ defined( 'ABSPATH' ) || exit;
 // header markup from `header.php`.
 get_header();
 
+// If the theme renders a custom gallery, prevent WooCommerce from also
+// outputting its default gallery to avoid duplicate DOM nodes and slider
+// initialization conflicts.
+remove_action( 'woocommerce_before_single_product_summary', 'woocommerce_show_product_images', 20 );
+
 if ( have_posts() ) :
   while ( have_posts() ) : the_post();
     $product = function_exists( 'wc_get_product' ) ? wc_get_product( get_the_ID() ) : null;
