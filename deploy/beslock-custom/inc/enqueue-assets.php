@@ -209,6 +209,21 @@ add_action( 'wp_enqueue_scripts', function() {
 
 }, 10 );
 
+// Ensure critical WooCommerce single-product scripts are present on product pages.
+// Some optimization plugins may dequeue these; enqueue them late to restore
+// gallery initialization when needed. This is a safe, temporary measure for
+// debugging — we only enqueue when `is_product()` is true.
+add_action( 'wp_enqueue_scripts', function(){
+  if ( function_exists( 'is_product' ) && is_product() ) {
+    if ( ! wp_script_is( 'wc-single-product', 'enqueued' ) ) {
+      wp_enqueue_script( 'wc-single-product' );
+    }
+    if ( ! wp_script_is( 'flexslider', 'enqueued' ) ) {
+      wp_enqueue_script( 'flexslider' );
+    }
+  }
+}, 110 );
+
 // Inline early-capture script: prevent navigation to raw uploads image URLs and open overlay
 add_action( 'wp_head', function(){
   ?>
