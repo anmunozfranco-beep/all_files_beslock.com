@@ -20,24 +20,42 @@
 }
 
 .single-product .woocommerce-product-gallery {
-  flex: 1 1 500px;
-  max-width: 600px;
+
+.single-product .woocommerce-product-gallery {
+  flex: 0 0 50%;
+  max-width: 50%;
+  width: 50%;
+
+  box-sizing: border-box;
 }
 
 .single-product .woocommerce-product-gallery img {
   width: 100%;
   height: auto;
+  max-width: 100%;
   object-fit: contain;
   display: block;
 }
 
+.single-product .woocommerce-product-gallery__wrapper {
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .single-product .summary {
-  flex: 1 1 400px;
-  max-width: 500px;
+  flex: 0 0 50%;
+  max-width: 50%;
+  width: 50%;
 
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+/* Safety: ensure images inside the single product page do not overflow their containers */
+.single-product img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Removed aggressive visibility reset to preserve WooCommerce JS-driven
