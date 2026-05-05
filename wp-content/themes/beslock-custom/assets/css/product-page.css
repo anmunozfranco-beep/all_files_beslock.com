@@ -95,6 +95,10 @@ input.qty {
   backface-visibility: hidden;
 }
 
+/* Move quantity box and add-to-cart down 15px on product pages */
+.single-product .product-page__buy .beslock-buy-controls { margin-top: 15px !important; }
+.single-product .product-page__buy .single_add_to_cart_button { margin-top: 31px !important; }
+
 .product-page__buy .single_add_to_cart_button:hover,
 .product-page__buy .button.add_to_cart_button:hover,
 .product-page__buy .button:hover {
