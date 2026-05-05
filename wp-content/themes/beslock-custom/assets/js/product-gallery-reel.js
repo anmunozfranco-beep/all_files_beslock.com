@@ -75,6 +75,32 @@
     if(!reel) return;
     // ensure slides are direct children (in case some existed already)
     const slides = Array.from(reel.children).filter(c => c.matches && c.matches('.product-page__gallery-slide'));
+    // ensure native touch-action and smooth scrolling
+    try{ reel.style.touchAction = 'pan-y'; }catch(e){}
+
+    // sanitize anchors/images to prevent fullscreen/lightbox and disable drag
+    Array.from(reel.querySelectorAll('a')).forEach(a=>{
+      try{
+        if(a.hasAttribute('href')){
+          a.setAttribute('data-beslock-href', a.getAttribute('href'));
+          a.removeAttribute('href');
+        }
+        // remove common lightbox attributes (non-destructive)
+        ['data-fancybox','data-lightbox','data-mfp','data-pswp-uid','rel','data-gallery'].forEach(attr=> a.removeAttribute(attr));
+        a.addEventListener('click', function(ev){ ev.preventDefault(); ev.stopImmediatePropagation(); }, {passive:false});
+        a.addEventListener('touchstart', function(ev){ /* noop to prioritize touch */ }, {passive:true});
+      }catch(e){ /* ignore */ }
+    });
+
+    Array.from(reel.querySelectorAll('img')).forEach(img=>{
+      try{
+        img.draggable = false;
+        img.addEventListener('dragstart', function(ev){ ev.preventDefault(); }, {passive:false});
+        // ensure pointer-events remain on images
+        img.style.userSelect = 'none';
+        img.style.webkitUserDrag = 'none';
+      }catch(e){}
+    });
     // build UI (dots + counter)
     buildUI(root, reel, slides);
     // initial update

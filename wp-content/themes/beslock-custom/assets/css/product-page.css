@@ -436,6 +436,16 @@ body.single-product .product-page__gallery-slide img {
   object-fit: contain;
 }
 
+/* Step 1: enable native touch scroll while allowing vertical pan */
+.product-page__gallery-reel {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Step 2: prevent drag blockers while keeping images interactive */
+.product-page__gallery-slide { pointer-events: none; }
+.product-page__gallery-slide img { pointer-events: auto; user-select: none; -webkit-user-drag: none; }
+
 body.single-product .product-gallery__ui {
   margin-top: 16px;
   display: flex;
