@@ -18,7 +18,7 @@
 .product-page__media{ order: 0; }
 .product-page__media img{ display:block; width:100%; height:auto; max-width:100%; object-fit:contain; }
 
-.product-page__info{ order: 1; }
+.product-page__info{ order: 1; margin-top: 30vh; }
 .product-page__title{ font-size: 1.25rem; margin: 0 0 .25rem; }
 .product-page__price{ font-size: 1.1rem; color: var(--beslock-green, #06a37a); margin-bottom: .5rem; font-weight:700 }
 .product-page__excerpt{ color: #444; margin-bottom: .75rem }
@@ -136,20 +136,8 @@ input.qty {
 @media (min-width: 768px){
   .product-page__hero{ display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items:start; }
   .product-page__media{ order:0 }
-  .product-page__info{ order:1 }
+  .product-page__info{ order:1; margin-top: 0; }
   .product-page__title{ font-size:1.6rem }
-}
-
-/* Desktop: position the info block so its top sits approximately at 50vh
-   Mobile-first: no vertical offset on small screens; only apply on wide viewports */
-@media (min-width: 1024px) {
-  .product-page__hero{ grid-template-columns: 1fr 1fr; align-items:start; }
-  .product-page__info {
-    /* push the info column down so its top is near the middle of the viewport */
-    margin-top: 50vh;
-    /* ensure it doesn't overflow awkwardly on very tall headers */
-    max-width: 560px;
-  }
 }
 
 /* Constrain gallery thumbnails and images within the media area (BEM-only) */
