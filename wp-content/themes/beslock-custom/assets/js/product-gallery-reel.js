@@ -77,8 +77,8 @@
     // Position canonical reel with a fixed 2rem gap from header (avoid double-counting header height)
     function setReelBelowHeader(canonical){
       try{
-        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-        canonical.style.marginTop = (2 * rem) + 'px';
+        // Force no vertical gap (0rem) to debug placement issues
+        canonical.style.marginTop = '0px';
       }catch(e){/* ignore */}
     }
 
