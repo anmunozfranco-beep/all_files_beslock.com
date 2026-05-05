@@ -53,26 +53,18 @@
     return {canonical, reel, slides: Array.from(reel.children)};
   }
 
-  function attachCounter(root, total){
-    // remove any existing counters anywhere to avoid duplicates
-    try{ Array.from(document.querySelectorAll('.product-page__gallery-counter')).forEach(n=>n && n.remove()); }catch(e){}
-    if(total <= 1) return null;
-    const wrap = document.createElement('div'); wrap.className='product-page__gallery-counter';
-    const span = document.createElement('span'); span.className='product-page__gallery-counter-text'; span.textContent = `1/${total}`; wrap.appendChild(span);
-    // Prefer inserting inside canonical viewport so it's centered w.r.t the reel
-    const canonical = root.querySelector('.product-page__gallery-canonical') || root;
-    canonical.style.position = canonical.style.position || 'relative';
-    canonical.appendChild(wrap);
-    return span;
-  }
+  // NOTE: counter creation/management removed from here — will be handled
+  // by a dedicated counter module appended below. This keeps the reel
+  // logic intact while enabling a fresh, independent counter rebuild.
 
   function init(root){
     if(!root || root.dataset.beslockInit === '1') return;
     const items = collectSources(root);
+    console.info('product-gallery-reel: init items.length=', items && items.length, 'root=', root);
     if(!items || items.length === 0) return;
     const built = buildCanonical(root, items);
     const reel = built.reel; const slides = built.slides; const total = slides.length;
-    const counter = attachCounter(root, total);
+    const counter = null; // counter handled by separate module
 
     // Positioning is handled via CSS (margin-top: 2rem); JS positioning removed
 
@@ -195,3 +187,63 @@
   tryInitAll();
 
 })();
+
+  /* New: stand-alone minimal gallery counter (robust, visible, independent)
+     - Creates a single `.product-page__gallery-counter` inside any
+       `.product-page__gallery-canonical`, `.product-page__gallery-wrapper` or
+       `.product-page__gallery` found on product pages.
+     - Uses IntersectionObserver to determine which slide is visible and
+       updates `X / N` accordingly.
+  */
+  (function(){
+    'use strict';
+    function findCanonicalRoots(){
+      return Array.from(document.querySelectorAll('.product-page__gallery-canonical, .product-page__gallery-wrapper, .product-page__gallery'));
+    }
+
+    function ensureCounterFor(root){
+      if(!root) return;
+      // avoid double-init
+      if(root.dataset.beslockCounter === '1') return;
+      const slides = Array.from(root.querySelectorAll('.product-page__gallery-slide, .woocommerce-product-gallery__image, .product-page__gallery-wrapper img'));
+      if(!slides.length) return;
+      // remove any existing counters to ensure single source
+      Array.from(root.querySelectorAll('.product-page__gallery-counter')).forEach(n=>n.remove());
+
+      const wrap = document.createElement('div'); wrap.className = 'product-page__gallery-counter';
+      const text = document.createElement('span'); text.className = 'product-page__gallery-counter-text'; wrap.appendChild(text);
+      // ensure parent is positioned so absolute inside it works
+      if(getComputedStyle(root).position === 'static') root.style.position = 'relative';
+      root.appendChild(wrap);
+
+      function update(i){ text.textContent = (i+1) + ' / ' + slides.length; }
+
+      let current = 0;
+      update(0);
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting && entry.intersectionRatio > 0.45){
+            const idx = slides.indexOf(entry.target);
+            if(idx !== -1 && idx !== current){ current = idx; update(current); }
+          }
+        });
+      }, {threshold: [0.45, 0.5]});
+
+      slides.forEach(s=> io.observe(s));
+      slides.forEach((s,i)=> s.addEventListener('click', ()=> { current = i; update(i); }));
+      root.dataset.beslockCounter = '1';
+      console.info('product-gallery-counter: initialized for', root, 'slides=', slides.length);
+    }
+
+    function initAll(){
+      const roots = findCanonicalRoots();
+      if(!roots.length) return;
+      roots.forEach(r => ensureCounterFor(r));
+    }
+
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);
+    else initAll();
+    // watch for dynamically-inserted galleries
+    const mo = new MutationObserver(()=> initAll());
+    mo.observe(document.body, {childList:true, subtree:true});
+  })();

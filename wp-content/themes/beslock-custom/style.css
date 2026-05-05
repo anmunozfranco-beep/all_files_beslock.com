@@ -223,11 +223,68 @@ Template: kadence
   align-items: center;
 }
 
+/* Logo registered mark: position and sizing
+	 - We position the mark absolutely inside the wrapper
+	 - JS sets --logo-h (px). The registered mark font-size becomes 12% of that height
+*/
+.logo-wrapper { position: relative; display: inline-block; line-height: 0; }
+.logo-wrapper img { display: block; height: auto; max-height: 100%; }
+.logo__tm {
+	position: absolute;
+	top: 0;
+	/* place the mark to the right of the logo instead of overlaying it */
+	left: 100%;
+	transform: translateX(-1px) translateY(-4px);
+	line-height: 1;
+	pointer-events: none;
+	/* fallback if JS hasn't run */
+	font-size: 14px;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* When JS sets --logo-h, compute font-size as 12% of that height */
+.logo-wrapper[style*="--logo-h"] .logo__tm {
+	/* set proportional size relative to measured logo height and keep it to the right */
+	font-size: calc(var(--logo-h) * 0.6) !important;
+	left: 100% !important;
+	transform: translateX(-1px) translateY(-4px) !important;
+	height: auto !important;
+	line-height: 1 !important;
+}
+
+/* Stronger override to ensure no other theme / woocommerce rules (that use
+	 var(--site-logo-height)) shrink the trademark. Use --logo-h measured by JS;
+	 fallback to --site-logo-height and finally 38px.
+*/
+.header .logo__tm,
+.header__logo .logo__tm,
+.logo-wrapper .logo__tm {
+	font-size: calc(var(--logo-h, var(--site-logo-height, 38px)) * 0.6) !important;
+	left: 100% !important;
+	transform: translateX(-1px) translateY(-4px) !important;
+	height: auto !important;
+	line-height: 1 !important;
+	display: inline-flex !important;
+	align-items: flex-start !important;
+	font-weight: 700 !important;
+	opacity: 0.98 !important;
+}
+
 @media (min-width: 1024px) {
 	.header__icon--cart i,
 	.header__icon i {
 		font-size: 34px; /* keep same absolute 34px on desktop to maintain exactness */
 	}
+}
+
+/* Final override: fixed px size for the trademark when requested by QA */
+.logo-wrapper .logo__tm {
+	font-size: 20px !important;
+	height: auto !important;
+	line-height: 1 !important;
+	transform: none !important;
+	top: 0 !important;
+	right: 0 !important;
 }
 
 /* Ensure icon in actions matches header exactly */

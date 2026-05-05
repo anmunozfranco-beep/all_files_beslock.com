@@ -86,18 +86,8 @@
 
 <?php wp_footer(); ?>
 
-<!-- Ensure product-gallery-reel executes: fetch+eval fallback -->
-<script>
-(function(){
-  function fetchAndRun() {
-    try{
-      var url = '<?php echo esc_url( get_stylesheet_directory_uri() . "/assets/js/product-gallery-reel.js" ); ?>?cb=' + Date.now();
-      fetch(url).then(function(r){ return r.text(); }).then(function(code){ try{ (0,eval)(code); }catch(e){ console && console.error && console.error('product-gallery-reel eval failed', e); } }).catch(function(err){ console && console.error && console.error('product-gallery-reel fetch failed', err); });
-    }catch(e){ /* silent */ }
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fetchAndRun); else fetchAndRun();
-})();
-</script>
+<!-- product-gallery-reel fetch+eval fallback DISABLED (was causing load issues). -->
+<script>console && console.info && console.info('product-gallery-reel: fetch fallback disabled');</script>
 
 </body>
 </html>
@@ -138,5 +128,57 @@
     } catch (e) { /* silent */ }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initFallback); else initFallback();
+})();
+</script>
+<script>
+// Emergency runtime safeguard: if header or cart are hidden by other scripts,
+// force them visible. This runs late to override transient states.
+(function(){
+  try{
+    var hdr = document.querySelector('.header');
+    if(hdr){ hdr.style.setProperty('display','flex','important'); hdr.style.setProperty('visibility','visible'); hdr.style.setProperty('opacity','1'); hdr.style.setProperty('z-index','9998'); }
+    var cart = document.querySelector('.header__icon--cart');
+    if(cart){ cart.style.setProperty('display','flex','important'); cart.style.setProperty('visibility','visible'); cart.style.setProperty('opacity','1'); cart.style.setProperty('z-index','9999'); }
+    var tm = document.querySelector('.logo__tm');
+    if(tm){ tm.style.setProperty('font-size','20px','important'); tm.style.setProperty('opacity','1'); tm.style.setProperty('display','inline-flex','important'); }
+  }catch(e){ console && console.error && console.error('beslock: emergency header restore failed', e); }
+})();
+</script>
+<script>
+// Debug helper: runs once on page load to report gallery counter state and force visibility for testing.
+(function(){
+  try{
+    console.info('beslock-debug: start');
+    var badge = document.getElementById('beslock-pgr-debug-badge');
+    console.info('beslock-debug: badge=', badge && badge.textContent);
+
+    (function(){
+      var counters = Array.from(document.querySelectorAll('.product-page__gallery-counter'));
+      console.info('beslock-debug: counters found=', counters.length);
+      counters.forEach(function(n,i){
+        console.info('beslock-debug: counter', i, n.outerHTML, {
+          display: getComputedStyle(n).display,
+          color: getComputedStyle(n).color,
+          zIndex: getComputedStyle(n).zIndex,
+          visibility: getComputedStyle(n).visibility,
+          opacity: getComputedStyle(n).opacity,
+          width: n.clientWidth,
+          height: n.clientHeight
+        });
+        // Force visible for testing
+        n.style.setProperty('display','block','important');
+        n.style.setProperty('color','#000','important');
+        n.style.setProperty('z-index','99999','important');
+        n.style.setProperty('visibility','visible','important');
+        n.style.setProperty('opacity','1','important');
+        n.style.setProperty('position','relative','important');
+      });
+      if(counters.length === 0){
+        var d = document.getElementById('beslock-debug-overlay');
+        if(!d){ d = document.createElement('div'); d.id = 'beslock-debug-overlay'; d.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:999999;background:#fff;border:2px solid #000;padding:8px;color:#000;font-weight:700;'; document.body.appendChild(d); }
+        d.textContent = 'Beslock debug: counters=0, badge=' + (badge && badge.textContent || 'none');
+      }
+    })();
+  }catch(e){ console && console.error && console.error('beslock-debug: runtime error', e); }
 })();
 </script>
