@@ -77,8 +77,20 @@
     // Position canonical reel with a fixed 2rem gap from header (avoid double-counting header height)
     function setReelBelowHeader(canonical){
       try{
-        // Force no vertical gap (0rem) to debug placement issues
-        canonical.style.marginTop = '0px';
+        // Desired absolute top: header bottom + 2rem
+        const header = document.querySelector('header, .header, #masthead');
+        const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        const desiredTop = headerBottom + 2 * rem;
+        // current absolute top of canonical
+        const rect = canonical.getBoundingClientRect();
+        const currentTop = rect.top;
+        // current computed marginTop (px)
+        const cs = getComputedStyle(canonical);
+        const currentMargin = parseFloat(cs.marginTop) || 0;
+        // delta needed to move canonical to desiredTop
+        const delta = Math.round(desiredTop - currentTop);
+        canonical.style.marginTop = (currentMargin + delta) + 'px';
       }catch(e){/* ignore */}
     }
 
