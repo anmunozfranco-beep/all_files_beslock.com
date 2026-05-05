@@ -85,6 +85,20 @@
 </script>
 
 <?php wp_footer(); ?>
+
+<!-- Ensure product-gallery-reel executes: fetch+eval fallback -->
+<script>
+(function(){
+  function fetchAndRun() {
+    try{
+      var url = '<?php echo esc_url( get_stylesheet_directory_uri() . "/assets/js/product-gallery-reel.js" ); ?>?cb=' + Date.now();
+      fetch(url).then(function(r){ return r.text(); }).then(function(code){ try{ (0,eval)(code); }catch(e){ console && console.error && console.error('product-gallery-reel eval failed', e); } }).catch(function(err){ console && console.error && console.error('product-gallery-reel fetch failed', err); });
+    }catch(e){ /* silent */ }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fetchAndRun); else fetchAndRun();
+})();
+</script>
+
 </body>
 </html>
 
