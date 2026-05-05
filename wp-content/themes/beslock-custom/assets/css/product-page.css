@@ -140,6 +140,15 @@ input.qty {
   .product-page__title{ font-size:1.6rem }
 }
 
+/* Position the title/price/info block at 50vh from the top of the viewport
+   on product pages. This uses margin-top so it doesn't change positioning
+   context (keeps flow) and is scoped to larger viewports to avoid mobile overlap. */
+@media (min-width: 768px) {
+  body.single-product .product-page__info {
+    margin-top: 50vh !important;
+  }
+}
+
 /* Constrain gallery thumbnails and images within the media area (BEM-only) */
 .product-page__media .product-page__gallery{ max-width:100%; }
 .product-page__media .product-page__gallery img{ width:100%; height:auto; object-fit:contain }
