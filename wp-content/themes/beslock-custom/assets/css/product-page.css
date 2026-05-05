@@ -468,9 +468,13 @@ body.single-product .product-gallery__counter { font-size:12px; color:#666; }
 .product-page__gallery-wrapper { display:none; }
 
 /* Mobile: hide description under the title; show on >=768px */
-.product-page__excerpt { display: none; }
+/* Make this rule specific to single-product and force it when needed
+   to override `.single-product .product-page__excerpt` in other files. */
+@media (max-width: 767px) {
+  .single-product .product-page__excerpt { display: none !important; }
+}
 @media (min-width: 768px) {
-  .product-page__excerpt { display: block; }
+  .single-product .product-page__excerpt { display: block !important; }
 }
 
 
