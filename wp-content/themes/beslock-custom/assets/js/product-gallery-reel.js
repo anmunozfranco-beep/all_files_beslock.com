@@ -74,6 +74,20 @@
     const reel = built.reel; const slides = built.slides; const total = slides.length;
     const counter = attachCounter(root, total);
 
+    // Position canonical reel 2rem below the site header (if present).
+    function setReelBelowHeader(canonical){
+      try{
+        const header = document.querySelector('header, #masthead, .site-header, .masthead, .site-header--main');
+        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        const headerHeight = header ? header.getBoundingClientRect().height : 0;
+        canonical.style.marginTop = (headerHeight + 2 * rem) + 'px';
+      }catch(e){/* ignore */}
+    }
+
+    // apply once now and on resize
+    setReelBelowHeader(built.canonical);
+    window.addEventListener('resize', ()=> setTimeout(()=> setReelBelowHeader(built.canonical), 120));
+
     // If only one slide, normal simple behavior
     if(total <= 1){
       let index = 0;
