@@ -608,3 +608,196 @@ body.single-product nav#mobileDrawer .mobile-drawer__panel {
   overflow: hidden !important;
 }
 
+/* ==================================================
+   Phase 2B — Stabilization & Cleanup (layout-only)
+   - Remove horizontal scroll for gallery, prevent hero overlap
+   - Scoped strictly under body.single-product
+   ==================================================*/
+
+body.single-product .product-page__media {
+  overflow: hidden;
+}
+
+body.single-product .beslock-gallery-reel {
+  overflow: hidden;
+  display: flex;
+}
+
+body.single-product .beslock-gallery-slide {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+body.single-product .beslock-gallery-slide img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+body.single-product .product-page__hero {
+  position: relative;
+  z-index: 1;
+}
+
+body.single-product .product-page__info {
+  position: relative;
+  z-index: 2;
+}
+
+/* Critical fix: allow flex/grid children to shrink properly */
+body.single-product .product-page__hero > * {
+  min-width: 0;
+}
+
+body.single-product {
+  overflow-x: hidden;
+}
+
+/* End Phase 2B */
+
+/* ==================================================
+   Phase 2 — Layout structure (mobile-first, layout-only)
+   - Mobile-first stacking then desktop two-column at >=1024px
+   - Layout-only: no colors, shadows, fonts or animations
+   ==================================================*/
+
+.product,
+.product-page {
+  width: 100%;
+}
+
+.product__hero,
+.product-page__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+}
+
+.product__media,
+.product-page__media {
+  width: 80vw;
+  max-width: 480px;
+}
+
+.product__info,
+.product-page__info {
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.product__buy,
+.product-page__buy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.product__details,
+.product-page__tabs {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+
+  .product__hero,
+  .product-page__hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 40vh;
+  }
+
+  .product__media,
+  .product-page__media {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .product__info,
+  .product-page__info {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+}
+
+/* End Phase 2 layout rules */
+
+/* ==================================================
+   Phase 2D — Final gallery/tabs/overflow controls (layout-only)
+   - Force only first gallery image visible
+   - Strict overflow guards and minimal tab layout tweaks
+   ==================================================*/
+
+body.single-product .woocommerce-product-gallery__wrapper {
+  display: block;
+}
+
+body.single-product .woocommerce-product-gallery__image {
+  display: none;
+}
+
+body.single-product .woocommerce-product-gallery__image:first-child {
+  display: block;
+}
+
+body.single-product {
+  overflow-x: hidden;
+}
+
+body.single-product * {
+  max-width: 100%;
+}
+
+body.single-product .product-page__details {
+  margin-top: 120px;
+}
+
+.product-tabs__nav {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+
+.product-tabs__tab { position: relative; }
+.product-tabs__tab.is-active::after { content: ""; position: absolute; bottom: -8px; left: 0; width: 100%; height: 2px; background: black; }
+.product-tabs__panel { display: none; }
+.product-tabs__panel.is-active { display: block; }
+
+/* End Phase 2D */
+
+/* Emergency override removed in deploy copy — gallery sizing controlled in source rules. */
+/* Gallery reel behavior for deploy copy: BEM-only selectors */
+body.single-product .product-page__media .product-page__gallery-wrapper {
+  display: flex !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+body.single-product .product-page__media .product-page__gallery-slide {
+  display: block !important;
+  flex: 0 0 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+body.single-product .product-page__media .product-page__gallery-slide img {
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+}

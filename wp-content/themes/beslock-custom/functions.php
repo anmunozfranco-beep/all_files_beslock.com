@@ -81,6 +81,12 @@ function beslock_enqueue_assets() {
   if ( file_exists( $main_js ) ) {
     wp_enqueue_script( 'beslock-main-js', get_stylesheet_directory_uri() . '/assets/js/main.js', array(), filemtime( $main_js ), true );
   }
+
+  // Product gallery reel (lightweight) — initialize only on single-product pages
+  $gallery_reel = get_stylesheet_directory() . '/assets/js/product-gallery-reel.js';
+  if ( file_exists( $gallery_reel ) ) {
+    wp_enqueue_script( 'beslock-gallery-reel', get_stylesheet_directory_uri() . '/assets/js/product-gallery-reel.js', array(), filemtime( $gallery_reel ), true );
+  }
 }
 add_action( 'wp_enqueue_scripts', 'beslock_enqueue_assets' );
 
@@ -108,6 +114,18 @@ add_action( 'after_setup_theme', function() {
     remove_theme_support( 'wc-product-gallery-zoom' );
     remove_theme_support( 'wc-product-gallery-lightbox' );
     remove_theme_support( 'wc-product-gallery-slider' );
+  }
+}, 20 );
+
+/**
+ * Phase 2B: remove duplicated WooCommerce outputs that the theme renders
+ * We only remove the excerpt and the product data tabs to avoid duplicate
+ * content. Title, price and add-to-cart hooks are left untouched.
+ */
+add_action( 'init', function() {
+  if ( function_exists( 'remove_action' ) ) {
+    remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
+    remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10 );
   }
 }, 20 );
 
