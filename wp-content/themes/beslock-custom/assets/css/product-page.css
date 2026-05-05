@@ -271,9 +271,36 @@ body.single-product .product-page__media .product-page__gallery-slide {
 
 /* Ensure no duplicate canonical/reel or clone-specific styles apply */
 .product-page__gallery-canonical,
-.product-page__gallery-reel,
 .product-page__gallery-slide--clone {
   display: none !important;
+}
+
+/* Neutralize additional flex/scroll containers so only the reel manages scrolling */
+.product-page__gallery,
+.product-page__gallery-wrapper,
+.woocommerce-product-gallery__wrapper {
+  display: block !important;
+  overflow: hidden !important;
+  flex: none !important;
+  width: 100% !important;
+}
+
+/* Make `.product-page__gallery-reel` the single scroll track */
+.product-page__gallery-reel {
+  display: flex !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  flex-wrap: nowrap !important;
+  scroll-snap-type: x mandatory !important;
+  width: 100% !important;
+}
+
+.product-page__gallery-reel > * {
+  flex: 0 0 100% !important;
+  scroll-snap-align: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 /* Counter positioned inside canonical viewport, bottom-centered relative to reel width */
