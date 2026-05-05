@@ -246,10 +246,8 @@ body.single-product .product-page__media .product-page__gallery-slide {
   padding: 0 !important;
 }
 
-/* Hide original Woo gallery inside custom gallery to avoid duplicates */
-.product-page__gallery .woocommerce-product-gallery {
-  display: none !important;
-}
+/* If you previously created a canonical gallery, hide _that_ instead of the Woo gallery.
+   The Woo gallery is the source of slides; ensure it's visible. */
 
 /* Prevent any gallery children from triggering full-screen or lightbox via pointer events on anchors */
 .product-page__gallery a,
