@@ -74,29 +74,7 @@
     const reel = built.reel; const slides = built.slides; const total = slides.length;
     const counter = attachCounter(root, total);
 
-    // Position canonical reel with a fixed 2rem gap from header (avoid double-counting header height)
-    function setReelBelowHeader(canonical){
-      try{
-        // Desired absolute top: header bottom + 2rem
-        const header = document.querySelector('header, .header, #masthead');
-        const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-        const desiredTop = headerBottom + 2 * rem;
-        // current absolute top of canonical
-        const rect = canonical.getBoundingClientRect();
-        const currentTop = rect.top;
-        // current computed marginTop (px)
-        const cs = getComputedStyle(canonical);
-        const currentMargin = parseFloat(cs.marginTop) || 0;
-        // delta needed to move canonical to desiredTop
-        const delta = Math.round(desiredTop - currentTop);
-        canonical.style.marginTop = (currentMargin + delta) + 'px';
-      }catch(e){/* ignore */}
-    }
-
-    // apply once now and on resize
-    setReelBelowHeader(built.canonical);
-    window.addEventListener('resize', ()=> setTimeout(()=> setReelBelowHeader(built.canonical), 120));
+    // Positioning is handled via CSS (margin-top: 2rem); JS positioning removed
 
     // If only one slide, normal simple behavior
     if(total <= 1){
