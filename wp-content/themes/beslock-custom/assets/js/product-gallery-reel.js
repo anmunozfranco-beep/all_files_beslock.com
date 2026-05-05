@@ -134,14 +134,19 @@
   /* Hide product excerpt on mobile via inline style to ensure override
      This is a defensive fix in case theme CSS loads after our stylesheet. */
   (function hideExcerptOnMobile(){
-    const el = document.querySelector('.single-product .product-page__excerpt');
-    if(!el) return;
+    const selectors = [
+      '.single-product .product-page__excerpt',
+      '.single-product .woocommerce-product-details__short-description',
+      '.single-product .summary .woocommerce-product-details__short-description'
+    ];
+    const els = selectors.map(s => Array.from(document.querySelectorAll(s))).flat();
+    if(!els.length) return;
     let raf;
     function apply(){
-      if(window.innerWidth < 768) el.style.display = 'none'; else el.style.display = '';
+      const hide = window.innerWidth < 768;
+      els.forEach(el => { el.style.display = hide ? 'none' : ''; });
     }
     window.addEventListener('resize', ()=>{ if(raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(apply); }, {passive:true});
-    // run once now
     try{ apply(); }catch(e){}
   })();
 

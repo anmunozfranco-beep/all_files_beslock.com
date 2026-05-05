@@ -477,6 +477,16 @@ body.single-product .product-gallery__counter { font-size:12px; color:#666; }
   .single-product .product-page__excerpt { display: block !important; }
 }
 
+/* Defensive: also hide common WooCommerce short description selectors on mobile */
+@media (max-width: 767px) {
+  .single-product .woocommerce-product-details__short-description,
+  .single-product .summary .woocommerce-product-details__short-description { display: none !important; }
+}
+@media (min-width: 768px) {
+  .single-product .woocommerce-product-details__short-description,
+  .single-product .summary .woocommerce-product-details__short-description { display: block !important; }
+}
+
 
 body.single-product ul {
   list-style: none;
