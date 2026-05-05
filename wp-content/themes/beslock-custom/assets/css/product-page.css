@@ -140,12 +140,15 @@ input.qty {
   .product-page__title{ font-size:1.6rem }
 }
 
-/* Position the title/price/info block at 50vh from the top of the viewport
-   on product pages. This uses margin-top so it doesn't change positioning
-   context (keeps flow) and is scoped to larger viewports to avoid mobile overlap. */
-@media (min-width: 768px) {
-  body.single-product .product-page__info {
-    margin-top: 50vh !important;
+/* Desktop: position the info block so its top sits approximately at 50vh
+   Mobile-first: no vertical offset on small screens; only apply on wide viewports */
+@media (min-width: 1024px) {
+  .product-page__hero{ grid-template-columns: 1fr 1fr; align-items:start; }
+  .product-page__info {
+    /* push the info column down so its top is near the middle of the viewport */
+    margin-top: 50vh;
+    /* ensure it doesn't overflow awkwardly on very tall headers */
+    max-width: 560px;
   }
 }
 
