@@ -442,9 +442,10 @@ body.single-product .product-page__gallery-slide img {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Step 2: prevent drag blockers while keeping images interactive */
-.product-page__gallery-slide { pointer-events: none; }
-.product-page__gallery-slide img { pointer-events: auto; user-select: none; -webkit-user-drag: none; }
+/* Step 2: ensure slides allow pointer events so native scrolling works
+  Images remain non-draggable and do not capture text selection */
+.product-page__gallery-slide { pointer-events: auto; }
+.product-page__gallery-slide img { pointer-events: auto; user-select: none; -webkit-user-drag: none; touch-action: manipulation; }
 
 body.single-product .product-gallery__ui {
   margin-top: 16px;
