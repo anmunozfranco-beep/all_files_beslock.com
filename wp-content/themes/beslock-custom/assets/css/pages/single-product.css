@@ -572,6 +572,9 @@ body.single-product .product_title {
 body.single-product .price {
   font-size: 20px;
   margin-bottom: 16px;
+  font-weight: 700;
+  color: #000;
+  text-align: center;
 }
 
 body.single-product {
