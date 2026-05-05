@@ -74,13 +74,11 @@
     const reel = built.reel; const slides = built.slides; const total = slides.length;
     const counter = attachCounter(root, total);
 
-    // Position canonical reel 2rem below the site header (if present).
+    // Position canonical reel with a fixed 2rem gap from header (avoid double-counting header height)
     function setReelBelowHeader(canonical){
       try{
-        const header = document.querySelector('header, #masthead, .site-header, .masthead, .site-header--main');
         const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-        const headerHeight = header ? header.getBoundingClientRect().height : 0;
-        canonical.style.marginTop = (headerHeight + 2 * rem) + 'px';
+        canonical.style.marginTop = (2 * rem) + 'px';
       }catch(e){/* ignore */}
     }
 
