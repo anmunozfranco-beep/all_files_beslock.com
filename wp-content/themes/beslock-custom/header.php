@@ -31,6 +31,33 @@
       </span>
     </a>
 
+    <script>
+    (function(){
+      function setLogoVar(){
+        var wrapper = document.querySelector('.logo-wrapper');
+        if(!wrapper) return;
+        var img = wrapper.querySelector('img');
+        if(!img) return;
+        var rect = img.getBoundingClientRect();
+        var h = rect && rect.height ? rect.height : (img.naturalHeight || 0);
+        if(h) wrapper.style.setProperty('--logo-h', h + 'px');
+          if(h) {
+            wrapper.setAttribute('data-logo-h', Math.round(h));
+            try { console.log('logo measured height:', Math.round(h)); } catch(e){}
+          }
+      }
+      document.addEventListener('DOMContentLoaded', setLogoVar);
+      window.addEventListener('resize', function(){ requestAnimationFrame(setLogoVar); });
+      var imgEl = document.querySelector('.logo-wrapper img');
+      if(imgEl){
+        if(!imgEl.complete){ imgEl.addEventListener('load', setLogoVar); }
+        else { setLogoVar(); }
+        // expose measured height for debugging/inspection
+        imgEl.addEventListener('load', function(){ var w=document.querySelector('.logo-wrapper'); if(w && imgEl.getBoundingClientRect) w.setAttribute('data-logo-h', Math.round(imgEl.getBoundingClientRect().height)); });
+      }
+    })();
+    </script>
+
     <?php
     // Use WooCommerce cart URL when available; fallback to /cart
     $cart_url = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/cart' );
