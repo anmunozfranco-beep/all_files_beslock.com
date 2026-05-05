@@ -552,6 +552,17 @@ body.single-product .price {
   text-align: center !important;
 }
 
+/* Ensure the exact markup used on front page (bdi + currency span) matches */
+.single-product .summary .price bdi,
+.single-product .summary .price bdi .woocommerce-Price-currencySymbol,
+.single-product .summary .price bdi .woocommerce-Price-amount {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+}
+
 /* ==================================================
    Phase 2 — Layout structure (mobile-first, layout-only)
    - Mobile-first stacking then desktop two-column at >=1024px
