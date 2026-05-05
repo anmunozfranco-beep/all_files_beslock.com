@@ -217,6 +217,7 @@ body.single-product .product-page__media .product-page__gallery-slide {
 .product-page__gallery-wrapper,
 .product-page__gallery,
 .woocommerce-product-gallery,
+
 /* Use native scroll-snap for galleries (mobile-first) */
 .product-page__gallery, .product-page__gallery-wrapper, .woocommerce-product-gallery, .woocommerce-product-gallery__wrapper {
   overflow-x: auto !important;
@@ -224,19 +225,21 @@ body.single-product .product-page__media .product-page__gallery-slide {
   -webkit-overflow-scrolling: touch !important;
   scroll-snap-type: x mandatory !important;
   width: 100% !important;
-  display: block !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
 }
 
-/* Slides: occupy full viewport width and snap into place */
+/* Slides: occupy full viewport width and snap into place (one per view) */
 .product-page__gallery-slide,
 .woocommerce-product-gallery__image,
 .product-page__gallery-wrapper > div,
 .product-page__gallery-wrapper img {
   scroll-snap-align: center !important;
-  display: inline-block !important;
+  display: block !important;
+  flex: 0 0 100% !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  vertical-align: top !important;
 }
 
 /* Images fill the slide width while preserving aspect */
