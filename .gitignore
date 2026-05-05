@@ -1,1 +1,5 @@
 .DS_Store
+wp-content/debug.log
+.vscode/
+node_modules/
+.env
