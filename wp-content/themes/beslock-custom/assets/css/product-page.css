@@ -20,6 +20,11 @@
 
 .product-page__info{ order: 1; margin-top: 30vh; }
 .product-page__title{ font-size: 1.25rem; margin: 0 0 .25rem; }
+
+/* Bring title up to sit flush with the gallery reel on mobile (0rem gap)
+  Counteracts the `.product-page__info { margin-top: 30vh }` spacing while
+  preserving the rest of the info block. Reset on larger screens. */
+.product-page__title { margin-top: -30vh !important; }
 .product-page__price{ font-size: 1.1rem; color: var(--beslock-green, #06a37a); margin-bottom: .5rem; font-weight:700 }
 .product-page__excerpt{ color: #444; margin-bottom: .75rem }
 .product-page__buy{ margin-bottom: .75rem }
@@ -138,6 +143,9 @@ input.qty {
   .product-page__media{ order:0 }
   .product-page__info{ order:1; margin-top: 0; }
   .product-page__title{ font-size:1.6rem }
+}
+@media (min-width: 768px){
+  .product-page__title { margin-top: 0 !important; }
 }
 
 /* Constrain gallery thumbnails and images within the media area (BEM-only) */
