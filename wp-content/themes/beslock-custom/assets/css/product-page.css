@@ -283,6 +283,7 @@ body.single-product .product-page__media .product-page__gallery-slide {
   overflow: hidden !important;
   flex: none !important;
   width: 100% !important;
+  touch-action: pan-x pan-y !important;
 }
 
 /* Make `.product-page__gallery-reel` the single scroll track */
@@ -436,9 +437,9 @@ body.single-product .product-page__gallery-slide img {
   object-fit: contain;
 }
 
-/* Step 1: enable native touch scroll while allowing vertical pan */
+/* Step 1: enable native touch scroll while allowing horizontal swipe */
 .product-page__gallery-reel {
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
   -webkit-overflow-scrolling: touch;
 }
 
