@@ -228,6 +228,8 @@ body.single-product .product-page__media .product-page__gallery-slide {
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
+  gap: 0 !important;
+  padding: 0 !important;
 }
 
 /* Slides: occupy full viewport width and snap into place (one per view) */
@@ -240,6 +242,21 @@ body.single-product .product-page__media .product-page__gallery-slide {
   flex: 0 0 100% !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Hide original Woo gallery inside custom gallery to avoid duplicates */
+.product-page__gallery .woocommerce-product-gallery {
+  display: none !important;
+}
+
+/* Prevent any gallery children from triggering full-screen or lightbox via pointer events on anchors */
+.product-page__gallery a,
+.product-page__gallery img {
+  touch-action: pan-y pinch-zoom; /* allow vertical scroll and pinch */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Images fill the slide width while preserving aspect */

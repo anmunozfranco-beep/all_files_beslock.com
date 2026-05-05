@@ -51,6 +51,24 @@
             }, {threshold:[0.5], root: track});
 
             slides.forEach(s=> io.observe(s));
+            // Prevent clicks on anchors/images from opening full-screen/lightbox
+            function preventFullscreenClick(e){
+              // If the click is on an anchor linking to the image, prevent default
+              const tgt = e.target;
+              const a = tgt.closest && tgt.closest('a');
+              if(a && a.getAttribute('href')){
+                e.preventDefault();
+                e.stopPropagation();
+                // dispatch a lightweight tap event in case other handlers rely on it
+                root.dispatchEvent(new CustomEvent('beslock:gallery:tap', {detail:{target: tgt}}));
+              } else if(tgt && (tgt.tagName === 'IMG')){
+                e.preventDefault();
+                e.stopPropagation();
+                root.dispatchEvent(new CustomEvent('beslock:gallery:tap', {detail:{target: tgt}}));
+              }
+            }
+            // Use capture so we intercept before theme/lightbox handlers
+            track.addEventListener('click', preventFullscreenClick, true);
             root.dataset.beslockInit = '1';
             console.info('product-gallery (snap): initialized slides=', total, 'root=', root);
           }
