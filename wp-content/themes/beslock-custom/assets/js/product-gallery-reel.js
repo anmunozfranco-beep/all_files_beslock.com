@@ -131,6 +131,20 @@
     roots.forEach(r=> initGallery(r));
   }
 
+  /* Hide product excerpt on mobile via inline style to ensure override
+     This is a defensive fix in case theme CSS loads after our stylesheet. */
+  (function hideExcerptOnMobile(){
+    const el = document.querySelector('.single-product .product-page__excerpt');
+    if(!el) return;
+    let raf;
+    function apply(){
+      if(window.innerWidth < 768) el.style.display = 'none'; else el.style.display = '';
+    }
+    window.addEventListener('resize', ()=>{ if(raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(apply); }, {passive:true});
+    // run once now
+    try{ apply(); }catch(e){}
+  })();
+
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll); else initAll();
   window.addEventListener('load', initAll);
   const mo = new MutationObserver(()=> initAll());
