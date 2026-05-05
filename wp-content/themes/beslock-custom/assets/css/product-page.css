@@ -189,7 +189,7 @@ body.single-product .product-page__info {
 
 /* Ensure there is 2rem spacing between the counter and the product info/title block */
 .product-page__gallery-counter {
-  margin-bottom: 1rem !important;
+  margin-bottom: 0.5rem !important;
 }
 
 /* Hide dot controls and nav buttons entirely */
