@@ -271,10 +271,11 @@ body.admin-bar.single-product .header__logo {
   top: calc(50% - 36px + 16px) !important;
 }
 
-/* Move the product gallery down so it doesn't overlap the header */
+/* Move the product gallery down so it doesn't overlap the header
+   Reduced from 90px to 2rem to match header rhythm and avoid large gaps */
 body.single-product .product-page__media,
 body.single-product .woocommerce div.product div.images {
-  margin-top: 90px !important;
+  margin-top: 2rem !important;
 }
 
 /* Define and lock the site-logo size variable used by theme */
