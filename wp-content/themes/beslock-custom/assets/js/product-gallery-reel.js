@@ -1,100 +1,108 @@
 (function(){
   'use strict';
 
-  // Idempotent DOM restructure: ensure all images inside .product-page__gallery
-  // are moved into a single .product-page__gallery-reel and wrapped as slides.
-  function restructureGallery(root){
-    if(!root) return;
-    if(root.dataset.beslockReflow === '1') return;
+  function findGalleries(){
+    return Array.from(document.querySelectorAll('.product-page__gallery'));
+  }
 
-    // find or create reel
+  function ensureReel(root){
+    if(!root) return null;
     let reel = root.querySelector('.product-page__gallery-reel');
-    if(!reel){
-      reel = document.createElement('div');
-      reel.className = 'product-page__gallery-reel';
-      root.appendChild(reel);
-    }
-
-    // collect images inside root but not already inside reel
+    if(reel) return reel;
+    reel = document.createElement('div');
+    reel.className = 'product-page__gallery-reel';
+    // move any existing images into the reel
     const imgs = Array.from(root.querySelectorAll('img'));
     imgs.forEach(img=>{
-      if(reel.contains(img)) return; // already moved
-      // prefer moving the anchor wrapper if present
       const movable = img.closest('a') || img;
-      // create slide wrapper
       const slide = document.createElement('div');
       slide.className = 'product-page__gallery-slide';
-      // move node
-      try{
-        slide.appendChild(movable);
-      }catch(e){
-        // fallback: move image only
-        if(movable !== img && movable.contains && movable.contains(img)){
-          slide.appendChild(img);
-          if(movable.parentElement && movable.parentElement.childNodes.length === 0) movable.parentElement.remove();
-        }
-      }
+      // move the node
+      slide.appendChild(movable);
       reel.appendChild(slide);
     });
 
-    // remove any stray direct img children of root
-    Array.from(root.querySelectorAll(':scope > img')).forEach(i=> i.remove());
+    // remove legacy wrappers that may contain duplicate images (non-destructive)
+    Array.from(root.querySelectorAll('.product-page__gallery-wrapper, .product-page__gallery-canonical')).forEach(n=>n.remove());
 
-    root.dataset.beslockReflow = '1';
+    root.appendChild(reel);
+    return reel;
   }
 
-  function findRoots(){
-    return Array.from(document.querySelectorAll('.product-page__gallery, .product-page__gallery-wrapper, .woocommerce-product-gallery'));
-  }
+  function buildUI(root, reel, slides){
+    if(!root || !reel) return null;
+    let ui = root.querySelector('.product-gallery__ui');
+    if(ui) return ui;
+    ui = document.createElement('div'); ui.className = 'product-gallery__ui';
+    const dots = document.createElement('div'); dots.className = 'product-gallery__dots';
+    const counter = document.createElement('div'); counter.className = 'product-gallery__counter';
+    ui.appendChild(dots); ui.appendChild(counter);
+    root.appendChild(ui);
 
-  function getSlides(root){
-    return Array.from(root.querySelectorAll('.product-page__gallery-reel > .product-page__gallery-slide, .product-page__gallery-reel > .woocommerce-product-gallery__image'));
-  }
-
-  function ensureTracking(root){
-    if(!root || root.dataset.beslockInit === '1') return;
-    restructureGallery(root);
-    const slides = getSlides(root);
-    if(!slides.length) return;
-
-    const track = root.querySelector('.product-page__gallery-reel') || root.querySelector('.woocommerce-product-gallery__wrapper') || root.querySelector('.product-page__gallery-wrapper') || root;
-    let current = 0; const total = slides.length;
-
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting && entry.intersectionRatio > 0.5){
-          const idx = slides.indexOf(entry.target);
-          if(idx !== -1 && idx !== current){
-            current = idx;
-            const ev = new CustomEvent('beslock:gallery:change', {detail:{index: current, total}});
-            root.dispatchEvent(ev);
-          }
-        }
+    slides.forEach((slide, i)=>{
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'product-gallery__dot';
+      dot.setAttribute('aria-label', 'Go to slide ' + (i+1));
+      dot.addEventListener('click', ()=>{
+        // scroll to slide
+        if(typeof slide.scrollIntoView === 'function') slide.scrollIntoView({behavior:'smooth', inline:'center'});
+        else reel.scrollTo({left: slide.offsetLeft, behavior: 'smooth'});
       });
-    }, {threshold:[0.5], root: track});
+      dots.appendChild(dot);
+    });
 
-    slides.forEach(s=> io.observe(s));
+    return ui;
+  }
 
-    function preventFullscreenClick(e){
-      const tgt = e.target;
-      const a = tgt.closest && tgt.closest('a');
-      if(a && a.getAttribute && a.getAttribute('href')){
-        e.preventDefault(); e.stopPropagation(); root.dispatchEvent(new CustomEvent('beslock:gallery:tap', {detail:{target: tgt}}));
-      } else if(tgt && tgt.tagName === 'IMG'){
-        e.preventDefault(); e.stopPropagation(); root.dispatchEvent(new CustomEvent('beslock:gallery:tap', {detail:{target: tgt}}));
-      }
+  function updateUI(root, reel, slides){
+    const ui = root.querySelector('.product-gallery__ui');
+    if(!ui) return;
+    const dots = Array.from(ui.querySelectorAll('.product-gallery__dot'));
+    const counter = ui.querySelector('.product-gallery__counter');
+    const cw = reel.clientWidth || 1;
+    const idx = Math.round(reel.scrollLeft / cw);
+    const index = Math.max(0, Math.min(slides.length-1, idx));
+    dots.forEach((d, i)=> d.classList.toggle('is-active', i === index));
+    if(counter) counter.textContent = (index+1) + ' / ' + slides.length;
+    // hide UI when not needed
+    ui.style.display = (slides.length <= 1) ? 'none' : 'flex';
+  }
+
+  function initGallery(root){
+    if(!root || root.dataset.beslockInit === '1') return;
+    const reel = ensureReel(root);
+    if(!reel) return;
+    // ensure slides are direct children (in case some existed already)
+    const slides = Array.from(reel.children).filter(c => c.matches && c.matches('.product-page__gallery-slide'));
+    // build UI (dots + counter)
+    buildUI(root, reel, slides);
+    // initial update
+    updateUI(root, reel, slides);
+
+    // sync on scroll with rAF throttle
+    let rafPending = false;
+    function onScroll(){
+      if(rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(()=>{ updateUI(root, reel, slides); rafPending = false; });
     }
+    reel.addEventListener('scroll', onScroll, {passive:true});
 
-    // attach handler on the track with capture to intercept theme/lightbox handlers
-    track.addEventListener('click', preventFullscreenClick, true);
+    // update on resize (slides width may change)
+    const ro = new ResizeObserver(()=> updateUI(root, reel, slides));
+    ro.observe(reel);
+
+    // ensure dots reflect current position on load
+    setTimeout(()=> updateUI(root, reel, slides), 120);
 
     root.dataset.beslockInit = '1';
-    console.info('product-gallery (snap): initialized slides=', total, 'root=', root);
+    console.info('product-gallery: initialized', root, 'slides=', slides.length);
   }
 
   function initAll(){
-    const roots = findRoots();
-    roots.forEach(r=> ensureTracking(r));
+    const roots = findGalleries();
+    roots.forEach(r=> initGallery(r));
   }
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll); else initAll();
