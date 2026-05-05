@@ -690,6 +690,62 @@ body.single-product {
   overflow-x: hidden;
 }
 
+/* ==================================================
+   FORCE: single scroll container for gallery
+   Applied as a last-resort override to neutralize all
+   other scroll/flex containers and make only the
+   `.product-page__gallery-reel` act as the horizontal
+   scrolling track.
+   ==================================================*/
+
+/* Step 2: hard reset all candidate containers */
+.product-page__gallery,
+.product-page__gallery-wrapper,
+.product-page__gallery-canonical,
+.woocommerce-product-gallery,
+.woocommerce-product-gallery__wrapper {
+  display: block !important;
+  overflow: hidden !important;
+  flex: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Step 3: define the only track that scrolls */
+.product-page__gallery-reel {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-snap-type: x mandatory !important;
+  width: 100% !important;
+  gap: 0 !important;
+}
+
+/* Step 4: lock slides to full width */
+.product-page__gallery-reel > *,
+.product-page__gallery-slide {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  scroll-snap-align: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure images inside slides don't exceed their container */
+.product-page__gallery-reel img,
+.product-page__gallery-slide img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+
 /* Spacing between hero and tabs/details */
 body.single-product .product-page__details {
   margin-top: 80px;
