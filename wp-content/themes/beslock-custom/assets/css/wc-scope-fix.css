@@ -320,6 +320,17 @@ body.single-product .woocommerce div.product div.images {
   color: inherit !important;
 }
 
+/* Ensure logo trademark matches front page appearance on Woo pages */
+.header .logo__tm,
+.header__logo .logo__tm {
+  color: var(--beslock-green) !important;
+  font-size: calc(var(--site-logo-height, 38px) * 0.25) !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  opacity: 0.88 !important;
+  pointer-events: none !important;
+}
+
 /* Ensure the logo anchor is clickable and shows pointer */
 .header a.header__logo,
 .header__logo {
