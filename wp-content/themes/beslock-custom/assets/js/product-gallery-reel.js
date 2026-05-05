@@ -1,87 +1,105 @@
 (function(){
   'use strict';
 
-  function qs(root, sel){ return Array.from((root||document).querySelectorAll(sel)); }
+  // Idempotent DOM restructure: ensure all images inside .product-page__gallery
+  // are moved into a single .product-page__gallery-reel and wrapped as slides.
+  function restructureGallery(root){
+    if(!root) return;
+    if(root.dataset.beslockReflow === '1') return;
 
-  function collectSources(root){
-    // prefer Woo nodes inside root
-    let nodes = qs(root, '.woocommerce-product-gallery__image');
-    if(nodes.length === 0) nodes = qs(root, '.woocommerce-product-gallery__wrapper img');
-    const seen = new Set();
-    const out = [];
-    nodes.forEach(n=>{
+    // find or create reel
+    let reel = root.querySelector('.product-page__gallery-reel');
+    if(!reel){
+      reel = document.createElement('div');
+      reel.className = 'product-page__gallery-reel';
+      root.appendChild(reel);
+    }
+
+    // collect images inside root but not already inside reel
+    const imgs = Array.from(root.querySelectorAll('img'));
+    imgs.forEach(img=>{
+      if(reel.contains(img)) return; // already moved
+      // prefer moving the anchor wrapper if present
+      const movable = img.closest('a') || img;
+      // create slide wrapper
+      const slide = document.createElement('div');
+      slide.className = 'product-page__gallery-slide';
+      // move node
       try{
-        const img = n.tagName === 'IMG' ? n : n.querySelector && n.querySelector('img');
-        const a = n.querySelector && n.querySelector('a');
-        const src = img && (img.getAttribute('data-large_image') || img.getAttribute('src'));
-        const href = a && a.getAttribute('href');
-        const key = href || src || (img && img.alt) || n.innerHTML;
-        if(!key || seen.has(key)) return;
-        seen.add(key);
-        // Minimal, non-mutating scroll-snap tracker for product galleries.
-        (function(){
-          'use strict';
+        slide.appendChild(movable);
+      }catch(e){
+        // fallback: move image only
+        if(movable !== img && movable.contains && movable.contains(img)){
+          slide.appendChild(img);
+          if(movable.parentElement && movable.parentElement.childNodes.length === 0) movable.parentElement.remove();
+        }
+      }
+      reel.appendChild(slide);
+    });
 
-          function findRoots(){
-            return Array.from(document.querySelectorAll('.product-page__gallery, .product-page__gallery-wrapper, .woocommerce-product-gallery'));
+    // remove any stray direct img children of root
+    Array.from(root.querySelectorAll(':scope > img')).forEach(i=> i.remove());
+
+    root.dataset.beslockReflow = '1';
+  }
+
+  function findRoots(){
+    return Array.from(document.querySelectorAll('.product-page__gallery, .product-page__gallery-wrapper, .woocommerce-product-gallery'));
+  }
+
+  function getSlides(root){
+    return Array.from(root.querySelectorAll('.product-page__gallery-reel > .product-page__gallery-slide, .product-page__gallery-reel > .woocommerce-product-gallery__image'));
+  }
+
+  function ensureTracking(root){
+    if(!root || root.dataset.beslockInit === '1') return;
+    restructureGallery(root);
+    const slides = getSlides(root);
+    if(!slides.length) return;
+
+    const track = root.querySelector('.product-page__gallery-reel') || root.querySelector('.woocommerce-product-gallery__wrapper') || root.querySelector('.product-page__gallery-wrapper') || root;
+    let current = 0; const total = slides.length;
+
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting && entry.intersectionRatio > 0.5){
+          const idx = slides.indexOf(entry.target);
+          if(idx !== -1 && idx !== current){
+            current = idx;
+            const ev = new CustomEvent('beslock:gallery:change', {detail:{index: current, total}});
+            root.dispatchEvent(ev);
           }
+        }
+      });
+    }, {threshold:[0.5], root: track});
 
-          function getSlides(root){
-            const selectors = ['.product-page__gallery-slide', '.woocommerce-product-gallery__image', '.product-page__gallery-wrapper img', 'img.wp-post-image'];
-            for(const sel of selectors){
-              const found = Array.from(root.querySelectorAll(sel));
-              if(found && found.length) return found;
-            }
-            return [];
-          }
+    slides.forEach(s=> io.observe(s));
 
-          function ensureTracking(root){
-            if(!root || root.dataset.beslockInit === '1') return;
-            const slides = getSlides(root);
-            if(!slides.length) return;
-            const track = root.querySelector('.woocommerce-product-gallery__wrapper') || root.querySelector('.product-page__gallery-wrapper') || root;
-            let current = 0; const total = slides.length;
-            const io = new IntersectionObserver((entries)=>{
-              entries.forEach(entry=>{
-                if(entry.isIntersecting && entry.intersectionRatio > 0.5){
-                  const idx = slides.indexOf(entry.target);
-                  if(idx !== -1 && idx !== current){ current = idx; const ev = new CustomEvent('beslock:gallery:change', {detail:{index: current, total}}); root.dispatchEvent(ev); }
-                }
-              });
-            }, {threshold:[0.5], root: track});
+    function preventFullscreenClick(e){
+      const tgt = e.target;
+      const a = tgt.closest && tgt.closest('a');
+      if(a && a.getAttribute && a.getAttribute('href')){
+        e.preventDefault(); e.stopPropagation(); root.dispatchEvent(new CustomEvent('beslock:gallery:tap', {detail:{target: tgt}}));
+      } else if(tgt && tgt.tagName === 'IMG'){
+        e.preventDefault(); e.stopPropagation(); root.dispatchEvent(new CustomEvent('beslock:gallery:tap', {detail:{target: tgt}}));
+      }
+    }
 
-            slides.forEach(s=> io.observe(s));
-            // Prevent clicks on anchors/images from opening full-screen/lightbox
-            function preventFullscreenClick(e){
-              // If the click is on an anchor linking to the image, prevent default
-              const tgt = e.target;
-              const a = tgt.closest && tgt.closest('a');
-              if(a && a.getAttribute('href')){
-                e.preventDefault();
-                e.stopPropagation();
-                // dispatch a lightweight tap event in case other handlers rely on it
-                root.dispatchEvent(new CustomEvent('beslock:gallery:tap', {detail:{target: tgt}}));
-              } else if(tgt && (tgt.tagName === 'IMG')){
-                e.preventDefault();
-                e.stopPropagation();
-                root.dispatchEvent(new CustomEvent('beslock:gallery:tap', {detail:{target: tgt}}));
-              }
-            }
-            // Use capture so we intercept before theme/lightbox handlers
-            track.addEventListener('click', preventFullscreenClick, true);
-            root.dataset.beslockInit = '1';
-            console.info('product-gallery (snap): initialized slides=', total, 'root=', root);
-          }
+    // attach handler on the track with capture to intercept theme/lightbox handlers
+    track.addEventListener('click', preventFullscreenClick, true);
 
-          function initAll(){
-            const roots = findRoots();
-            roots.forEach(r=> ensureTracking(r));
-          }
+    root.dataset.beslockInit = '1';
+    console.info('product-gallery (snap): initialized slides=', total, 'root=', root);
+  }
 
-          if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll); else initAll();
-          window.addEventListener('load', initAll);
-          const mo = new MutationObserver(()=> initAll());
-          mo.observe(document.body, {childList:true, subtree:true});
+  function initAll(){
+    const roots = findRoots();
+    roots.forEach(r=> ensureTracking(r));
+  }
 
-        })();
-    // Positioning is handled via CSS (margin-top: 2rem); JS positioning removed
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll); else initAll();
+  window.addEventListener('load', initAll);
+  const mo = new MutationObserver(()=> initAll());
+  mo.observe(document.body, {childList:true, subtree:true});
+
+})();
