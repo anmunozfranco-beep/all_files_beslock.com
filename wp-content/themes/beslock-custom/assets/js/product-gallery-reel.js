@@ -75,8 +75,8 @@
     if(!reel) return;
     // ensure slides are direct children (in case some existed already)
     const slides = Array.from(reel.children).filter(c => c.matches && c.matches('.product-page__gallery-slide'));
-    // ensure native touch-action and smooth scrolling
-    try{ reel.style.touchAction = 'pan-y'; }catch(e){}
+    // ensure native touch-action and smooth scrolling (allow horizontal swipe)
+    try{ reel.style.touchAction = 'pan-x pan-y'; }catch(e){}
 
     // sanitize anchors/images to prevent fullscreen/lightbox and disable drag
     Array.from(reel.querySelectorAll('a')).forEach(a=>{
