@@ -540,6 +540,18 @@ body.single-product nav#mobileDrawer:not(.is-open) {
 
 /* End scoped reset & adapter */
 
+/* Force product price visual parity with front page (high specificity) */
+.single-product .summary .price,
+.single-product p.price,
+.single-product .product-page__price,
+.single-product .woocommerce-Price-amount,
+body.single-product .price {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+  text-align: center !important;
+}
+
 /* ==================================================
    Phase 2 — Layout structure (mobile-first, layout-only)
    - Mobile-first stacking then desktop two-column at >=1024px
