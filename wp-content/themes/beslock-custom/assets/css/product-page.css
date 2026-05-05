@@ -184,7 +184,12 @@ body.single-product .product-page__media .product-page__gallery-wrapper::-webkit
 
 /* Prevent product info (title/price/desc) overlapping the indicator */
 body.single-product .product-page__info {
-  margin-top: 70px !important;
+  margin-top: 0 !important;
+}
+
+/* Ensure there is 2rem spacing between the counter and the product info/title block */
+.product-page__gallery-counter {
+  margin-bottom: 1rem !important;
 }
 
 /* Hide dot controls and nav buttons entirely */
