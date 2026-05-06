@@ -567,6 +567,104 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
   }
 }
 
+if ( ! function_exists( 'beslock_generate_products_csv' ) ) {
+  /**
+   * Generate a WooCommerce-importable CSV from data/products.json.
+   * Attempts to fetch rendered product pages (DOM) for richer fields, falls back to JSON.
+   * Returns path to CSV or WP_Error.
+   */
+  function beslock_generate_products_csv( $use_dom = true ) {
+    $theme_dir = get_stylesheet_directory();
+    $data_file = $theme_dir . '/data/products.json';
+    if ( ! file_exists( $data_file ) ) return new WP_Error( 'no_file', 'products.json not found for CSV generation' );
+    $json = file_get_contents( $data_file );
+    $data = json_decode( $json, true );
+    if ( ! is_array( $data ) ) return new WP_Error( 'invalid_json', 'products.json invalid' );
+
+    $csv_path = $theme_dir . '/data/products.csv';
+    $fh = @fopen( $csv_path, 'w' );
+    if ( ! $fh ) return new WP_Error( 'no_write', 'Unable to open CSV for writing: ' . $csv_path );
+
+    // Header matching common WooCommerce importer columns (minimal set)
+    $headers = array( 'Name','Slug','Description','Short description','Regular price','SKU','Categories','Tags','Images' );
+    fputcsv( $fh, $headers );
+
+    foreach ( $data as $prod ) {
+      $row = array_fill( 0, count( $headers ), '' );
+      $name = isset( $prod['title'] ) ? $prod['title'] : ( isset( $prod['slug'] ) ? $prod['slug'] : '' );
+      $slug = isset( $prod['slug'] ) ? $prod['slug'] : sanitize_title( $name );
+      $desc = isset( $prod['description'] ) ? $prod['description'] : '';
+      $short = isset( $prod['short_description'] ) ? $prod['short_description'] : '';
+      $price = isset( $prod['price'] ) ? $prod['price'] : '';
+      $sku = isset( $prod['sku'] ) ? $prod['sku'] : '';
+      $cats = isset( $prod['categories'] ) && is_array( $prod['categories'] ) ? implode( '|', $prod['categories'] ) : '';
+      $tags = isset( $prod['tags'] ) && is_array( $prod['tags'] ) ? implode( ', ', $prod['tags'] ) : '';
+      $images_csv = '';
+
+      if ( $use_dom ) {
+        // attempt to find an existing product and fetch its permalink
+        $existing = get_page_by_path( $slug, OBJECT, 'product' );
+        if ( ! $existing && ! empty( $prod['title'] ) ) {
+          $existing = get_page_by_title( $prod['title'], OBJECT, 'product' );
+        }
+        if ( $existing ) {
+          $permalink = get_permalink( $existing->ID );
+          if ( $permalink ) {
+            $res = wp_remote_get( $permalink );
+            if ( ! is_wp_error( $res ) && wp_remote_retrieve_response_code( $res ) === 200 ) {
+              $html = wp_remote_retrieve_body( $res );
+              if ( ! empty( $html ) ) {
+                libxml_use_internal_errors( true );
+                $doc = new DOMDocument();
+                $doc->loadHTML( mb_convert_encoding( $html, 'HTML-ENTITIES', 'UTF-8' ) );
+                $xpath = new DOMXPath( $doc );
+                // title
+                $nodes = $xpath->query("//h1[contains(@class,'product_title')] | //h1[contains(@class,'entry-title')] | //h1");
+                if ( $nodes->length ) $name = trim( $nodes->item(0)->textContent );
+                // short description
+                $nodes = $xpath->query("//*[contains(@class,'short-description')] | //div[contains(@class,'woocommerce-product-details__short-description')] | //div[contains(@class,'entry-summary')]/p");
+                if ( $nodes->length ) $short = trim( $nodes->item(0)->textContent );
+                // description
+                $nodes = $xpath->query("//div[contains(@class,'woocommerce-Tabs-panel') or contains(@class,'description')] | //div[contains(@class,'entry-content')]");
+                if ( $nodes->length ) $desc = trim( preg_replace('/\s+/', ' ', $nodes->item(0)->textContent) );
+                // price
+                $nodes = $xpath->query("//*[contains(@class,'price')]//span[contains(@class,'amount')] | //p[contains(@class,'price')]//span");
+                if ( $nodes->length ) {
+                  $price_text = trim( $nodes->item(0)->textContent );
+                  $price_digits = preg_replace('/[^0-9\.,]/', '', $price_text );
+                  $price = str_replace( array( ',', ' ' ), array( '.', '' ), $price_digits );
+                }
+                // images: gather product gallery images
+                $img_nodes = $xpath->query("//figure[contains(@class,'woocommerce-product-gallery__image')]//img | //div[contains(@class,'product-gallery')]//img | //img[contains(@class,'wp-post-image')]");
+                $imgs = array();
+                foreach ( $img_nodes as $n ) {
+                  $src = $n->getAttribute('src');
+                  if ( $src ) $imgs[] = $src;
+                }
+                if ( ! empty( $imgs ) ) {
+                  // CSV expects comma separated list of image URLs
+                  $images_csv = implode( ',', array_unique( $imgs ) );
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // fallback to JSON images if none found from DOM
+      if ( empty( $images_csv ) && ! empty( $prod['images'] ) ) {
+        $images_csv = implode( ',', $prod['images'] );
+      }
+
+      $row = array( $name, $slug, $desc, $short, $price, $sku, $cats, $tags, $images_csv );
+      fputcsv( $fh, $row );
+    }
+
+    fclose( $fh );
+    return $csv_path;
+  }
+}
+
 // Admin helper: render a small summary (used when included from an admin page)
 if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
   function beslock_carga_portfolio_admin_ui() {
@@ -619,6 +717,16 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
       } );
 
       try {
+        // If user requested CSV generation, run that first
+        if ( isset( $_POST['beslock_generate_csv'] ) && $_POST['beslock_generate_csv'] ) {
+          $csv_res = beslock_generate_products_csv( true );
+          if ( is_wp_error( $csv_res ) ) {
+            echo '<div class="notice notice-error"><p>' . esc_html( $csv_res->get_error_message() ) . '</p></div>';
+          } else {
+            echo '<div class="notice notice-success"><p>' . esc_html__( 'CSV generado:', 'beslock' ) . ' ' . esc_html( $csv_res ) . '</p></div>';
+          }
+        }
+
         $res = beslock_carga_portfolio_process( $dry_run_flag );
         if ( is_wp_error( $res ) ) {
           echo '<div class="notice notice-error"><p>' . esc_html( $res->get_error_message() ) . '</p></div>';
@@ -646,6 +754,8 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
         try { update_option( 'beslock_last_import_log', $e->getMessage() . "\n" . $e->getTraceAsString() ); } catch ( Exception $ex ) { }
       }
     }
+    // show CSV generator checkbox
+    echo '<p><label><input type="checkbox" name="beslock_generate_csv" value="1"> ' . esc_html__( 'Generate CSV from products (try DOM render then JSON fallback)', 'beslock' ) . '</label></p>';
 
     echo '<form method="post">' . wp_nonce_field( 'beslock_carga_portfolio_nonce' );
     echo '<p>' . esc_html__( 'This will read data/products.json and create/update WooCommerce products accordingly.', 'beslock' ) . '</p>';
