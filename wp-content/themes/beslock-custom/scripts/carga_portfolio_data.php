@@ -396,21 +396,31 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
     if ( isset( $_POST['beslock_carga_run'] ) ) {
       check_admin_referer( 'beslock_carga_portfolio_nonce' );
       $dry_run_flag = isset( $_POST['beslock_carga_dryrun'] ) && $_POST['beslock_carga_dryrun'] ? true : false;
-      $res = beslock_carga_portfolio_process( $dry_run_flag );
-      if ( is_wp_error( $res ) ) {
-        echo '<div class="notice notice-error"><p>' . esc_html( $res->get_error_message() ) . '</p></div>';
-      } else {
-        echo '<div class="notice notice-success"><p>' . esc_html__( 'Import finished. See log below.', 'beslock' ) . '</p></div>';
-        echo '<h2>Summary</h2>';
-        echo '<ul>';
-        echo '<li>Created: ' . intval( $res['created'] ) . '</li>';
-        echo '<li>Updated: ' . intval( $res['updated'] ) . '</li>';
-        echo '<li>Skipped: ' . count( $res['skipped'] ) . '</li>';
-        echo '<li>Missing images: ' . count( $res['missing_images'] ) . '</li>';
-        echo '<li>Duplicated slugs: ' . count( $res['duplicated_slugs'] ) . '</li>';
-        echo '</ul>';
-        echo '<h2>Log</h2>';
-        echo '<pre style="white-space:pre-wrap; background:#fff; border:1px solid #ddd; padding:12px;">' . esc_html( implode( "\n", $res['log'] ) ) . '</pre>';
+      try {
+        $res = beslock_carga_portfolio_process( $dry_run_flag );
+        if ( is_wp_error( $res ) ) {
+          echo '<div class="notice notice-error"><p>' . esc_html( $res->get_error_message() ) . '</p></div>';
+        } else {
+          echo '<div class="notice notice-success"><p>' . esc_html__( 'Import finished. See log below.', 'beslock' ) . '</p></div>';
+          echo '<h2>Summary</h2>';
+          echo '<ul>';
+          echo '<li>Created: ' . intval( $res['created'] ) . '</li>';
+          echo '<li>Updated: ' . intval( $res['updated'] ) . '</li>';
+          echo '<li>Skipped: ' . count( $res['skipped'] ) . '</li>';
+          echo '<li>Missing images: ' . count( $res['missing_images'] ) . '</li>';
+          echo '<li>Duplicated slugs: ' . count( $res['duplicated_slugs'] ) . '</li>';
+          echo '</ul>';
+          echo '<h2>Log</h2>';
+          echo '<pre style="white-space:pre-wrap; background:#fff; border:1px solid #ddd; padding:12px;">' . esc_html( implode( "\n", $res['log'] ) ) . '</pre>';
+        }
+      } catch ( Throwable $e ) {
+        $err = sprintf( 'Import failed with exception: %s on line %d', $e->getMessage(), $e->getLine() );
+        echo '<div class="notice notice-error"><p>' . esc_html( $err ) . '</p></div>';
+        // try to persist exception to log dir
+        $log_dir = get_stylesheet_directory() . '/import_logs';
+        if ( ! is_dir( $log_dir ) ) {@mkdir( $log_dir, 0755, true );}
+        $log_file = trailingslashit( $log_dir ) . 'carga_portfolio_error_' . date( 'Ymd_His' ) . '.log';
+        @file_put_contents( $log_file, $e->getMessage() . "\n" . $e->getTraceAsString() );
       }
     }
 
