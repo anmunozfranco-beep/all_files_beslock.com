@@ -249,10 +249,10 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
             update_post_meta( $pid, '_downloadable', 'no' );
             // visibility (older WP/WC versions)
             update_post_meta( $pid, '_visibility', 'visible' );
-            // set product type to simple to avoid theme hooks assuming variations
-            if ( function_exists( 'wp_set_object_terms' ) ) {
-              wp_set_object_terms( $pid, 'variable', 'product_type' );
-              $log[] = "Set product type to variable for {$slug}";
+             // set product type to simple to avoid theme hooks assuming variations
+             if ( function_exists( 'wp_set_object_terms' ) ) {
+              wp_set_object_terms( $pid, 'simple', 'product_type' );
+              $log[] = "Set product type to simple for {$slug}";
             }
           } else {
             $log[] = "(dry-run) Would set minimal product metadata for {$slug}";
@@ -280,6 +280,80 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         $update_post['post_name'] = $slug;
         $changed = true;
         $log[] = "Will update post_name (slug) for product ID {$pid} to {$slug}";
+      }
+      // map long description -> post_content
+      if ( isset( $prod['description'] ) && $prod['description'] !== get_post_field( 'post_content', $pid ) ) {
+        $update_post['post_content'] = $prod['description'];
+        $changed = true;
+      }
+      // SKU mapping
+      if ( isset( $prod['sku'] ) ) {
+        $sku = sanitize_text_field( $prod['sku'] );
+        if ( $sku !== get_post_meta( $pid, '_sku', true ) ) {
+          if ( ! $is_dry ) {
+            update_post_meta( $pid, '_sku', $sku );
+          } else {
+            $log[] = "(dry-run) Would set _sku for {$slug}: {$sku}";
+          }
+        }
+      }
+      // stock and manage_stock
+      if ( isset( $prod['manage_stock'] ) ) {
+        $manage = $prod['manage_stock'] ? 'yes' : 'no';
+        if ( ! $is_dry ) {
+          update_post_meta( $pid, '_manage_stock', $manage );
+        } else {
+          $log[] = "(dry-run) Would set _manage_stock for {$slug}: {$manage}";
+        }
+      }
+      if ( isset( $prod['stock'] ) ) {
+        if ( ! $is_dry ) {
+          update_post_meta( $pid, '_stock', sanitize_text_field( $prod['stock'] ) );
+        } else {
+          $log[] = "(dry-run) Would set _stock for {$slug}: " . sanitize_text_field( $prod['stock'] );
+        }
+      }
+      if ( isset( $prod['stock_status'] ) ) {
+        if ( ! $is_dry ) {
+          update_post_meta( $pid, '_stock_status', sanitize_text_field( $prod['stock_status'] ) );
+        } else {
+          $log[] = "(dry-run) Would set _stock_status for {$slug}: " . sanitize_text_field( $prod['stock_status'] );
+        }
+      }
+      // weight and dimensions
+      if ( isset( $prod['weight'] ) ) {
+        if ( ! $is_dry ) {
+          update_post_meta( $pid, '_weight', sanitize_text_field( $prod['weight'] ) );
+        } else {
+          $log[] = "(dry-run) Would set _weight for {$slug}: " . sanitize_text_field( $prod['weight'] );
+        }
+      }
+      if ( isset( $prod['length'] ) || isset( $prod['width'] ) || isset( $prod['height'] ) ) {
+        if ( ! $is_dry ) {
+          if ( isset( $prod['length'] ) ) update_post_meta( $pid, '_length', sanitize_text_field( $prod['length'] ) );
+          if ( isset( $prod['width'] ) ) update_post_meta( $pid, '_width', sanitize_text_field( $prod['width'] ) );
+          if ( isset( $prod['height'] ) ) update_post_meta( $pid, '_height', sanitize_text_field( $prod['height'] ) );
+        } else {
+          $log[] = "(dry-run) Would set dimensions for {$slug}";
+        }
+      }
+      // categories (by slug or name)
+      if ( ! empty( $prod['categories'] ) && is_array( $prod['categories'] ) ) {
+        $cats = array_map( 'sanitize_text_field', $prod['categories'] );
+        if ( ! $is_dry ) {
+          wp_set_object_terms( $pid, $cats, 'product_cat' );
+        } else {
+          $log[] = "(dry-run) Would set categories for {$slug}: " . implode( ',', $cats );
+        }
+      }
+      // tags
+      if ( ! empty( $prod['tags'] ) && is_array( $prod['tags'] ) ) {
+        $tags = array_map( 'sanitize_text_field', $prod['tags'] );
+        if ( ! $is_dry ) {
+          wp_set_post_terms( $pid, $tags, 'product_tag' );
+        } else {
+          $log[] = "(dry-run) Would set tags for {$slug}: " . implode( ',', $tags );
+        }
       }
       if ( isset( $prod['title'] ) && $prod['title'] !== get_the_title( $pid ) ) {
         $update_post['post_title'] = $prod['title'];
