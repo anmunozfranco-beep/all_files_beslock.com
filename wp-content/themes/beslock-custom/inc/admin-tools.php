@@ -216,6 +216,13 @@ add_action( 'admin_menu', function() {
   );
 } );
 
+// Admin notice with direct link to CSV Generator (help if menu missing)
+add_action( 'admin_notices', function() {
+  if ( ! current_user_can( 'manage_options' ) ) return;
+  $url = admin_url( 'tools.php?page=beslock-csv-generator' );
+  echo '<div class="notice notice-info is-dismissible"><p>' . sprintf( esc_html__( 'CSV Generator available: %sOpen CSV Generator%s', 'beslock' ), '<a href="' . esc_url( $url ) . '">', '</a>' ) . '</p></div>';
+} );
+
 function beslock_fix_placeholders_page() {
   if ( ! current_user_can( 'manage_options' ) ) {
     wp_die( __( 'Insufficient permissions', 'beslock' ) );
