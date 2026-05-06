@@ -45,17 +45,57 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       return $res ? intval( $res ) : 0;
     };
 
+    // helper: find theme file path across known image dirs
+    $find_theme_file = function( $filename ) {
+      $search_dirs = array(
+        get_stylesheet_directory() . '/assets/images/products/',
+        get_stylesheet_directory() . '/assets/images/',
+      );
+
+      $ext = strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
+      $base = pathinfo( $filename, PATHINFO_FILENAME );
+      $candidates = array();
+
+      // If already webp, look for it directly and its _s variant
+      if ( $ext === 'webp' ) {
+        $candidates[] = $base . '.webp';
+        $candidates[] = $base . '_s.webp';
+      } else {
+        // Map any incoming filename to webp candidates only
+        $candidates[] = $base . '.webp';
+        $candidates[] = $base . '_s.webp';
+        // If filename has common suffixes like _hero or _d, also try stripped base
+        if ( preg_match('/(_hero|_d(_\d+)?)$/i', $base ) ) {
+          $stripped = preg_replace('/(_hero|_d(_\d+)?)$/i', '', $base );
+          if ( $stripped ) {
+            $candidates[] = $stripped . '.webp';
+            $candidates[] = $stripped . '_s.webp';
+          }
+        }
+      }
+
+      foreach ( $search_dirs as $d ) {
+        foreach ( $candidates as $cand ) {
+          $p = trailingslashit( $d ) . $cand;
+          if ( file_exists( $p ) ) return $p;
+        }
+      }
+
+      return '';
+    };
+
     // helper: import theme image if present and not already in uploads
-    $import_theme_image = function( $filename, &$log ) use ( $find_attachment_by_filename ) {
-      $theme_path = get_stylesheet_directory() . '/assets/images/products/' . $filename;
-      if ( ! file_exists( $theme_path ) ) {
+    $import_theme_image = function( $filename, &$log ) use ( $find_attachment_by_filename, $find_theme_file ) {
+      $theme_path = $find_theme_file( $filename );
+      if ( ! $theme_path ) {
         return 0;
       }
 
-      // check existing attachment first
-      $existing = $find_attachment_by_filename( $filename );
+      // check existing attachment first (use the discovered theme basename)
+      $theme_basename = wp_basename( $theme_path );
+      $existing = $find_attachment_by_filename( $theme_basename );
       if ( $existing ) {
-        $log[] = "Reused existing attachment for {$filename}: {$existing}";
+        $log[] = "Reused existing attachment for {$theme_basename}: {$existing}";
         return $existing;
       }
 
@@ -64,7 +104,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       require_once ABSPATH . 'wp-admin/includes/media.php';
 
       $upload_dir = wp_upload_dir();
-      $unique = wp_unique_filename( $upload_dir['path'], $filename );
+      $unique = wp_unique_filename( $upload_dir['path'], wp_basename( $theme_path ) );
       $new_path = trailingslashit( $upload_dir['path'] ) . $unique;
       if ( ! copy( $theme_path, $new_path ) ) {
         $log[] = "Failed to copy theme image {$theme_path} to uploads";
@@ -74,7 +114,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       $filetype = wp_check_filetype( $unique );
       $attachment = array(
         'post_mime_type' => $filetype['type'] ?: 'image/jpeg',
-        'post_title' => sanitize_file_name( pathinfo( $filename, PATHINFO_FILENAME ) ),
+        'post_title' => sanitize_file_name( pathinfo( $unique, PATHINFO_FILENAME ) ),
         'post_content' => '',
         'post_status' => 'inherit',
       );
@@ -89,6 +129,29 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       wp_update_attachment_metadata( $attach_id, $attach_data );
       $log[] = "Imported theme image {$filename} as attachment {$attach_id}";
       return $attach_id;
+    };
+
+    // helper: discover images for a product slug under assets/images
+    $discover_images_for_slug = function( $slug ) {
+      $dirs = array(
+        get_stylesheet_directory() . '/assets/images/products/',
+        get_stylesheet_directory() . '/assets/images/',
+      );
+      $found = array( 'primary' => array(), 'secondary' => array() );
+      foreach ( $dirs as $d ) {
+        if ( ! is_dir( $d ) ) continue;
+        // only consider webp files
+        $pattern = trailingslashit( $d ) . $slug . '*.webp';
+        foreach ( glob( $pattern ) as $path ) {
+          $base = wp_basename( $path );
+          if ( preg_match('/_s\.webp$/i', $base) ) {
+            $found['secondary'][] = $base;
+          } else {
+            $found['primary'][] = $base;
+          }
+        }
+      }
+      return $found;
     };
 
     $created = 0;
@@ -175,7 +238,10 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         }
       }
 
-      // handle featured image (first images[] entry)
+      // handle featured image + gallery
+      $gallery_ids = array();
+
+      // If images specified in products.json, prefer them
       if ( ! empty( $prod['images'] ) && is_array( $prod['images'] ) ) {
         $first_image = wp_basename( $prod['images'][0] );
         $att_id = $find_attachment_by_filename( $first_image );
@@ -188,11 +254,43 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
           $missing_images[] = $first_image;
           $log[] = "Missing featured image for {$slug}: {$first_image}";
         }
+      } else {
+        // attempt to discover theme images by slug
+        $discovered = $discover_images_for_slug( $slug );
+        if ( ! empty( $discovered['primary'] ) ) {
+          $first = $discovered['primary'][0];
+          $att = $find_attachment_by_filename( $first );
+          if ( ! $att ) $att = $import_theme_image( $first, $log );
+          if ( $att ) {
+            set_post_thumbnail( $pid, $att );
+            $log[] = "Auto-assigned featured image for {$slug}: {$first}";
+          } else {
+            $missing_images[] = $first;
+            $log[] = "Missing auto-discovered featured image for {$slug}: {$first}";
+          }
+        }
+        // add secondary images as gallery
+        if ( ! empty( $discovered['secondary'] ) ) {
+          foreach ( $discovered['secondary'] as $sfile ) {
+            $att = $find_attachment_by_filename( $sfile );
+            if ( ! $att ) $att = $import_theme_image( $sfile, $log );
+            if ( $att ) $gallery_ids[] = $att;
+            else { $missing_images[] = $sfile; $log[] = "Missing auto-discovered gallery image for {$slug}: {$sfile}"; }
+          }
+        }
+        // also include any "others"
+        if ( ! empty( $discovered['others'] ) ) {
+          foreach ( $discovered['others'] as $ofile ) {
+            $att = $find_attachment_by_filename( $ofile );
+            if ( ! $att ) $att = $import_theme_image( $ofile, $log );
+            if ( $att ) $gallery_ids[] = $att;
+            else { $missing_images[] = $ofile; $log[] = "Missing auto-discovered gallery image for {$slug}: {$ofile}"; }
+          }
+        }
       }
 
-      // handle gallery images
+      // If explicit gallery entries present, append them (after discovery)
       if ( ! empty( $prod['gallery'] ) && is_array( $prod['gallery'] ) ) {
-        $gallery_ids = array();
         foreach ( $prod['gallery'] as $gfile ) {
           $gbase = wp_basename( $gfile );
           $gid = $find_attachment_by_filename( $gbase );
@@ -206,9 +304,10 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
             $log[] = "Missing gallery image for {$slug}: {$gbase}";
           }
         }
-        if ( ! empty( $gallery_ids ) ) {
-          update_post_meta( $pid, '_product_image_gallery', implode( ',', $gallery_ids ) );
-        }
+      }
+
+      if ( ! empty( $gallery_ids ) ) {
+        update_post_meta( $pid, '_product_image_gallery', implode( ',', $gallery_ids ) );
       }
 
       // features and badge metadata
