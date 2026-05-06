@@ -12,6 +12,131 @@ if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
 
+if ( ! function_exists( 'beslock_import_images_from_assets' ) ) {
+  /**
+   * Import images from theme assets into uploads and assign featured/gallery to products.
+   * Returns array(summary) or WP_Error.
+   */
+  function beslock_import_images_from_assets( $dry_run = true ) {
+    $log = array();
+    $is_dry = (bool) $dry_run;
+    $theme_dir = get_stylesheet_directory();
+    $data_file = $theme_dir . '/data/products.json';
+    if ( ! file_exists( $data_file ) ) return new WP_Error( 'no_file', 'products.json not found' );
+    $json = file_get_contents( $data_file );
+    $data = json_decode( $json, true );
+    if ( ! is_array( $data ) ) return new WP_Error( 'invalid_json', 'products.json invalid' );
+
+    global $wpdb;
+    $imported = 0;
+    $assigned = 0;
+    $missing = array();
+
+    $search_dirs = array(
+      $theme_dir . '/assets/images/products/',
+      $theme_dir . '/assets/images/',
+    );
+
+    foreach ( $data as $prod ) {
+      if ( empty( $prod['slug'] ) ) continue;
+      $slug = sanitize_title( $prod['slug'] );
+      $found_files = array();
+      // primary candidate slug_.webp and slug.webp
+      foreach ( $search_dirs as $d ) {
+        if ( ! is_dir( $d ) ) continue;
+        $p1 = trailingslashit( $d ) . $slug . '_.webp';
+        $p2 = trailingslashit( $d ) . $slug . '.webp';
+        if ( file_exists( $p1 ) ) $found_files[] = $p1;
+        if ( file_exists( $p2 ) ) $found_files[] = $p2;
+        // glob secondaries
+        foreach ( glob( trailingslashit( $d ) . $slug . '_*.webp' ) as $g ) {
+          if ( ! in_array( $g, $found_files ) ) $found_files[] = $g;
+        }
+      }
+
+      if ( empty( $found_files ) ) {
+        $log[] = "No assets found for {$slug}";
+        $missing[] = $slug;
+        continue;
+      }
+
+      // find product by slug or title
+      $existing = get_page_by_path( $slug, OBJECT, 'product' );
+      if ( ! $existing && ! empty( $prod['title'] ) ) {
+        $existing = get_page_by_title( $prod['title'], OBJECT, 'product' );
+      }
+      $pid = $existing ? $existing->ID : 0;
+
+      $gallery_ids = array();
+      foreach ( $found_files as $file_path ) {
+        $basename = wp_basename( $file_path );
+        // check existing attachment by filename (without ext)
+        $name_no_ext = pathinfo( $basename, PATHINFO_FILENAME );
+        $like = '%' . $wpdb->esc_like( $name_no_ext ) . '%';
+        $sql = $wpdb->prepare( "SELECT p.ID FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id WHERE p.post_type='attachment' AND pm.meta_key='_wp_attached_file' AND pm.meta_value LIKE %s LIMIT 1", $like );
+        $att_id = $wpdb->get_var( $sql );
+        if ( $att_id ) {
+          $log[] = "Reused attachment {$att_id} for {$basename}";
+        } else {
+          if ( $is_dry ) {
+            $log[] = "(dry-run) Would import {$basename} for product {$slug}";
+            $att_id = 0;
+          } else {
+            // copy to uploads and create attachment
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/media.php';
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+            $upload_dir = wp_upload_dir();
+            $unique = wp_unique_filename( $upload_dir['path'], $basename );
+            $new_path = trailingslashit( $upload_dir['path'] ) . $unique;
+            if ( ! copy( $file_path, $new_path ) ) {
+              $log[] = "Failed to copy {$file_path} to uploads";
+              continue;
+            }
+            $filetype = wp_check_filetype( $unique );
+            $attachment = array(
+              'post_mime_type' => $filetype['type'] ?: 'image/webp',
+              'post_title' => sanitize_file_name( pathinfo( $unique, PATHINFO_FILENAME ) ),
+              'post_content' => '',
+              'post_status' => 'inherit',
+            );
+            $att_id = wp_insert_attachment( $attachment, $new_path );
+            if ( is_wp_error( $att_id ) || ! $att_id ) {
+              $log[] = "Failed to insert attachment for {$basename}";
+              continue;
+            }
+            $meta = wp_generate_attachment_metadata( $att_id, $new_path );
+            wp_update_attachment_metadata( $att_id, $meta );
+            $imported++;
+            $log[] = "Imported asset {$basename} as attachment {$att_id}";
+          }
+        }
+
+        if ( $att_id ) $gallery_ids[] = intval( $att_id );
+      }
+
+      // assign featured image (first) and gallery
+      if ( ! empty( $gallery_ids ) && $pid ) {
+        if ( ! $is_dry ) {
+          set_post_thumbnail( $pid, $gallery_ids[0] );
+          if ( count( $gallery_ids ) > 1 ) update_post_meta( $pid, '_product_image_gallery', implode( ',', array_slice( $gallery_ids, 1 ) ) );
+          $assigned++;
+          $log[] = "Assigned images to product {$slug} (ID {$pid})";
+        } else {
+          $log[] = "(dry-run) Would assign images to product {$slug}: " . implode( ',', $gallery_ids );
+        }
+      } elseif ( ! empty( $gallery_ids ) ) {
+        $log[] = "Images imported for {$slug} but product not found (skipped assignment)";
+      }
+    }
+
+    // persist log to option
+    try { update_option( 'beslock_last_import_log', implode( "\n", $log ) ); } catch ( Exception $e ) {}
+
+    return array( 'imported' => $imported, 'assigned' => $assigned, 'missing' => $missing, 'log' => $log );
+  }
+}
+
 if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
   function beslock_carga_portfolio_process( $dry_run = false ) {
     $log = array();
@@ -684,6 +809,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
     if ( isset( $_POST['beslock_carga_run'] ) ) {
       check_admin_referer( 'beslock_carga_portfolio_nonce' );
       $dry_run_flag = isset( $_POST['beslock_carga_dryrun'] ) && $_POST['beslock_carga_dryrun'] ? true : false;
+      $images_only = isset( $_POST['beslock_import_images'] ) && $_POST['beslock_import_images'];
 
       // convert PHP errors to exceptions so they can be caught
       set_error_handler( function( $severity, $message, $file, $line ) {
@@ -727,7 +853,11 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
           }
         }
 
-        $res = beslock_carga_portfolio_process( $dry_run_flag );
+        if ( $images_only ) {
+          $res = beslock_import_images_from_assets( $dry_run_flag );
+        } else {
+          $res = beslock_carga_portfolio_process( $dry_run_flag );
+        }
         if ( is_wp_error( $res ) ) {
           echo '<div class="notice notice-error"><p>' . esc_html( $res->get_error_message() ) . '</p></div>';
         } else {
@@ -760,6 +890,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
     echo '<form method="post">' . wp_nonce_field( 'beslock_carga_portfolio_nonce' );
     echo '<p>' . esc_html__( 'This will read data/products.json and create/update WooCommerce products accordingly.', 'beslock' ) . '</p>';
     echo '<p><label><input type="checkbox" name="beslock_carga_dryrun" value="1" checked> ' . esc_html__( 'Dry run (no changes, just report)', 'beslock' ) . '</label></p>';
+    echo '<p><label><input type="checkbox" name="beslock_import_images" value="1"> ' . esc_html__( 'Only import images from theme assets and assign to products', 'beslock' ) . '</label></p>';
     echo '<p><button type="submit" name="beslock_carga_run" class="button button-primary">' . esc_html__( 'Regenerar catálogo', 'beslock' ) . '</button></p>';
     echo '</form></div>';
   }
