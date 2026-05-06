@@ -11,24 +11,25 @@ body.woocommerce, body.woocommerce-page {
   line-height: unset !important;
 }
 
-/* Reset only WooCommerce-native controls so child theme utilities don't
-   interfere with core WC components. This targets only elements created
-   by WooCommerce itself (buttons and submit inputs) and avoids any custom
-   `.btn` or product-card classes. */
-body.woocommerce button,
-body.woocommerce input[type="submit"],
-body.woocommerce .button,
-body.woocommerce-page button,
-body.woocommerce-page input[type="submit"],
-body.woocommerce-page .button {
-  all: unset;
-  display: revert;
+/* Neutralize child button utilities so WooCommerce buttons keep their own styles */
+body.woocommerce .btn,
+body.woocommerce .beslock-btn,
+body.woocommerce .discover__btn,
+body.woocommerce .hero__cta,
+body.woocommerce-page .btn,
+body.woocommerce-page .beslock-btn,
+body.woocommerce-page .discover__btn,
+body.woocommerce-page .hero__cta {
+  all: unset !important;
+  display: revert !important;
 }
 
-/* Note: we intentionally do not globally reset `a` on WooCommerce pages
-   because that can unintentionally remove styling from theme components
-   such as product-card anchors. Link styling should be controlled by the
-   theme's component CSS (e.g., main.css). */
+/* Make sure links within WC pages get their inherited/parent styles */
+body.woocommerce a,
+body.woocommerce-page a {
+  color: unset !important;
+  text-decoration: unset !important;
+}
 
 /* Inputs/forms: avoid child overrides that alter sizing/appearance */
 body.woocommerce input,
@@ -187,9 +188,6 @@ body.tax-product_tag .header__logo img {
     height: var(--site-logo-height) !important;
   }
 }
-
-
-
 
 /* ===================================================================
    FULL HEADER ISOLATION — Lock header vertical system and typography

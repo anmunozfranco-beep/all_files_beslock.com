@@ -1,66 +1,23 @@
 <?php
 /**
- * Empty cart page
- *
- * This template can be overridden by copying it to yourtheme/woocommerce/cart/cart-empty.php.
- *
- * HOWEVER, on occasion WooCommerce will need to update template files and you
- * (the theme developer) will need to copy the new files to your theme to
- * maintain compatibility. We try to do this as little as possible, but it does
- * happen. When this occurs the version of the template file will be bumped and
- * the readme will list any important changes.
- *
- * @see     https://woocommerce.com/document/template-structure/
- * @package WooCommerce\Templates
- * @version 7.0.1
+ * Theme override: Cart empty template with product-card style buttons
  */
 
 defined( 'ABSPATH' ) || exit;
 
-/* Keep the required hook only. */
-do_action( 'woocommerce_cart_is_empty' );
-
+$shop_url = wc_get_page_permalink( 'shop' );
 ?>
+<div class="wc-empty-cart-message beslock-empty-cart-theme">
+  <p class="cart-empty woocommerce-info"><?php echo esc_html__( 'Tu carrito está vacío.', 'beslock' ); ?></p>
 
-<div class="beslock-cart beslock-cart--empty beslock-cart--offset">
-    <div class="beslock-cart__container">
-
-        <h2 class="beslock-cart__empty-title">
-            Tu carrito está vacío
-        </h2>
-
-        <p class="beslock-cart__empty-subtitle">
-            Descubre nuestros productos y equipa tu espacio con Beslock
-        </p>
-
-                <div class="beslock-cart__recommendations">
-                    <?php
-                    $args = [
-                        'post_type' => 'product',
-                        'posts_per_page' => 4,
-                    ];
-
-                    $loop = new WP_Query( $args );
-
-                    if ( $loop->have_posts() ) : ?>
-
-                        <div class="products-portfolio__grid">
-
-                            <?php while ( $loop->have_posts() ) : $loop->the_post(); ?>
-
-                                <?php wc_get_template_part( 'content', 'product' ); ?>
-
-                            <?php endwhile; ?>
-
-                        </div>
-
-                    <?php endif;
-
-                    wp_reset_postdata();
-                    ?>
-                </div>
-
+  <div class="beslock-empty-actions product-card product-card--empty">
+    <div class="product-card__content">
+      <div class="product-card__actions product-card__actions--inline">
+        <a href="<?php echo esc_url( $shop_url ); ?>" class="btn product-card__btn product-card__btn--link product-card__btn--full"><?php echo esc_html__( 'Ver Producto', 'beslock' ); ?></a>
+        <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="product-card__add-to-cart" aria-label="<?php echo esc_attr__( 'Ir al carrito', 'beslock' ); ?>" rel="nofollow">
+          <i class="bi bi-cart" aria-hidden="true"></i>
+        </a>
+      </div>
     </div>
+  </div>
 </div>
-
-<?php

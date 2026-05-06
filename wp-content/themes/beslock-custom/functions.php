@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-  exit;
-}
-
 /**
 /* Beslock Custom Theme – Functions
  * Mobile-first + BEM + GSAP Ready

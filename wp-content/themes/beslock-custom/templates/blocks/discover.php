@@ -5,7 +5,7 @@
  */
 ?>
 
-<section class="discover section section--lined section-reveal">
+<section class="discover section section--lined reveal">
   <div class="u-container">
     <div class="discover__block">
 
