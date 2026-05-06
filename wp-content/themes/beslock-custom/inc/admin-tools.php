@@ -17,6 +17,17 @@ if ( is_admin() ) {
   );
   } );
 
+  // Register CSV Generator page
+  add_action( 'admin_menu', function() {
+    add_management_page(
+      __( 'CSV Generator', 'beslock' ),
+      __( 'CSV Generator', 'beslock' ),
+      'manage_options',
+      'beslock-csv-generator',
+      'beslock_csv_generator_page'
+    );
+  } );
+
 function beslock_import_portfolio_page() {
   if ( ! current_user_can( 'manage_options' ) ) {
     wp_die( __( 'Insufficient permissions', 'beslock' ) );
@@ -56,6 +67,27 @@ function beslock_import_portfolio_page() {
   echo '<p><button type="submit" name="beslock_import_and_assign" class="button button-primary">' . esc_html__( 'Import and assign images', 'beslock' ) . '</button></p>';
   echo '<p><button type="submit" name="beslock_set_all_price" class="button button-secondary" onclick="return confirm(\'' . esc_js( __( 'Set price 500000 for ALL products? This cannot be undone easily.', 'beslock' ) ) . '\');">' . esc_html__( 'Set all products price (500000)', 'beslock' ) . '</button></p>';
   echo '</form></div>';
+}
+
+function beslock_csv_generator_page() {
+  if ( ! current_user_can( 'manage_options' ) ) {
+    wp_die( __( 'Insufficient permissions', 'beslock' ) );
+  }
+  $script = get_stylesheet_directory() . '/scripts/CSV_portfolio_generator.php';
+  if ( ! file_exists( $script ) ) {
+    echo '<div class="wrap"><h1>' . esc_html__( 'CSV Generator', 'beslock' ) . '</h1>';
+    echo '<div class="notice notice-error"><p>' . esc_html__( 'Script not found: scripts/CSV_portfolio_generator.php', 'beslock' ) . '</p></div>';
+    echo '</div>';
+    return;
+  }
+  include $script;
+  if ( function_exists( 'beslock_csv_portfolio_admin_ui' ) ) {
+    beslock_csv_portfolio_admin_ui();
+  } else {
+    echo '<div class="wrap"><h1>' . esc_html__( 'CSV Generator', 'beslock' ) . '</h1>';
+    echo '<div class="notice notice-error"><p>' . esc_html__( 'CSV functions not available.', 'beslock' ) . '</p></div>';
+    echo '</div>';
+  }
 }
 
   // Handle combined action if submitted
