@@ -23,6 +23,15 @@ if ( ! function_exists( 'beslock_admin_tools_menu' ) ) {
       'beslock-fix-placeholders',
       'beslock_fix_placeholders_page'
     );
+
+    // New importer admin page: Cargar Portfolio Data (reads data/products.json)
+    add_management_page(
+      __( 'Cargar Portfolio Data', 'beslock' ),
+      __( 'Cargar Portfolio Data', 'beslock' ),
+      'manage_options',
+      'beslock-carga-portfolio',
+      'beslock_carga_portfolio_page'
+    );
   }
   add_action( 'admin_menu', 'beslock_admin_tools_menu' );
 }
@@ -130,5 +139,33 @@ if ( ! function_exists( 'beslock_fix_placeholders_page' ) ) {
     echo '<pre style="white-space:pre-wrap;background:#fff;border:1px solid #ddd;padding:12px;">' . esc_html( $output ) . '</pre>';
     echo '</form>';
     echo '</div>';
+  }
+}
+
+// Admin page wrapper for carga_portfolio_data importer
+if ( ! function_exists( 'beslock_carga_portfolio_page' ) ) {
+  function beslock_carga_portfolio_page() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+      wp_die( __( 'Insufficient permissions', 'beslock' ) );
+    }
+
+    $script = get_stylesheet_directory() . '/scripts/carga_portfolio_data.php';
+    if ( ! file_exists( $script ) ) {
+      echo '<div class="wrap"><h1>' . esc_html__( 'Cargar Portfolio Data', 'beslock' ) . '</h1>';
+      echo '<div class="notice notice-error"><p>' . esc_html__( 'Importer script not found: scripts/carga_portfolio_data.php', 'beslock' ) . '</p></div>';
+      echo '</div>';
+      return;
+    }
+
+    // Include the script which defines UI and processing functions
+    include $script;
+    // Render the included admin UI helper
+    if ( function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
+      beslock_carga_portfolio_admin_ui();
+    } else {
+      echo '<div class="wrap"><h1>' . esc_html__( 'Cargar Portfolio Data', 'beslock' ) . '</h1>';
+      echo '<div class="notice notice-error"><p>' . esc_html__( 'Importer functions not available.', 'beslock' ) . '</p></div>';
+      echo '</div>';
+    }
   }
 }

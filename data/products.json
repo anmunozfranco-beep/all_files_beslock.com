@@ -1,0 +1,148 @@
+[
+  {
+    "slug": "e-flex",
+    "title": "e-Flex",
+    "price": "",
+    "short_description": "Llegar sin complicaciones",
+    "badge": "Ideal para estancias cortas",
+    "features": [
+      "Ideal para — visitas temporales",
+      "Total control — en el celular",
+      "Varias formas — de apertura"
+    ],
+    "reviews": [
+      {"author":"Cliente Anónimo","rating":4,"text":"Muy buen desempeño en espacios pequeños."},
+      {"author":"Cliente Anónimo","rating":5,"text":"Fácil de instalar y de usar."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Buena relación calidad-precio."}
+    ],
+    "images": [
+      "e-flex.webp"
+    ],
+    "gallery": [
+      "e-flex_hero.png",
+      "e-flex_d.png"
+    ]
+  },
+  {
+    "slug": "e-nova",
+    "title": "e-Nova",
+    "price": "",
+    "short_description": "Comodidad, seguridad y tranquilidad",
+    "badge": "Privacidad sin complicaciones",
+    "features": [
+      "Libérate — de cargar llaves",
+      "Varias formas — de apertura",
+      "Múltiples — usuarios"
+    ],
+    "reviews": [
+      {"author":"Cliente Anónimo","rating":5,"text":"Perfecta para uso diario."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Se siente segura y estable."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Recomendada para familias."}
+    ],
+    "images": [
+      "e-nova.webp"
+    ],
+    "gallery": [
+      "e-nova_hero.png",
+      "e-nova_d.png"
+    ]
+  },
+  {
+    "slug": "e-orbit",
+    "title": "e-Orbit",
+    "price": "",
+    "short_description": "En cualquier lugar",
+    "badge": "Desde donde te encuentres",
+    "features": [
+      "Total control — en el celular",
+      "Varias formas — de apertura",
+      "Ideal para — visitas temporales"
+    ],
+    "reviews": [
+      {"author":"Cliente Anónimo","rating":5,"text":"Ideal para control remoto desde cualquier sitio."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Conectividad fiable."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Buena integración con el hogar."}
+    ],
+    "images": [
+      "e-orbit.webp"
+    ],
+    "gallery": [
+      "e-orbit_hero.png",
+      "e-orbit_2_hero.png",
+      "e-orbit_d.png",
+      "e-orbit_d_2.png"
+    ]
+  },
+  {
+    "slug": "e-prime",
+    "title": "e-Prime",
+    "price": "",
+    "short_description": "Para todos los espacios",
+    "badge": "Pensada para oficinas",
+    "features": [
+      "Múltiples — usuarios",
+      "Total control — en el celular",
+      "Varias formas — de apertura"
+    ],
+    "reviews": [
+      {"author":"Cliente Anónimo","rating":4,"text":"Robusta y profesional."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Buena para oficinas pequeñas."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Recomendable para negocios."}
+    ],
+    "images": [
+      "e-prime.webp"
+    ],
+    "gallery": [
+      "e-prime_hero.png",
+      "e-prime_d.png"
+    ]
+  },
+  {
+    "slug": "e-shield",
+    "title": "e-Shield",
+    "price": "",
+    "short_description": "Protege lo más valioso",
+    "badge": "Máxima protección en tu hogar",
+    "features": [
+      "Libérate — de cargar llaves",
+      "Varias formas — de apertura",
+      "Total control — en el celular"
+    ],
+    "reviews": [
+      {"author":"Cliente Anónimo","rating":5,"text":"Súper seguro, me da paz mental."},
+      {"author":"Cliente Anónimo","rating":5,"text":"Construcción sólida."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Excelente para uso residencial."}
+    ],
+    "images": [
+      "e-shield.webp"
+    ],
+    "gallery": [
+      "e-shield_hero.png",
+      "e-shield_d.png"
+    ]
+  },
+  {
+    "slug": "e-touch",
+    "title": "e-Touch",
+    "price": "",
+    "short_description": "Acceso para todos",
+    "badge": "Acceso para todos",
+    "features": [
+      "Múltiples — usuarios",
+      "Varias formas — de apertura",
+      "Libérate — de cargar llaves"
+    ],
+    "reviews": [
+      {"author":"Cliente Anónimo","rating":4,"text":"Muy accesible para invitados."},
+      {"author":"Cliente Anónimo","rating":4,"text":"Fácil de usar."},
+      {"author":"Cliente Anónimo","rating":3,"text":"Funciona bien en la mayoría de puertas."}
+    ],
+    "images": [
+      "e-touch.webp"
+    ],
+    "gallery": [
+      "e-touch_hero.png",
+      "e-touch_d.png"
+    ]
+  }
+]

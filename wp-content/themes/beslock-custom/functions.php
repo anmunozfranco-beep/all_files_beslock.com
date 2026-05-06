@@ -163,6 +163,32 @@ add_action( 'init', function() {
     );
   } );
 
+  // Register Tools -> Cargar Portfolio Data to include the new isolated importer
+  add_action( 'admin_menu', function() {
+    $script = get_stylesheet_directory() . '/scripts/carga_portfolio_data.php';
+    if ( file_exists( $script ) ) {
+      add_management_page(
+        __( 'Cargar Portfolio Data', 'beslock' ),
+        __( 'Cargar Portfolio Data', 'beslock' ),
+        'manage_options',
+        'beslock-carga-portfolio',
+        function() use ( $script ) {
+          if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( __( 'Insufficient permissions', 'beslock' ) );
+          }
+          include $script;
+          if ( function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
+            beslock_carga_portfolio_admin_ui();
+          } else {
+            echo '<div class="wrap"><h1>' . esc_html__( 'Cargar Portfolio Data', 'beslock' ) . '</h1>';
+            echo '<div class="notice notice-error"><p>' . esc_html__( 'Importer functions not available.', 'beslock' ) . '</p></div>';
+            echo '</div>';
+          }
+        }
+      );
+    }
+  } );
+
   function beslock_import_portfolio_page() {
     if ( ! current_user_can( 'manage_options' ) ) {
       wp_die( __( 'Insufficient permissions', 'beslock' ) );
