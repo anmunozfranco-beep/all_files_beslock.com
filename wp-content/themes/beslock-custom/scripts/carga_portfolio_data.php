@@ -201,8 +201,16 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       }
       $seen_slugs[ $slug ] = true;
 
-      // find existing product by slug
+      // find existing product by slug; fall back to matching by title (useful when a dummy product exists)
       $existing = get_page_by_path( $slug, OBJECT, 'product' );
+      if ( ! $existing && ! empty( $prod['title'] ) ) {
+        // try to find by exact title match
+        $by_title = get_page_by_title( $prod['title'], OBJECT, 'product' );
+        if ( $by_title ) {
+          $existing = $by_title;
+          $log[] = "Found existing product by title for {$slug}: ID {$existing->ID}";
+        }
+      }
 
       if ( $existing ) {
         $pid = $existing->ID;
@@ -267,6 +275,12 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       // update title/short description if needed
       $update_post = array( 'ID' => $pid );
       $changed = false;
+      // ensure the post_name (slug) reflects the canonical slug from products.json
+      if ( $pid && ! empty( $slug ) && $slug !== get_post_field( 'post_name', $pid ) ) {
+        $update_post['post_name'] = $slug;
+        $changed = true;
+        $log[] = "Will update post_name (slug) for product ID {$pid} to {$slug}";
+      }
       if ( isset( $prod['title'] ) && $prod['title'] !== get_the_title( $pid ) ) {
         $update_post['post_title'] = $prod['title'];
         $changed = true;
