@@ -32,6 +32,15 @@ if ( ! function_exists( 'beslock_admin_tools_menu' ) ) {
       'beslock-carga-portfolio',
       'beslock_carga_portfolio_page'
     );
+
+    // CSV generator page
+    add_management_page(
+      __( 'CSV Generator', 'beslock' ),
+      __( 'CSV Generator', 'beslock' ),
+      'manage_options',
+      'beslock-csv-generator',
+      'beslock_csv_generator_page'
+    );
   }
   add_action( 'admin_menu', 'beslock_admin_tools_menu' );
 }
@@ -165,6 +174,31 @@ if ( ! function_exists( 'beslock_carga_portfolio_page' ) ) {
     } else {
       echo '<div class="wrap"><h1>' . esc_html__( 'Cargar Portfolio Data', 'beslock' ) . '</h1>';
       echo '<div class="notice notice-error"><p>' . esc_html__( 'Importer functions not available.', 'beslock' ) . '</p></div>';
+      echo '</div>';
+    }
+  }
+}
+
+if ( ! function_exists( 'beslock_csv_generator_page' ) ) {
+  function beslock_csv_generator_page() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+      wp_die( __( 'Insufficient permissions', 'beslock' ) );
+    }
+
+    $script = get_stylesheet_directory() . '/scripts/CSV_portfolio_generator.php';
+    if ( ! file_exists( $script ) ) {
+      echo '<div class="wrap"><h1>' . esc_html__( 'CSV Generator', 'beslock' ) . '</h1>';
+      echo '<div class="notice notice-error"><p>' . esc_html__( 'Script not found: scripts/CSV_portfolio_generator.php', 'beslock' ) . '</p></div>';
+      echo '</div>';
+      return;
+    }
+
+    include $script;
+    if ( function_exists( 'beslock_csv_portfolio_admin_ui' ) ) {
+      beslock_csv_portfolio_admin_ui();
+    } else {
+      echo '<div class="wrap"><h1>' . esc_html__( 'CSV Generator', 'beslock' ) . '</h1>';
+      echo '<div class="notice notice-error"><p>' . esc_html__( 'CSV functions not available.', 'beslock' ) . '</p></div>';
       echo '</div>';
     }
   }
