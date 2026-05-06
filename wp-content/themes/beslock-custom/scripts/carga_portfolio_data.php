@@ -13,8 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
-  function beslock_carga_portfolio_process() {
+  function beslock_carga_portfolio_process( $dry_run = false ) {
     $log = array();
+    $is_dry = (bool) $dry_run;
 
     $data_file = get_stylesheet_directory() . '/data/products.json';
     if ( ! file_exists( $data_file ) ) {
@@ -85,7 +86,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
     };
 
     // helper: import theme image if present and not already in uploads
-    $import_theme_image = function( $filename, &$log ) use ( $find_attachment_by_filename, $find_theme_file ) {
+    $import_theme_image = function( $filename, &$log ) use ( $find_attachment_by_filename, $find_theme_file, &$is_dry ) {
       $theme_path = $find_theme_file( $filename );
       if ( ! $theme_path ) {
         return 0;
@@ -97,6 +98,11 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       if ( $existing ) {
         $log[] = "Reused existing attachment for {$theme_basename}: {$existing}";
         return $existing;
+      }
+
+      if ( $is_dry ) {
+        $log[] = "Would import theme image (dry-run): {$theme_basename}";
+        return 0;
       }
 
       require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -183,23 +189,30 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         $pid = $existing->ID;
         $is_new = false;
       } else {
-        // create product post
-        $postarr = array(
-          'post_title' => isset( $prod['title'] ) ? $prod['title'] : $slug,
-          'post_name' => $slug,
-          'post_excerpt' => isset( $prod['short_description'] ) ? $prod['short_description'] : '',
-          'post_status' => 'publish',
-          'post_type' => 'product',
-        );
-        $pid = wp_insert_post( $postarr );
-        if ( is_wp_error( $pid ) || ! $pid ) {
-          $log[] = "Failed to create product for slug: {$slug}";
-          $skipped[] = $slug;
-          continue;
+        if ( $is_dry ) {
+          $pid = 0;
+          $created++;
+          $is_new = true;
+          $log[] = "(dry-run) Would create product {$slug}";
+        } else {
+          // create product post
+          $postarr = array(
+            'post_title' => isset( $prod['title'] ) ? $prod['title'] : $slug,
+            'post_name' => $slug,
+            'post_excerpt' => isset( $prod['short_description'] ) ? $prod['short_description'] : '',
+            'post_status' => 'publish',
+            'post_type' => 'product',
+          );
+          $pid = wp_insert_post( $postarr );
+          if ( is_wp_error( $pid ) || ! $pid ) {
+            $log[] = "Failed to create product for slug: {$slug}";
+            $skipped[] = $slug;
+            continue;
+          }
+          $created++;
+          $is_new = true;
+          $log[] = "Created product {$slug} (ID: {$pid})";
         }
-        $created++;
-        $is_new = true;
-        $log[] = "Created product {$slug} (ID: {$pid})";
       }
 
       // update title/short description if needed
@@ -217,24 +230,32 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         }
       }
       if ( $changed ) {
-        wp_update_post( $update_post );
-        $log[] = "Updated basic fields for {$slug}";
+        if ( ! $is_dry ) {
+          wp_update_post( $update_post );
+          $log[] = "Updated basic fields for {$slug}";
+        } else {
+          $log[] = "(dry-run) Would update basic fields for {$slug}";
+        }
       }
 
       // set price
       $price = isset( $prod['price'] ) ? trim( (string) $prod['price'] ) : '';
       if ( $price !== '' ) {
-        if ( function_exists( 'wc_get_product' ) ) {
-          $wc = wc_get_product( $pid );
-          if ( $wc ) {
-            $wc->set_regular_price( $price );
-            $wc->save();
+        if ( $is_dry ) {
+          $log[] = "(dry-run) Would set price {$price} for {$slug}";
+        } else {
+          if ( function_exists( 'wc_get_product' ) ) {
+            $wc = wc_get_product( $pid );
+            if ( $wc ) {
+              $wc->set_regular_price( $price );
+              $wc->save();
+              update_post_meta( $pid, '_regular_price', $price );
+              update_post_meta( $pid, '_price', $price );
+            }
+          } else {
             update_post_meta( $pid, '_regular_price', $price );
             update_post_meta( $pid, '_price', $price );
           }
-        } else {
-          update_post_meta( $pid, '_regular_price', $price );
-          update_post_meta( $pid, '_price', $price );
         }
       }
 
@@ -249,7 +270,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
           $att_id = $import_theme_image( $first_image, $log );
         }
         if ( $att_id ) {
-          set_post_thumbnail( $pid, $att_id );
+          if ( ! $is_dry && $pid ) set_post_thumbnail( $pid, $att_id );
         } else {
           $missing_images[] = $first_image;
           $log[] = "Missing featured image for {$slug}: {$first_image}";
@@ -262,8 +283,8 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
           $att = $find_attachment_by_filename( $first );
           if ( ! $att ) $att = $import_theme_image( $first, $log );
           if ( $att ) {
-            set_post_thumbnail( $pid, $att );
-            $log[] = "Auto-assigned featured image for {$slug}: {$first}";
+            if ( ! $is_dry && $pid ) set_post_thumbnail( $pid, $att );
+            $log[] = ( $is_dry ? "(dry-run) Would auto-assign featured image for {$slug}: {$first}" : "Auto-assigned featured image for {$slug}: {$first}" );
           } else {
             $missing_images[] = $first;
             $log[] = "Missing auto-discovered featured image for {$slug}: {$first}";
@@ -274,8 +295,12 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
           foreach ( $discovered['secondary'] as $sfile ) {
             $att = $find_attachment_by_filename( $sfile );
             if ( ! $att ) $att = $import_theme_image( $sfile, $log );
-            if ( $att ) $gallery_ids[] = $att;
-            else { $missing_images[] = $sfile; $log[] = "Missing auto-discovered gallery image for {$slug}: {$sfile}"; }
+            if ( $att ) {
+              $gallery_ids[] = $att;
+            } else {
+              $missing_images[] = $sfile;
+              $log[] = "Missing auto-discovered gallery image for {$slug}: {$sfile}";
+            }
           }
         }
         // no additional non-webp fallbacks; only primary and secondary webp images are considered
@@ -299,15 +324,27 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       }
 
       if ( ! empty( $gallery_ids ) ) {
-        update_post_meta( $pid, '_product_image_gallery', implode( ',', $gallery_ids ) );
+        if ( ! $is_dry && $pid ) {
+          update_post_meta( $pid, '_product_image_gallery', implode( ',', $gallery_ids ) );
+        } else {
+          $log[] = "(dry-run) Would set product gallery for {$slug}: " . implode( ',', $gallery_ids );
+        }
       }
 
       // features and badge metadata
       if ( isset( $prod['badge'] ) ) {
-        update_post_meta( $pid, 'beslock_badge', sanitize_text_field( $prod['badge'] ) );
+        if ( ! $is_dry && $pid ) {
+          update_post_meta( $pid, 'beslock_badge', sanitize_text_field( $prod['badge'] ) );
+        } else {
+          $log[] = "(dry-run) Would set badge for {$slug}: " . sanitize_text_field( $prod['badge'] );
+        }
       }
       if ( isset( $prod['features'] ) && is_array( $prod['features'] ) ) {
-        update_post_meta( $pid, 'beslock_features', array_map( 'sanitize_text_field', $prod['features'] ) );
+        if ( ! $is_dry && $pid ) {
+          update_post_meta( $pid, 'beslock_features', array_map( 'sanitize_text_field', $prod['features'] ) );
+        } else {
+          $log[] = "(dry-run) Would set features for {$slug}: " . implode( ',', array_map( 'sanitize_text_field', $prod['features'] ) );
+        }
       }
 
       $updated++;
@@ -335,7 +372,8 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
 
     if ( isset( $_POST['beslock_carga_run'] ) ) {
       check_admin_referer( 'beslock_carga_portfolio_nonce' );
-      $res = beslock_carga_portfolio_process();
+      $dry_run_flag = isset( $_POST['beslock_carga_dryrun'] ) && $_POST['beslock_carga_dryrun'] ? true : false;
+      $res = beslock_carga_portfolio_process( $dry_run_flag );
       if ( is_wp_error( $res ) ) {
         echo '<div class="notice notice-error"><p>' . esc_html( $res->get_error_message() ) . '</p></div>';
       } else {
@@ -355,6 +393,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
 
     echo '<form method="post">' . wp_nonce_field( 'beslock_carga_portfolio_nonce' );
     echo '<p>' . esc_html__( 'This will read data/products.json and create/update WooCommerce products accordingly.', 'beslock' ) . '</p>';
+    echo '<p><label><input type="checkbox" name="beslock_carga_dryrun" value="1" checked> ' . esc_html__( 'Dry run (no changes, just report)', 'beslock' ) . '</label></p>';
     echo '<p><button type="submit" name="beslock_carga_run" class="button button-primary">' . esc_html__( 'Regenerar catálogo', 'beslock' ) . '</button></p>';
     echo '</form></div>';
   }
