@@ -233,7 +233,8 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
             update_post_meta( $pid, '_visibility', 'visible' );
             // set product type to simple to avoid theme hooks assuming variations
             if ( function_exists( 'wp_set_object_terms' ) ) {
-              wp_set_object_terms( $pid, 'simple', 'product_type' );
+              wp_set_object_terms( $pid, 'variable', 'product_type' );
+              $log[] = "Set product type to variable for {$slug}";
             }
           } else {
             $log[] = "(dry-run) Would set minimal product metadata for {$slug}";
