@@ -16,11 +16,9 @@
       {"author":"Cliente Anónimo","rating":4,"text":"Buena relación calidad-precio."}
     ],
     "images": [
-      "e-flex.webp"
+      "e-flex_.webp"
     ],
     "gallery": [
-      "e-flex_hero.png",
-      "e-flex_d.png"
     ]
   },
   {
@@ -40,11 +38,10 @@
       {"author":"Cliente Anónimo","rating":4,"text":"Recomendada para familias."}
     ],
     "images": [
-      "e-nova.webp"
+      "e-nova_.webp"
     ],
     "gallery": [
-      "e-nova_hero.png",
-      "e-nova_d.png"
+      "e-nova_s.webp"
     ]
   },
   {
@@ -64,13 +61,9 @@
       {"author":"Cliente Anónimo","rating":4,"text":"Buena integración con el hogar."}
     ],
     "images": [
-      "e-orbit.webp"
+      "e-orbit_.webp"
     ],
     "gallery": [
-      "e-orbit_hero.png",
-      "e-orbit_2_hero.png",
-      "e-orbit_d.png",
-      "e-orbit_d_2.png"
     ]
   },
   {
@@ -90,11 +83,9 @@
       {"author":"Cliente Anónimo","rating":4,"text":"Recomendable para negocios."}
     ],
     "images": [
-      "e-prime.webp"
+      "e-prime_.webp"
     ],
     "gallery": [
-      "e-prime_hero.png",
-      "e-prime_d.png"
     ]
   },
   {
@@ -114,11 +105,10 @@
       {"author":"Cliente Anónimo","rating":4,"text":"Excelente para uso residencial."}
     ],
     "images": [
-      "e-shield.webp"
+      "e-shield_.webp"
     ],
     "gallery": [
-      "e-shield_hero.png",
-      "e-shield_d.png"
+      "e-shield_e.webp"
     ]
   },
   {
@@ -138,11 +128,10 @@
       {"author":"Cliente Anónimo","rating":3,"text":"Funciona bien en la mayoría de puertas."}
     ],
     "images": [
-      "e-touch.webp"
+      "e-touch_.webp"
     ],
     "gallery": [
-      "e-touch_hero.png",
-      "e-touch_d.png"
+      "e-touch_c.webp"
     ]
   }
 ]

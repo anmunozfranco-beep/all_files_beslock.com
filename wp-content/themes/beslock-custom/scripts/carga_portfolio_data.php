@@ -69,33 +69,22 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         get_stylesheet_directory() . '/assets/images/',
       );
 
-      $ext = strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
-      $base = pathinfo( $filename, PATHINFO_FILENAME );
-      $candidates = array();
+      $basename = wp_basename( $filename );
+      $name_no_ext = pathinfo( $basename, PATHINFO_FILENAME );
 
-      // If already webp, look for it directly and its _s variant
-      if ( $ext === 'webp' ) {
-        $candidates[] = $base . '.webp';
-        $candidates[] = $base . '_s.webp';
-      } else {
-        // Map any incoming filename to webp candidates only
-        $candidates[] = $base . '.webp';
-        $candidates[] = $base . '_s.webp';
-        // If filename has common suffixes like _hero or _d, also try stripped base
-        if ( preg_match('/(_hero|_d(_\d+)?)$/i', $base ) ) {
-          $stripped = preg_replace('/(_hero|_d(_\d+)?)$/i', '', $base );
-          if ( $stripped ) {
-            $candidates[] = $stripped . '.webp';
-            $candidates[] = $stripped . '_s.webp';
-          }
-        }
-      }
+      // Prefer primary pattern: slug + '_' (e.g. e-orbit_.webp)
+      $primary_candidate = $name_no_ext . '_.webp';
+      // Also accept plain webp fallback (slug.webp)
+      $fallback_candidate = $name_no_ext . '.webp';
 
       foreach ( $search_dirs as $d ) {
-        foreach ( $candidates as $cand ) {
-          $p = trailingslashit( $d ) . $cand;
-          if ( file_exists( $p ) ) return $p;
-        }
+        $p = trailingslashit( $d ) . $primary_candidate;
+        if ( file_exists( $p ) ) return $p;
+        $p2 = trailingslashit( $d ) . $fallback_candidate;
+        if ( file_exists( $p2 ) ) return $p2;
+        // also accept explicit filename passed (with extension)
+        $explicit = trailingslashit( $d ) . $basename;
+        if ( file_exists( $explicit ) ) return $explicit;
       }
 
       return '';
@@ -103,7 +92,12 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
 
     // helper: import theme image if present and not already in uploads
     $import_theme_image = function( $filename, &$log ) use ( $find_attachment_by_filename, $find_theme_file, &$is_dry ) {
+      // accept either basename with extension or name without extension
       $theme_path = $find_theme_file( $filename );
+      if ( ! $theme_path ) {
+        // try basename without extension
+        $theme_path = $find_theme_file( pathinfo( wp_basename( $filename ), PATHINFO_FILENAME ) );
+      }
       if ( ! $theme_path ) {
         return 0;
       }
@@ -154,6 +148,8 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
     };
 
     // helper: discover images for a product slug under assets/images
+    // Primary convention: slug_.webp (e.g. e-orbit_.webp)
+    // Secondary convention: slug_*.webp (anything with an extra part after underscore)
     $discover_images_for_slug = function( $slug ) {
       $dirs = array(
         get_stylesheet_directory() . '/assets/images/products/',
@@ -162,15 +158,20 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       $found = array( 'primary' => array(), 'secondary' => array() );
       foreach ( $dirs as $d ) {
         if ( ! is_dir( $d ) ) continue;
-        // only consider webp files
-        $pattern = trailingslashit( $d ) . $slug . '*.webp';
+        $pattern = trailingslashit( $d ) . $slug . '_*.webp';
         foreach ( glob( $pattern ) as $path ) {
           $base = wp_basename( $path );
-          if ( preg_match('/_s\.webp$/i', $base) ) {
-            $found['secondary'][] = $base;
-          } else {
+          // primary exact match slug_.webp
+          if ( strcasecmp( $base, $slug . '_.webp' ) === 0 ) {
             $found['primary'][] = $base;
+          } else {
+            $found['secondary'][] = $base;
           }
+        }
+        // also accept plain slug.webp as fallback
+        $plain = trailingslashit( $d ) . $slug . '.webp';
+        if ( file_exists( $plain ) ) {
+          $found['primary'][] = wp_basename( $plain );
         }
       }
       return $found;
