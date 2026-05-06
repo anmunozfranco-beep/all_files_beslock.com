@@ -386,6 +386,8 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         $log[] = "Failed to write import log to {$log_file}";
       } else {
         $log[] = "Wrote import log to {$log_file}";
+        // persist last log into options for admin inspection
+        try { update_option( 'beslock_last_import_log', $content ); } catch ( Exception $e ) { }
       }
     }
 
@@ -441,6 +443,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
         $log_file = trailingslashit( $use_dir ) . 'carga_portfolio_error_shutdown_' . date( 'Ymd_His' ) . '.log';
         $content = $msg . "\n\n" . var_export( $err, true ) . "\n\n" . implode( "\n", array_map( function( $k, $v ) { return "$k: $v"; }, array_keys( $_SERVER ), array_values( $_SERVER ) ) );
         @file_put_contents( $log_file, $content );
+        try { update_option( 'beslock_last_import_log', $content ); } catch ( Exception $e ) { }
       } );
 
       try {
@@ -468,6 +471,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
         if ( ! is_dir( $log_dir ) ) {@mkdir( $log_dir, 0755, true );}
         $log_file = trailingslashit( $log_dir ) . 'carga_portfolio_error_' . date( 'Ymd_His' ) . '.log';
         @file_put_contents( $log_file, $e->getMessage() . "\n" . $e->getTraceAsString() );
+        try { update_option( 'beslock_last_import_log', $e->getMessage() . "\n" . $e->getTraceAsString() ); } catch ( Exception $ex ) { }
       }
     }
 
