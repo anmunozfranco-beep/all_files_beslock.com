@@ -411,6 +411,13 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
 
     echo '<div class="wrap"><h1>' . esc_html__( 'Cargar Portfolio Data', 'beslock' ) . '</h1>';
 
+    // show last persisted log from options (if any)
+    $last_log = get_option( 'beslock_last_import_log', '' );
+    if ( ! empty( $last_log ) ) {
+      echo '<h2>' . esc_html__( 'Último log persistido', 'beslock' ) . '</h2>';
+      echo '<pre style="white-space:pre-wrap; background:#fff; border:1px solid #ddd; padding:12px;">' . esc_html( $last_log ) . '</pre>';
+    }
+
     if ( isset( $_POST['beslock_carga_run'] ) ) {
       check_admin_referer( 'beslock_carga_portfolio_nonce' );
       $dry_run_flag = isset( $_POST['beslock_carga_dryrun'] ) && $_POST['beslock_carga_dryrun'] ? true : false;
