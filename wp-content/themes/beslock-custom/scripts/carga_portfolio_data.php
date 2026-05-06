@@ -405,6 +405,37 @@ if ( ! function_exists( 'beslock_carga_portfolio_admin_ui' ) ) {
     if ( isset( $_POST['beslock_carga_run'] ) ) {
       check_admin_referer( 'beslock_carga_portfolio_nonce' );
       $dry_run_flag = isset( $_POST['beslock_carga_dryrun'] ) && $_POST['beslock_carga_dryrun'] ? true : false;
+
+      // convert PHP errors to exceptions so they can be caught
+      set_error_handler( function( $severity, $message, $file, $line ) {
+        throw new \ErrorException( $message, 0, $severity, $file, $line );
+      } );
+
+      // shutdown handler to catch fatal errors that bypass try/catch
+      register_shutdown_function( function() use ( $dry_run_flag ) {
+        $err = error_get_last();
+        if ( ! $err ) {
+          return;
+        }
+        $msg = sprintf( "Shutdown error: [%s] %s in %s on line %d", $err['type'], $err['message'], $err['file'], $err['line'] );
+        // determine log dir (theme first, then uploads)
+        $log_dir = get_stylesheet_directory() . '/import_logs';
+        if ( ! is_dir( $log_dir ) ) {
+          @mkdir( $log_dir, 0755, true );
+        }
+        $use_dir = $log_dir;
+        if ( ! is_dir( $use_dir ) || ! is_writable( $use_dir ) ) {
+          $upload_dir = wp_upload_dir();
+          $use_dir = trailingslashit( $upload_dir['basedir'] ) . 'beslock_import_logs';
+          if ( ! is_dir( $use_dir ) ) {
+            @mkdir( $use_dir, 0755, true );
+          }
+        }
+        $log_file = trailingslashit( $use_dir ) . 'carga_portfolio_error_shutdown_' . date( 'Ymd_His' ) . '.log';
+        $content = $msg . "\n\n" . var_export( $err, true ) . "\n\n" . implode( "\n", array_map( function( $k, $v ) { return "$k: $v"; }, array_keys( $_SERVER ), array_values( $_SERVER ) ) );
+        @file_put_contents( $log_file, $content );
+      } );
+
       try {
         $res = beslock_carga_portfolio_process( $dry_run_flag );
         if ( is_wp_error( $res ) ) {
