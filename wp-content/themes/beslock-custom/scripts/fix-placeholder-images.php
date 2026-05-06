@@ -124,20 +124,69 @@ foreach ( $products as $p ) {
             }
         }
 
-        // If no replacement attached, try theme asset by slug
+        // If no replacement attached, try theme asset by slug (prefer primary/underscore .webp)
         if ( ! $replacement_id ) {
             $slug = $p->post_name;
             $theme_dir = get_stylesheet_directory();
             $theme_uri = get_stylesheet_directory_uri();
-            $exts = array( '.webp', '.png', '.jpg', '.jpeg' );
-            foreach ( $exts as $ext ) {
-                $candidate = $theme_dir . '/assets/images/products/' . $slug . $ext;
-                if ( file_exists( $candidate ) ) {
-                    $file_url = $theme_uri . '/assets/images/products/' . $slug . $ext;
-                    // sideload into media library
-                    require_once ABSPATH . 'wp-admin/includes/media.php';
-                    require_once ABSPATH . 'wp-admin/includes/file.php';
-                    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+            // prefer primary pattern: slug_.webp, then plain slug.webp, then any slug_*.webp
+            $candidates = array();
+            $primary = $theme_dir . '/assets/images/products/' . $slug . '_.webp';
+            $fallback_plain = $theme_dir . '/assets/images/products/' . $slug . '.webp';
+            if ( file_exists( $primary ) ) {
+                $candidates[] = array( 'path' => $primary, 'url' => $theme_uri . '/assets/images/products/' . $slug . '_.webp' );
+            }
+            if ( file_exists( $fallback_plain ) ) {
+                $candidates[] = array( 'path' => $fallback_plain, 'url' => $theme_uri . '/assets/images/products/' . $slug . '.webp' );
+            }
+            // glob secondary variants (slug_*.webp)
+            $glob_pattern = $theme_dir . '/assets/images/products/' . $slug . '_*.webp';
+            foreach ( glob( $glob_pattern ) as $g ) {
+                $rel = str_replace( $theme_dir, '', $g );
+                $rel = ltrim( $rel, '/' );
+                $candidates[] = array( 'path' => $g, 'url' => $theme_uri . '/' . $rel );
+            }
+
+            // fallback to assets/images/ (non-products folder)
+            $primary2 = $theme_dir . '/assets/images/' . $slug . '_.webp';
+            $fallback_plain2 = $theme_dir . '/assets/images/' . $slug . '.webp';
+            if ( file_exists( $primary2 ) ) {
+                $candidates[] = array( 'path' => $primary2, 'url' => $theme_uri . '/assets/images/' . $slug . '_.webp' );
+            }
+            if ( file_exists( $fallback_plain2 ) ) {
+                $candidates[] = array( 'path' => $fallback_plain2, 'url' => $theme_uri . '/assets/images/' . $slug . '.webp' );
+            }
+            $glob_pattern2 = $theme_dir . '/assets/images/' . $slug . '_*.webp';
+            foreach ( glob( $glob_pattern2 ) as $g ) {
+                $rel = str_replace( $theme_dir, '', $g );
+                $rel = ltrim( $rel, '/' );
+                $candidates[] = array( 'path' => $g, 'url' => $theme_uri . '/' . $rel );
+            }
+
+            // if still no candidate, fall back to older extensions
+            if ( empty( $candidates ) ) {
+                $exts = array( '.png', '.jpg', '.jpeg' );
+                foreach ( $exts as $ext ) {
+                    $candidate = $theme_dir . '/assets/images/products/' . $slug . $ext;
+                    if ( file_exists( $candidate ) ) {
+                        $candidates[] = array( 'path' => $candidate, 'url' => $theme_uri . '/assets/images/products/' . $slug . $ext );
+                        break;
+                    }
+                    $candidate2 = $theme_dir . '/assets/images/' . $slug . $ext;
+                    if ( file_exists( $candidate2 ) ) {
+                        $candidates[] = array( 'path' => $candidate2, 'url' => $theme_uri . '/assets/images/' . $slug . $ext );
+                        break;
+                    }
+                }
+            }
+
+            if ( ! empty( $candidates ) ) {
+                require_once ABSPATH . 'wp-admin/includes/media.php';
+                require_once ABSPATH . 'wp-admin/includes/file.php';
+                require_once ABSPATH . 'wp-admin/includes/image.php';
+                foreach ( $candidates as $cand ) {
+                    $file_url = $cand['url'];
                     $maybe_id = media_sideload_image( $file_url, $pid, null, 'id' );
                     if ( ! is_wp_error( $maybe_id ) && intval( $maybe_id ) ) {
                         $replacement_id = intval( $maybe_id );
