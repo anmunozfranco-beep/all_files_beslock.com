@@ -3,7 +3,7 @@
     "slug": "e-flex",
     "title": "e-Flex",
     "price": "689000",
-    "short_description": "Llegar sin complicaciones",
+    "short_description": "Ideal para recibir y dar acceso sin estar presente. Códigos temporales, huella y control remoto para estancias cortas.",
     "badge": "Ideal para estancias cortas",
     "features": [
       "Ideal para — visitas temporales",
@@ -25,7 +25,7 @@
     "slug": "e-nova",
     "title": "e-Nova",
     "price": "412000",
-    "short_description": "Comodidad, seguridad y tranquilidad",
+    "short_description": "Acceso inteligente sin llaves para tu día a día. Huella y control simple para moverte con libertad y tranquilidad.",
     "badge": "Privacidad sin complicaciones",
     "features": [
       "Libérate — de cargar llaves",
@@ -70,7 +70,7 @@
     "slug": "e-prime",
     "title": "e-Prime",
     "price": "941000",
-    "short_description": "Para todos los espacios",
+    "short_description": "Control total para accesos exigentes. Gestión avanzada de usuarios para espacios de alto flujo.",
     "badge": "Pensada para oficinas",
     "features": [
       "Múltiples — usuarios",
@@ -92,7 +92,7 @@
     "slug": "e-shield",
     "title": "e-Shield",
     "price": "982000",
-    "short_description": "Protege lo más valioso",
+    "short_description": "Protección inteligente para tu hogar. Seguridad robusta con acceso electrónico y respaldo mecánico.",
     "badge": "Máxima protección en tu hogar",
     "features": [
       "Libérate — de cargar llaves",
@@ -115,7 +115,7 @@
     "slug": "e-touch",
     "title": "e-Touch",
     "price": "435000",
-    "short_description": "Acceso para todos",
+    "short_description": "Acceso fácil para espacios compartidos. Clave y huella para que todos puedan entrar, sin complicaciones.",
     "badge": "Acceso para todos",
     "features": [
       "Múltiples — usuarios",
