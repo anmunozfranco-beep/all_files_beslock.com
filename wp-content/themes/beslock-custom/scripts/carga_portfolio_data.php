@@ -53,8 +53,10 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
     // helper: find attachment ID by filename (basename match)
     $find_attachment_by_filename = function( $filename ) {
       global $wpdb;
-      $filename = wp_basename( $filename );
-      $like = '%' . $wpdb->esc_like( $filename ) . '%';
+      // match by basename without extension so webp attachments are found
+      $basename = wp_basename( $filename );
+      $name_no_ext = pathinfo( $basename, PATHINFO_FILENAME );
+      $like = '%' . $wpdb->esc_like( $name_no_ext ) . '%';
       $sql = $wpdb->prepare( "SELECT p.ID FROM {$wpdb->posts} p JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id WHERE p.post_type='attachment' AND pm.meta_key='_wp_attached_file' AND pm.meta_value LIKE %s LIMIT 1", $like );
       $res = $wpdb->get_var( $sql );
       return $res ? intval( $res ) : 0;
@@ -299,10 +301,12 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
 
       // If images specified in products.json, prefer them
       if ( ! empty( $prod['images'] ) && is_array( $prod['images'] ) ) {
+        // Only consider webp variants: use basename without extension so find/import will map to .webp
         $first_image = wp_basename( $prod['images'][0] );
-        $att_id = $find_attachment_by_filename( $first_image );
+        $first_base = pathinfo( $first_image, PATHINFO_FILENAME );
+        $att_id = $find_attachment_by_filename( $first_base );
         if ( ! $att_id ) {
-          $att_id = $import_theme_image( $first_image, $log );
+          $att_id = $import_theme_image( $first_base, $log );
         }
         if ( $att_id ) {
           if ( ! $is_dry && $pid ) set_post_thumbnail( $pid, $att_id );
@@ -346,10 +350,12 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       // If explicit gallery entries present, append them (after discovery)
       if ( ! empty( $prod['gallery'] ) && is_array( $prod['gallery'] ) ) {
         foreach ( $prod['gallery'] as $gfile ) {
+          // use basename without extension so we only match/import .webp candidates
           $gbase = wp_basename( $gfile );
-          $gid = $find_attachment_by_filename( $gbase );
+          $gbase_no_ext = pathinfo( $gbase, PATHINFO_FILENAME );
+          $gid = $find_attachment_by_filename( $gbase_no_ext );
           if ( ! $gid ) {
-            $gid = $import_theme_image( $gbase, $log );
+            $gid = $import_theme_image( $gbase_no_ext, $log );
           }
           if ( $gid ) {
             $gallery_ids[] = $gid;
