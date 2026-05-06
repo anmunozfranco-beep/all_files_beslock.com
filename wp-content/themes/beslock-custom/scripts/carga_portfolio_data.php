@@ -221,6 +221,23 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
           $created++;
           $is_new = true;
           $log[] = "Created product {$slug} (ID: {$pid})";
+          // ensure minimal WooCommerce product metadata so product exists in empty store
+          if ( ! $is_dry && $pid ) {
+            // stock / visibility defaults
+            update_post_meta( $pid, '_stock_status', 'instock' );
+            update_post_meta( $pid, '_manage_stock', 'no' );
+            update_post_meta( $pid, '_stock', '' );
+            update_post_meta( $pid, '_virtual', 'no' );
+            update_post_meta( $pid, '_downloadable', 'no' );
+            // visibility (older WP/WC versions)
+            update_post_meta( $pid, '_visibility', 'visible' );
+            // set product type to simple to avoid theme hooks assuming variations
+            if ( function_exists( 'wp_set_object_terms' ) ) {
+              wp_set_object_terms( $pid, 'simple', 'product_type' );
+            }
+          } else {
+            $log[] = "(dry-run) Would set minimal product metadata for {$slug}";
+          }
         }
       }
 
