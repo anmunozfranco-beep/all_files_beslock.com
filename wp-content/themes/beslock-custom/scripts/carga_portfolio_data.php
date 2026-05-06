@@ -45,6 +45,11 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       return $err;
     }
 
+    // helper: persist current log to WP option so admin UI can show progress even on crash
+    $persist_log = function() use ( &$log ) {
+      try { update_option( 'beslock_last_import_log', implode( "\n", $log ) ); } catch ( Exception $e ) { }
+    };
+
     // helper: find attachment ID by filename (basename match)
     $find_attachment_by_filename = function( $filename ) {
       global $wpdb;
@@ -180,6 +185,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
     foreach ( $data as $prod ) {
       if ( ! isset( $prod['slug'] ) || empty( $prod['slug'] ) ) {
         $log[] = 'Skipping product with missing slug';
+        $persist_log();
         continue;
       }
 
@@ -263,6 +269,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         } else {
           $log[] = "(dry-run) Would update basic fields for {$slug}";
         }
+        $persist_log();
       }
 
       // set price
@@ -270,6 +277,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       if ( $price !== '' ) {
         if ( $is_dry ) {
           $log[] = "(dry-run) Would set price {$price} for {$slug}";
+          $persist_log();
         } else {
           if ( function_exists( 'wc_get_product' ) ) {
             $wc = wc_get_product( $pid );
@@ -309,13 +317,14 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
           $first = $discovered['primary'][0];
           $att = $find_attachment_by_filename( $first );
           if ( ! $att ) $att = $import_theme_image( $first, $log );
-          if ( $att ) {
-            if ( ! $is_dry && $pid ) set_post_thumbnail( $pid, $att );
-            $log[] = ( $is_dry ? "(dry-run) Would auto-assign featured image for {$slug}: {$first}" : "Auto-assigned featured image for {$slug}: {$first}" );
-          } else {
-            $missing_images[] = $first;
-            $log[] = "Missing auto-discovered featured image for {$slug}: {$first}";
-          }
+            if ( $att ) {
+              if ( ! $is_dry && $pid ) set_post_thumbnail( $pid, $att );
+              $log[] = ( $is_dry ? "(dry-run) Would auto-assign featured image for {$slug}: {$first}" : "Auto-assigned featured image for {$slug}: {$first}" );
+            } else {
+              $missing_images[] = $first;
+              $log[] = "Missing auto-discovered featured image for {$slug}: {$first}";
+            }
+            $persist_log();
         }
         // add secondary images as gallery
         if ( ! empty( $discovered['secondary'] ) ) {
@@ -328,6 +337,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
               $missing_images[] = $sfile;
               $log[] = "Missing auto-discovered gallery image for {$slug}: {$sfile}";
             }
+            $persist_log();
           }
         }
         // no additional non-webp fallbacks; only primary and secondary webp images are considered
@@ -347,6 +357,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
             $missing_images[] = $gbase;
             $log[] = "Missing gallery image for {$slug}: {$gbase}";
           }
+          $persist_log();
         }
       }
 
