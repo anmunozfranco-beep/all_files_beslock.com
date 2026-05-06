@@ -2,7 +2,7 @@
   {
     "slug": "e-flex",
     "title": "e-Flex",
-    "price": "",
+    "price": "689000",
     "short_description": "Llegar sin complicaciones",
     "badge": "Ideal para estancias cortas",
     "features": [
@@ -24,7 +24,7 @@
   {
     "slug": "e-nova",
     "title": "e-Nova",
-    "price": "",
+    "price": "412000",
     "short_description": "Comodidad, seguridad y tranquilidad",
     "badge": "Privacidad sin complicaciones",
     "features": [
@@ -47,7 +47,7 @@
   {
     "slug": "e-orbit",
     "title": "e-Orbit",
-    "price": "",
+    "price": "1734000",
     "short_description": "En cualquier lugar",
     "badge": "Desde donde te encuentres",
     "features": [
@@ -69,7 +69,7 @@
   {
     "slug": "e-prime",
     "title": "e-Prime",
-    "price": "",
+    "price": "941000",
     "short_description": "Para todos los espacios",
     "badge": "Pensada para oficinas",
     "features": [
@@ -91,7 +91,7 @@
   {
     "slug": "e-shield",
     "title": "e-Shield",
-    "price": "",
+    "price": "982000",
     "short_description": "Protege lo más valioso",
     "badge": "Máxima protección en tu hogar",
     "features": [
@@ -114,7 +114,7 @@
   {
     "slug": "e-touch",
     "title": "e-Touch",
-    "price": "",
+    "price": "435000",
     "short_description": "Acceso para todos",
     "badge": "Acceso para todos",
     "features": [
