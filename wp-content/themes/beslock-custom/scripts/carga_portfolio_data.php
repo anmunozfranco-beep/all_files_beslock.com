@@ -185,7 +185,8 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
 
     $seen_slugs = array();
 
-    foreach ( $data as $prod ) {
+    $data_modified = false;
+    foreach ( $data as $idx => $prod ) {
       if ( ! isset( $prod['slug'] ) || empty( $prod['slug'] ) ) {
         $log[] = 'Skipping product with missing slug';
         $persist_log();
@@ -248,6 +249,18 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
           } else {
             $log[] = "(dry-run) Would set minimal product metadata for {$slug}";
           }
+        }
+      }
+
+      // If JSON lacks a short_description, try to use existing product excerpt
+      if ( empty( $prod['short_description'] ) && $pid ) {
+        $existing_excerpt = get_post_field( 'post_excerpt', $pid );
+        if ( ! empty( $existing_excerpt ) ) {
+          $data[ $idx ]['short_description'] = $existing_excerpt;
+          $prod['short_description'] = $existing_excerpt;
+          $data_modified = true;
+          $log[] = "Filled missing short_description for {$slug} from existing post_excerpt";
+          $persist_log();
         }
       }
 
@@ -446,6 +459,14 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
     );
     $full_content = "Summary:\n" . implode( "\n", $summary_lines_all ) . "\n\nLog:\n" . implode( "\n", $log );
     try { update_option( 'beslock_last_import_log', $full_content ); } catch ( Exception $e ) { }
+
+    // If we filled missing short_descriptions from existing posts, write an updated data file for review
+    if ( $data_modified ) {
+      $updated_file = dirname( $data_file ) . '/products.updated.json';
+      @file_put_contents( $updated_file, json_encode( $data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
+      $log[] = "Wrote updated data file with filled short_descriptions: {$updated_file}";
+      try { update_option( 'beslock_last_import_log', implode( "\n", $log ) ); } catch ( Exception $e ) { }
+    }
 
     return array(
       'created' => $created,
