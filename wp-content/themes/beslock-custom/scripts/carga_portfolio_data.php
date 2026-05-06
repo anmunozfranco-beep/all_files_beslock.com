@@ -278,15 +278,7 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
             else { $missing_images[] = $sfile; $log[] = "Missing auto-discovered gallery image for {$slug}: {$sfile}"; }
           }
         }
-        // also include any "others"
-        if ( ! empty( $discovered['others'] ) ) {
-          foreach ( $discovered['others'] as $ofile ) {
-            $att = $find_attachment_by_filename( $ofile );
-            if ( ! $att ) $att = $import_theme_image( $ofile, $log );
-            if ( $att ) $gallery_ids[] = $att;
-            else { $missing_images[] = $ofile; $log[] = "Missing auto-discovered gallery image for {$slug}: {$ofile}"; }
-          }
-        }
+        // no additional non-webp fallbacks; only primary and secondary webp images are considered
       }
 
       // If explicit gallery entries present, append them (after discovery)
