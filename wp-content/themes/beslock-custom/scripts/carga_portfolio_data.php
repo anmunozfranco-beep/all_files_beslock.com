@@ -360,18 +360,25 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         'Duplicated slugs: ' . count( $duplicated_slugs ),
       );
       $log_dir = get_stylesheet_directory() . '/import_logs';
-      if ( ! is_dir( $log_dir ) ) {
-        @mkdir( $log_dir, 0755, true );
-      }
-      // fallback to uploads if theme dir is not writable
-      $use_dir = $log_dir;
-      if ( ! is_dir( $use_dir ) || ! is_writable( $use_dir ) ) {
-        $upload_dir = wp_upload_dir();
-        $use_dir = trailingslashit( $upload_dir['basedir'] ) . 'beslock_import_logs';
-        if ( ! is_dir( $use_dir ) ) {
-          @mkdir( $use_dir, 0755, true );
+        if ( ! is_dir( $log_dir ) ) {
+          @mkdir( $log_dir, 0755, true );
         }
-      }
+        // fallback to uploads if theme dir is not writable, otherwise use sys temp dir
+        $use_dir = $log_dir;
+        if ( ! is_dir( $use_dir ) || ! is_writable( $use_dir ) ) {
+          $upload_dir = wp_upload_dir();
+          $use_dir = trailingslashit( $upload_dir['basedir'] ) . 'beslock_import_logs';
+          if ( ! is_dir( $use_dir ) ) {
+            @mkdir( $use_dir, 0755, true );
+          }
+        }
+        if ( ! is_dir( $use_dir ) || ! is_writable( $use_dir ) ) {
+          $tmp = sys_get_temp_dir();
+          $use_dir = trailingslashit( $tmp ) . 'beslock_import_logs';
+          if ( ! is_dir( $use_dir ) ) {
+            @mkdir( $use_dir, 0755, true );
+          }
+        }
       $log_file = trailingslashit( $use_dir ) . 'carga_portfolio_' . date( 'Ymd_His' ) . '.log';
       $content = "Summary:\n" . implode( "\n", $summary_lines ) . "\n\nLog:\n" . implode( "\n", $log );
       $written = @file_put_contents( $log_file, $content );
