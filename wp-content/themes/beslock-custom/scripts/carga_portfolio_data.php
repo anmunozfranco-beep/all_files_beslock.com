@@ -19,21 +19,30 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
 
     $data_file = get_stylesheet_directory() . '/data/products.json';
     if ( ! file_exists( $data_file ) ) {
-      return new WP_Error( 'no_file', sprintf( __( 'products.json not found: %s', 'beslock' ), $data_file ) );
+      $err = new WP_Error( 'no_file', sprintf( __( 'products.json not found: %s', 'beslock' ), $data_file ) );
+      try { update_option( 'beslock_last_import_log', $err->get_error_message() ); } catch ( Exception $e ) { }
+      return $err;
     }
 
     $json = file_get_contents( $data_file );
     if ( $json === false ) {
-      return new WP_Error( 'read_error', __( 'Unable to read products.json', 'beslock' ) );
+      $err = new WP_Error( 'read_error', __( 'Unable to read products.json', 'beslock' ) );
+      try { update_option( 'beslock_last_import_log', $err->get_error_message() ); } catch ( Exception $e ) { }
+      return $err;
     }
 
     $data = json_decode( $json, true );
     if ( json_last_error() !== JSON_ERROR_NONE ) {
-      return new WP_Error( 'json_error', json_last_error_msg() );
+      $msg = json_last_error_msg();
+      $err = new WP_Error( 'json_error', $msg );
+      try { update_option( 'beslock_last_import_log', $msg ); } catch ( Exception $e ) { }
+      return $err;
     }
 
     if ( ! is_array( $data ) ) {
-      return new WP_Error( 'invalid_format', __( 'products.json must be an array of product objects', 'beslock' ) );
+      $err = new WP_Error( 'invalid_format', __( 'products.json must be an array of product objects', 'beslock' ) );
+      try { update_option( 'beslock_last_import_log', $err->get_error_message() ); } catch ( Exception $e ) { }
+      return $err;
     }
 
     // helper: find attachment ID by filename (basename match)
@@ -390,6 +399,17 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         try { update_option( 'beslock_last_import_log', $content ); } catch ( Exception $e ) { }
       }
     }
+
+    // always persist last log (including dry-run) so admin UI can show it immediately
+    $summary_lines_all = array(
+      'Created: ' . $created,
+      'Updated: ' . $updated,
+      'Skipped: ' . count( $skipped ),
+      'Missing images: ' . count( array_values( array_unique( $missing_images ) ) ),
+      'Duplicated slugs: ' . count( $duplicated_slugs ),
+    );
+    $full_content = "Summary:\n" . implode( "\n", $summary_lines_all ) . "\n\nLog:\n" . implode( "\n", $log );
+    try { update_option( 'beslock_last_import_log', $full_content ); } catch ( Exception $e ) { }
 
     return array(
       'created' => $created,
