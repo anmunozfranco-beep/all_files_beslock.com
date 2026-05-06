@@ -1,0 +1,560 @@
+{
+    "created_at": "2026-05-06 15:27:13",
+    "items": [
+        {
+            "slug": "e-prime",
+            "pre": {
+                "ID": 11,
+                "post_title": "e-Prime",
+                "post_name": "e-prime",
+                "post_content": "Control total para accesos exigentes.\r\nGestión avanzada de usuarios para espacios de alto flujo.",
+                "post_excerpt": "Control total para accesos exigentes. Gestión avanzada de usuarios para espacios de alto flujo.",
+                "post_status": "publish"
+            },
+            "meta": {
+                "_regular_price": [
+                    "941000"
+                ],
+                "_price": [
+                    "941000"
+                ],
+                "_thumbnail_id": [
+                    "23"
+                ],
+                "_edit_lock": [
+                    "1777726432:1"
+                ],
+                "_edit_last": [
+                    "1"
+                ],
+                "total_sales": [
+                    "0"
+                ],
+                "_tax_status": [
+                    "taxable"
+                ],
+                "_tax_class": [
+                    ""
+                ],
+                "_manage_stock": [
+                    "no"
+                ],
+                "_backorders": [
+                    "no"
+                ],
+                "_sold_individually": [
+                    "no"
+                ],
+                "_virtual": [
+                    "no"
+                ],
+                "_downloadable": [
+                    "no"
+                ],
+                "_download_limit": [
+                    "-1"
+                ],
+                "_download_expiry": [
+                    "-1"
+                ],
+                "_stock": [
+                    null
+                ],
+                "_stock_status": [
+                    "instock"
+                ],
+                "_wc_average_rating": [
+                    "0"
+                ],
+                "_wc_review_count": [
+                    "0"
+                ],
+                "_product_version": [
+                    "10.7.0"
+                ],
+                "_kad_post_transparent": [
+                    "default"
+                ],
+                "_kad_post_layout": [
+                    "default"
+                ],
+                "_kad_post_content_style": [
+                    "default"
+                ],
+                "_kad_post_vertical_padding": [
+                    "default"
+                ],
+                "beslock_badge": [
+                    "Pensada para oficinas"
+                ],
+                "beslock_features": [
+                    "a:3:{i:0;s:23:\"Múltiples — usuarios\";i:1;s:31:\"Total control — en el celular\";i:2;s:29:\"Varias formas — de apertura\";}"
+                ]
+            }
+        },
+        {
+            "slug": "e-shield",
+            "pre": {
+                "ID": 10,
+                "post_title": "e-Shield",
+                "post_name": "e-shield",
+                "post_content": "Protección inteligente para tu hogar.\r\nSeguridad robusta con acceso electrónico y respaldo mecánico.",
+                "post_excerpt": "Protección inteligente para tu hogar. Seguridad robusta con acceso electrónico y respaldo mecánico.",
+                "post_status": "publish"
+            },
+            "meta": {
+                "_regular_price": [
+                    "982000"
+                ],
+                "_price": [
+                    "982000"
+                ],
+                "_thumbnail_id": [
+                    "24"
+                ],
+                "_product_image_gallery": [
+                    "25"
+                ],
+                "_edit_lock": [
+                    "1777726413:1"
+                ],
+                "_edit_last": [
+                    "1"
+                ],
+                "total_sales": [
+                    "0"
+                ],
+                "_tax_status": [
+                    "taxable"
+                ],
+                "_tax_class": [
+                    ""
+                ],
+                "_manage_stock": [
+                    "no"
+                ],
+                "_backorders": [
+                    "no"
+                ],
+                "_sold_individually": [
+                    "no"
+                ],
+                "_virtual": [
+                    "no"
+                ],
+                "_downloadable": [
+                    "no"
+                ],
+                "_download_limit": [
+                    "-1"
+                ],
+                "_download_expiry": [
+                    "-1"
+                ],
+                "_stock": [
+                    null
+                ],
+                "_stock_status": [
+                    "instock"
+                ],
+                "_wc_average_rating": [
+                    "0"
+                ],
+                "_wc_review_count": [
+                    "0"
+                ],
+                "_product_version": [
+                    "10.7.0"
+                ],
+                "_kad_post_transparent": [
+                    "default"
+                ],
+                "_kad_post_layout": [
+                    "default"
+                ],
+                "_kad_post_content_style": [
+                    "default"
+                ],
+                "_kad_post_vertical_padding": [
+                    "default"
+                ],
+                "beslock_badge": [
+                    "Máxima protección en tu hogar"
+                ],
+                "beslock_features": [
+                    "a:3:{i:0;s:30:\"Libérate — de cargar llaves\";i:1;s:29:\"Varias formas — de apertura\";i:2;s:31:\"Total control — en el celular\";}"
+                ]
+            }
+        },
+        {
+            "slug": "e-flex",
+            "pre": {
+                "ID": 9,
+                "post_title": "e-Flex",
+                "post_name": "e-flex",
+                "post_content": "Ideal para recibir y dar acceso sin estar presente.\r\nCódigos temporales, huella y control remoto para estancias cortas.",
+                "post_excerpt": "Ideal para recibir y dar acceso sin estar presente. Códigos temporales, huella y control remoto para estancias cortas.",
+                "post_status": "publish"
+            },
+            "meta": {
+                "_regular_price": [
+                    "689000"
+                ],
+                "_price": [
+                    "689000"
+                ],
+                "_thumbnail_id": [
+                    "19"
+                ],
+                "_edit_lock": [
+                    "1777726394:1"
+                ],
+                "_edit_last": [
+                    "1"
+                ],
+                "total_sales": [
+                    "0"
+                ],
+                "_tax_status": [
+                    "taxable"
+                ],
+                "_tax_class": [
+                    ""
+                ],
+                "_manage_stock": [
+                    "no"
+                ],
+                "_backorders": [
+                    "no"
+                ],
+                "_sold_individually": [
+                    "no"
+                ],
+                "_virtual": [
+                    "no"
+                ],
+                "_downloadable": [
+                    "no"
+                ],
+                "_download_limit": [
+                    "-1"
+                ],
+                "_download_expiry": [
+                    "-1"
+                ],
+                "_stock": [
+                    null
+                ],
+                "_stock_status": [
+                    "instock"
+                ],
+                "_wc_average_rating": [
+                    "0"
+                ],
+                "_wc_review_count": [
+                    "0"
+                ],
+                "_product_version": [
+                    "10.7.0"
+                ],
+                "_kad_post_transparent": [
+                    "default"
+                ],
+                "_kad_post_layout": [
+                    "default"
+                ],
+                "_kad_post_content_style": [
+                    "default"
+                ],
+                "_kad_post_vertical_padding": [
+                    "default"
+                ],
+                "beslock_badge": [
+                    "Ideal para estancias cortas"
+                ],
+                "beslock_features": [
+                    "a:3:{i:0;s:33:\"Ideal para — visitas temporales\";i:1;s:31:\"Total control — en el celular\";i:2;s:29:\"Varias formas — de apertura\";}"
+                ]
+            }
+        },
+        {
+            "slug": "e-touch",
+            "pre": {
+                "ID": 8,
+                "post_title": "e-Touch",
+                "post_name": "e-touch",
+                "post_content": "Acceso fácil para espacios compartidos.\r\nClave y huella para que todos puedan entrar, sin complicaciones.",
+                "post_excerpt": "Acceso fácil para espacios compartidos. Clave y huella para que todos puedan entrar, sin complicaciones.",
+                "post_status": "publish"
+            },
+            "meta": {
+                "_regular_price": [
+                    "435000"
+                ],
+                "_price": [
+                    "435000"
+                ],
+                "_thumbnail_id": [
+                    "26"
+                ],
+                "_product_image_gallery": [
+                    "27"
+                ],
+                "_edit_lock": [
+                    "1777726372:1"
+                ],
+                "_edit_last": [
+                    "1"
+                ],
+                "total_sales": [
+                    "0"
+                ],
+                "_tax_status": [
+                    "taxable"
+                ],
+                "_tax_class": [
+                    ""
+                ],
+                "_manage_stock": [
+                    "no"
+                ],
+                "_backorders": [
+                    "no"
+                ],
+                "_sold_individually": [
+                    "no"
+                ],
+                "_virtual": [
+                    "no"
+                ],
+                "_downloadable": [
+                    "no"
+                ],
+                "_download_limit": [
+                    "-1"
+                ],
+                "_download_expiry": [
+                    "-1"
+                ],
+                "_stock": [
+                    null
+                ],
+                "_stock_status": [
+                    "instock"
+                ],
+                "_wc_average_rating": [
+                    "0"
+                ],
+                "_wc_review_count": [
+                    "0"
+                ],
+                "_product_version": [
+                    "10.7.0"
+                ],
+                "_kad_post_transparent": [
+                    "default"
+                ],
+                "_kad_post_layout": [
+                    "default"
+                ],
+                "_kad_post_content_style": [
+                    "default"
+                ],
+                "_kad_post_vertical_padding": [
+                    "default"
+                ],
+                "beslock_badge": [
+                    "Acceso para todos"
+                ],
+                "beslock_features": [
+                    "a:3:{i:0;s:23:\"Múltiples — usuarios\";i:1;s:29:\"Varias formas — de apertura\";i:2;s:30:\"Libérate — de cargar llaves\";}"
+                ]
+            }
+        },
+        {
+            "slug": "e-orbit",
+            "pre": {
+                "ID": 7,
+                "post_title": "e-Orbit",
+                "post_name": "e-orbit",
+                "post_content": "Mira y controla quién llega a tu puerta, estés donde estés.\r\nSeguridad avanzada con video y acceso inteligente desde tu celular.",
+                "post_excerpt": "Mira y controla quién llega a tu puerta, estés donde estés. Seguridad avanzada con video y acceso inteligente desde tu celular.",
+                "post_status": "publish"
+            },
+            "meta": {
+                "_regular_price": [
+                    "1734000"
+                ],
+                "_price": [
+                    "1734000"
+                ],
+                "_edit_lock": [
+                    "1777979937:1"
+                ],
+                "_thumbnail_id": [
+                    "22"
+                ],
+                "_edit_last": [
+                    "1"
+                ],
+                "total_sales": [
+                    "0"
+                ],
+                "_tax_status": [
+                    "taxable"
+                ],
+                "_tax_class": [
+                    ""
+                ],
+                "_manage_stock": [
+                    "no"
+                ],
+                "_backorders": [
+                    "no"
+                ],
+                "_sold_individually": [
+                    "no"
+                ],
+                "_virtual": [
+                    "no"
+                ],
+                "_downloadable": [
+                    "no"
+                ],
+                "_download_limit": [
+                    "-1"
+                ],
+                "_download_expiry": [
+                    "-1"
+                ],
+                "_stock": [
+                    null
+                ],
+                "_stock_status": [
+                    "instock"
+                ],
+                "_wc_average_rating": [
+                    "0"
+                ],
+                "_wc_review_count": [
+                    "0"
+                ],
+                "_product_version": [
+                    "10.7.0"
+                ],
+                "_kad_post_transparent": [
+                    "default"
+                ],
+                "_kad_post_layout": [
+                    "default"
+                ],
+                "_kad_post_content_style": [
+                    "default"
+                ],
+                "_kad_post_vertical_padding": [
+                    "default"
+                ],
+                "beslock_badge": [
+                    "Desde donde te encuentres"
+                ],
+                "beslock_features": [
+                    "a:3:{i:0;s:31:\"Total control — en el celular\";i:1;s:29:\"Varias formas — de apertura\";i:2;s:33:\"Ideal para — visitas temporales\";}"
+                ]
+            }
+        },
+        {
+            "slug": "e-nova",
+            "pre": {
+                "ID": 6,
+                "post_title": "e-Nova",
+                "post_name": "e-nova",
+                "post_content": "Acceso inteligente sin llaves para tu día a día.\r\nHuella y control simple para moverte con libertad y tranquilidad.",
+                "post_excerpt": "Acceso inteligente sin llaves para tu día a día. Huella y control simple para moverte con libertad y tranquilidad.",
+                "post_status": "publish"
+            },
+            "meta": {
+                "_regular_price": [
+                    "412000"
+                ],
+                "_price": [
+                    "412000"
+                ],
+                "_thumbnail_id": [
+                    "20"
+                ],
+                "_product_image_gallery": [
+                    "21"
+                ],
+                "_edit_lock": [
+                    "1777726591:1"
+                ],
+                "_edit_last": [
+                    "1"
+                ],
+                "total_sales": [
+                    "0"
+                ],
+                "_tax_status": [
+                    "taxable"
+                ],
+                "_tax_class": [
+                    ""
+                ],
+                "_manage_stock": [
+                    "no"
+                ],
+                "_backorders": [
+                    "no"
+                ],
+                "_sold_individually": [
+                    "no"
+                ],
+                "_virtual": [
+                    "no"
+                ],
+                "_downloadable": [
+                    "no"
+                ],
+                "_download_limit": [
+                    "-1"
+                ],
+                "_download_expiry": [
+                    "-1"
+                ],
+                "_stock": [
+                    null
+                ],
+                "_stock_status": [
+                    "instock"
+                ],
+                "_wc_average_rating": [
+                    "0"
+                ],
+                "_wc_review_count": [
+                    "0"
+                ],
+                "_product_version": [
+                    "10.7.0"
+                ],
+                "_kad_post_transparent": [
+                    "default"
+                ],
+                "_kad_post_layout": [
+                    "default"
+                ],
+                "_kad_post_content_style": [
+                    "default"
+                ],
+                "_kad_post_vertical_padding": [
+                    "default"
+                ],
+                "beslock_badge": [
+                    "Privacidad sin complicaciones"
+                ],
+                "beslock_features": [
+                    "a:3:{i:0;s:30:\"Libérate — de cargar llaves\";i:1;s:29:\"Varias formas — de apertura\";i:2;s:23:\"Múltiples — usuarios\";}"
+                ]
+            }
+        }
+    ]
+}
