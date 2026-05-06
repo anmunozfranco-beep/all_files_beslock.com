@@ -350,6 +350,29 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
       $updated++;
     }
 
+    // write a persisted log file when not a dry-run
+    if ( ! $is_dry ) {
+      $summary_lines = array(
+        'Created: ' . $created,
+        'Updated: ' . $updated,
+        'Skipped: ' . count( $skipped ),
+        'Missing images: ' . count( array_values( array_unique( $missing_images ) ) ),
+        'Duplicated slugs: ' . count( $duplicated_slugs ),
+      );
+      $log_dir = get_stylesheet_directory() . '/import_logs';
+      if ( ! is_dir( $log_dir ) ) {
+        @mkdir( $log_dir, 0755, true );
+      }
+      $log_file = trailingslashit( $log_dir ) . 'carga_portfolio_' . date( 'Ymd_His' ) . '.log';
+      $content = "Summary:\n" . implode( "\n", $summary_lines ) . "\n\nLog:\n" . implode( "\n", $log );
+      $written = @file_put_contents( $log_file, $content );
+      if ( $written === false ) {
+        $log[] = "Failed to write import log to {$log_file}";
+      } else {
+        $log[] = "Wrote import log to {$log_file}";
+      }
+    }
+
     return array(
       'created' => $created,
       'updated' => $updated,
