@@ -1,6 +1,5 @@
 === QUEUE ===
 wp-img-auto-sizes-contain => inline/unknown
-admin-bar => /wp-includes/css/admin-bar.min.css
 beslock-main-style => http://localhost:8000/wp-content/themes/beslock-custom/style.css
 wp-emoji-styles => inline/unknown
 woocommerce-inline => inline/unknown
@@ -13,7 +12,6 @@ beslock-product-page => http://localhost:8000/wp-content/themes/beslock-custom/a
 beslock-product-tabs => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/product-tabs.css
 beslock-product-rotator => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/product-rotator.css
 beslock-header-state-css => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/header-state.css
-kad-splide => http://localhost:8000/wp-content/themes/kadence/assets/css/kadence-splide.min.css
 beslock-wc-scope-fix => http://localhost:8000/wp-content/themes/beslock-custom/assets/css/wc-scope-fix.css
 
 === REGISTERED (selected) ===

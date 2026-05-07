@@ -337,52 +337,103 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         }
       }
 
+      // Use WooCommerce API for creation/update to ensure product is fully registered
+      $product = null;
       if ( $existing ) {
         $pid = $existing->ID;
         $is_new = false;
+        if ( function_exists( 'wc_get_product' ) ) {
+          $product = wc_get_product( $pid );
+        }
+        if ( ! $product && class_exists( 'WC_Product_Simple' ) ) {
+          // attempt to hydrate a WC object from existing post id
+          $product = new WC_Product_Simple( $pid );
+        }
       } else {
+        $pid = 0;
+        $is_new = true;
         if ( $is_dry ) {
-          $pid = 0;
-          $created++;
-          $is_new = true;
           $log[] = "(dry-run) Would create product {$slug}";
         } else {
-          // create product post
-          $postarr = array(
-            'post_title' => isset( $prod['title'] ) ? $prod['title'] : $slug,
-            'post_name' => $slug,
-            'post_excerpt' => isset( $prod['short_description'] ) ? $prod['short_description'] : '',
-            'post_status' => 'publish',
-            'post_type' => 'product',
-          );
-          $pid = wp_insert_post( $postarr );
-          if ( is_wp_error( $pid ) || ! $pid ) {
-            $log[] = "Failed to create product for slug: {$slug}";
+          if ( ! class_exists( 'WC_Product_Simple' ) ) {
+            $log[] = "WooCommerce WC_Product_Simple not available; skipping product {$slug}";
             $skipped[] = $slug;
             continue;
           }
-          $created++;
-          $is_new = true;
-          $log[] = "Created product {$slug} (ID: {$pid})";
-          // ensure minimal WooCommerce product metadata so product exists in empty store
-          if ( ! $is_dry && $pid ) {
-            // stock / visibility defaults
-            update_post_meta( $pid, '_stock_status', 'instock' );
-            update_post_meta( $pid, '_manage_stock', 'no' );
-            update_post_meta( $pid, '_stock', '' );
-            update_post_meta( $pid, '_virtual', 'no' );
-            update_post_meta( $pid, '_downloadable', 'no' );
-            // visibility (older WP/WC versions)
-            update_post_meta( $pid, '_visibility', 'visible' );
-             // set product type to simple to avoid theme hooks assuming variations
-             if ( function_exists( 'wp_set_object_terms' ) ) {
-              wp_set_object_terms( $pid, 'simple', 'product_type' );
-              $log[] = "Set product type to simple for {$slug}";
+          $product = new WC_Product_Simple();
+        }
+      }
+
+      // Prepare values
+      $name = isset( $prod['title'] ) ? $prod['title'] : $slug;
+      $short = isset( $prod['short_description'] ) ? $prod['short_description'] : '';
+      $desc = isset( $prod['description'] ) ? $prod['description'] : '';
+      $price = isset( $prod['price'] ) ? trim( (string) $prod['price'] ) : '';
+      $sku = isset( $prod['sku'] ) ? sanitize_text_field( $prod['sku'] ) : '';
+
+      if ( $product ) {
+        if ( $is_dry ) {
+          $log[] = "(dry-run) Would set product fields for {$slug}: name={$name} price={$price}";
+        } else {
+          // Set core product fields via WC API
+          $product->set_name( $name );
+          $product->set_slug( $slug );
+          $product->set_status( 'publish' );
+          if ( method_exists( $product, 'set_catalog_visibility' ) ) {
+            $product->set_catalog_visibility( 'visible' );
+          }
+          $product->set_short_description( $short );
+          $product->set_description( $desc );
+          if ( $price !== '' && method_exists( $product, 'set_regular_price' ) ) {
+            $product->set_regular_price( $price );
+          }
+          if ( $sku !== '' && method_exists( $product, 'set_sku' ) ) {
+            $product->set_sku( $sku );
+          }
+          // stock
+          if ( isset( $prod['manage_stock'] ) ) {
+            $product->set_manage_stock( $prod['manage_stock'] ? true : false );
+            if ( isset( $prod['stock'] ) ) $product->set_stock_quantity( intval( $prod['stock'] ) );
+          }
+          if ( method_exists( $product, 'set_stock_status' ) ) {
+            $product->set_stock_status( isset( $prod['stock_status'] ) ? sanitize_text_field( $prod['stock_status'] ) : 'instock' );
+          }
+          // dimensions/weight
+          if ( isset( $prod['weight'] ) && method_exists( $product, 'set_weight' ) ) $product->set_weight( sanitize_text_field( $prod['weight'] ) );
+          if ( isset( $prod['length'] ) && method_exists( $product, 'set_length' ) ) $product->set_length( sanitize_text_field( $prod['length'] ) );
+          if ( isset( $prod['width'] ) && method_exists( $product, 'set_width' ) ) $product->set_width( sanitize_text_field( $prod['width'] ) );
+          if ( isset( $prod['height'] ) && method_exists( $product, 'set_height' ) ) $product->set_height( sanitize_text_field( $prod['height'] ) );
+
+          // Save product (create or update)
+          try {
+            $new_id = $product->save();
+          } catch ( Exception $e ) {
+            $log[] = "Failed to save WC product for {$slug}: " . $e->getMessage();
+            $skipped[] = $slug;
+            continue;
+          }
+
+          if ( $new_id ) {
+            $pid = $new_id;
+            // ensure product_type term set
+            if ( function_exists( 'wp_set_object_terms' ) ) wp_set_object_terms( $pid, 'simple', 'product_type' );
+            // ensure basic metas for compatibility
+            update_post_meta( $pid, '_stock_status', get_post_meta( $pid, '_stock_status', true ) ?: 'instock' );
+            update_post_meta( $pid, '_visibility', get_post_meta( $pid, '_visibility', true ) ?: 'visible' );
+            $log[] = ( $is_new ? "Created product {$slug} (ID {$pid})" : "Updated product {$slug} (ID {$pid})" );
+            if ( $is_new ) {
+              $created++;
+            } else {
+              $updated++;
             }
-          } else {
-            $log[] = "(dry-run) Would set minimal product metadata for {$slug}";
+            // delete transients and schedule lookup table update
+            if ( function_exists( 'wc_delete_product_transients' ) ) wc_delete_product_transients( $pid );
           }
         }
+      } else {
+        $log[] = "No WC product object available for {$slug}; skipped";
+        $skipped[] = $slug;
+        continue;
       }
 
       // If JSON lacks a short_description, try to use existing product excerpt
@@ -397,108 +448,77 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         }
       }
 
-      // update title/short description if needed
-      $update_post = array( 'ID' => $pid );
-      $changed = false;
-      // ensure the post_name (slug) reflects the canonical slug from products.json
-      if ( $pid && ! empty( $slug ) && $slug !== get_post_field( 'post_name', $pid ) ) {
-        $update_post['post_name'] = $slug;
-        $changed = true;
-        $log[] = "Will update post_name (slug) for product ID {$pid} to {$slug}";
-      }
-      // map long description -> post_content
-      if ( isset( $prod['description'] ) && $prod['description'] !== get_post_field( 'post_content', $pid ) ) {
-        $update_post['post_content'] = $prod['description'];
-        $changed = true;
-      }
-      // SKU mapping
-      if ( isset( $prod['sku'] ) ) {
-        $sku = sanitize_text_field( $prod['sku'] );
-        if ( $sku !== get_post_meta( $pid, '_sku', true ) ) {
-          if ( ! $is_dry ) {
-            update_post_meta( $pid, '_sku', $sku );
-          } else {
-            $log[] = "(dry-run) Would set _sku for {$slug}: {$sku}";
-          }
+      // Update fields via WooCommerce API / WC_Product when available (avoid raw wp_update_post)
+      if ( ! $is_dry && isset( $product ) && is_object( $product ) ) {
+        $fields_changed = false;
+        // ensure slug matches
+        if ( $pid && $slug !== get_post_field( 'post_name', $pid ) && method_exists( $product, 'set_slug' ) ) {
+          $product->set_slug( $slug );
+          $fields_changed = true;
+          $log[] = "Will set slug for product ID {$pid} to {$slug}";
         }
-      }
-      // stock and manage_stock
-      if ( isset( $prod['manage_stock'] ) ) {
-        $manage = $prod['manage_stock'] ? 'yes' : 'no';
-        if ( ! $is_dry ) {
-          update_post_meta( $pid, '_manage_stock', $manage );
-        } else {
-          $log[] = "(dry-run) Would set _manage_stock for {$slug}: {$manage}";
+        // description/content
+        if ( isset( $prod['description'] ) && method_exists( $product, 'set_description' ) ) {
+          $product->set_description( $prod['description'] );
+          $fields_changed = true;
         }
-      }
-      if ( isset( $prod['stock'] ) ) {
-        if ( ! $is_dry ) {
-          update_post_meta( $pid, '_stock', sanitize_text_field( $prod['stock'] ) );
-        } else {
-          $log[] = "(dry-run) Would set _stock for {$slug}: " . sanitize_text_field( $prod['stock'] );
+        // title/name
+        if ( isset( $prod['title'] ) && method_exists( $product, 'set_name' ) && $prod['title'] !== $product->get_name() ) {
+          $product->set_name( $prod['title'] );
+          $fields_changed = true;
         }
-      }
-      if ( isset( $prod['stock_status'] ) ) {
-        if ( ! $is_dry ) {
-          update_post_meta( $pid, '_stock_status', sanitize_text_field( $prod['stock_status'] ) );
-        } else {
-          $log[] = "(dry-run) Would set _stock_status for {$slug}: " . sanitize_text_field( $prod['stock_status'] );
+        // short description
+        if ( isset( $prod['short_description'] ) && method_exists( $product, 'set_short_description' ) ) {
+          $product->set_short_description( $prod['short_description'] );
+          $fields_changed = true;
         }
-      }
-      // weight and dimensions
-      if ( isset( $prod['weight'] ) ) {
-        if ( ! $is_dry ) {
-          update_post_meta( $pid, '_weight', sanitize_text_field( $prod['weight'] ) );
-        } else {
-          $log[] = "(dry-run) Would set _weight for {$slug}: " . sanitize_text_field( $prod['weight'] );
+        // SKU
+        if ( isset( $prod['sku'] ) && method_exists( $product, 'set_sku' ) ) {
+          $product->set_sku( sanitize_text_field( $prod['sku'] ) );
+          $fields_changed = true;
         }
-      }
-      if ( isset( $prod['length'] ) || isset( $prod['width'] ) || isset( $prod['height'] ) ) {
-        if ( ! $is_dry ) {
-          if ( isset( $prod['length'] ) ) update_post_meta( $pid, '_length', sanitize_text_field( $prod['length'] ) );
-          if ( isset( $prod['width'] ) ) update_post_meta( $pid, '_width', sanitize_text_field( $prod['width'] ) );
-          if ( isset( $prod['height'] ) ) update_post_meta( $pid, '_height', sanitize_text_field( $prod['height'] ) );
-        } else {
-          $log[] = "(dry-run) Would set dimensions for {$slug}";
+        // stock & manage stock
+        if ( isset( $prod['manage_stock'] ) && method_exists( $product, 'set_manage_stock' ) ) {
+          $product->set_manage_stock( $prod['manage_stock'] ? true : false );
+          if ( isset( $prod['stock'] ) && method_exists( $product, 'set_stock_quantity' ) ) $product->set_stock_quantity( intval( $prod['stock'] ) );
+          $fields_changed = true;
         }
-      }
-      // categories (by slug or name)
-      if ( ! empty( $prod['categories'] ) && is_array( $prod['categories'] ) ) {
-        $cats = array_map( 'sanitize_text_field', $prod['categories'] );
-        if ( ! $is_dry ) {
+        if ( isset( $prod['stock_status'] ) && method_exists( $product, 'set_stock_status' ) ) {
+          $product->set_stock_status( sanitize_text_field( $prod['stock_status'] ) );
+          $fields_changed = true;
+        }
+        // dimensions/weight
+        if ( isset( $prod['weight'] ) && method_exists( $product, 'set_weight' ) ) { $product->set_weight( sanitize_text_field( $prod['weight'] ) ); $fields_changed = true; }
+        if ( isset( $prod['length'] ) && method_exists( $product, 'set_length' ) ) { $product->set_length( sanitize_text_field( $prod['length'] ) ); $fields_changed = true; }
+        if ( isset( $prod['width'] ) && method_exists( $product, 'set_width' ) ) { $product->set_width( sanitize_text_field( $prod['width'] ) ); $fields_changed = true; }
+        if ( isset( $prod['height'] ) && method_exists( $product, 'set_height' ) ) { $product->set_height( sanitize_text_field( $prod['height'] ) ); $fields_changed = true; }
+        // categories and tags: still use wp_set_object_terms (safe)
+        if ( ! empty( $prod['categories'] ) && is_array( $prod['categories'] ) ) {
+          $cats = array_map( 'sanitize_text_field', $prod['categories'] );
           wp_set_object_terms( $pid, $cats, 'product_cat' );
-        } else {
-          $log[] = "(dry-run) Would set categories for {$slug}: " . implode( ',', $cats );
         }
-      }
-      // tags
-      if ( ! empty( $prod['tags'] ) && is_array( $prod['tags'] ) ) {
-        $tags = array_map( 'sanitize_text_field', $prod['tags'] );
-        if ( ! $is_dry ) {
+        if ( ! empty( $prod['tags'] ) && is_array( $prod['tags'] ) ) {
+          $tags = array_map( 'sanitize_text_field', $prod['tags'] );
           wp_set_post_terms( $pid, $tags, 'product_tag' );
-        } else {
-          $log[] = "(dry-run) Would set tags for {$slug}: " . implode( ',', $tags );
         }
-      }
-      if ( isset( $prod['title'] ) && $prod['title'] !== get_the_title( $pid ) ) {
-        $update_post['post_title'] = $prod['title'];
-        $changed = true;
-      }
-      if ( isset( $prod['short_description'] ) ) {
-        $excerpt = $prod['short_description'];
-        if ( $excerpt !== get_post_field( 'post_excerpt', $pid ) ) {
-          $update_post['post_excerpt'] = $excerpt;
-          $changed = true;
+        if ( $fields_changed ) {
+          try {
+            $product->save();
+            if ( function_exists( 'wc_delete_product_transients' ) ) wc_delete_product_transients( $product->get_id() );
+            $log[] = "Saved product via WC API for {$slug} (ID {$product->get_id()})";
+            if ( ! $is_new ) $updated++;
+          } catch ( Exception $e ) {
+            $log[] = "Failed to save product via WC API for {$slug}: " . $e->getMessage();
+          }
+          $persist_log();
         }
-      }
-      if ( $changed ) {
-        if ( ! $is_dry ) {
-          wp_update_post( $update_post );
-          $log[] = "Updated basic fields for {$slug}";
-        } else {
+      } else {
+        // fall back for dry-run or missing WC object: still attempt to update basic post fields via wp_update_post for compatibility
+        if ( $is_dry ) {
           $log[] = "(dry-run) Would update basic fields for {$slug}";
+        } else {
+          $log[] = "Skipping non-WC update for {$slug} (no product object)";
         }
-        $persist_log();
       }
 
       // set price
@@ -618,11 +638,20 @@ if ( ! function_exists( 'beslock_carga_portfolio_process' ) ) {
         }
       }
 
-      $updated++;
+      // count updated is handled when saving via WC API; do not increment here.
     }
 
     // write a persisted log file when not a dry-run
     if ( ! $is_dry ) {
+      // ensure lookup tables are updated after bulk changes
+      if ( function_exists( 'wc_update_product_lookup_tables' ) ) {
+        try {
+          wc_update_product_lookup_tables();
+          $log[] = 'Ran wc_update_product_lookup_tables() to sync lookup tables';
+        } catch ( Exception $e ) {
+          $log[] = 'wc_update_product_lookup_tables() failed: ' . $e->getMessage();
+        }
+      }
       $summary_lines = array(
         'Created: ' . $created,
         'Updated: ' . $updated,

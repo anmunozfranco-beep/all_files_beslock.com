@@ -100,9 +100,10 @@ $table_prefix = 'wptq_';
 // Enable debug logging and display errors in local development.
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
-define( 'WP_DEBUG_DISPLAY', true );
+define( 'WP_DEBUG_DISPLAY', false );
 
-@ini_set( 'display_errors', 1 );
+// Ensure PHP does not display errors publicly in admin pages; keep them in logs only
+@ini_set( 'display_errors', 0 );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
